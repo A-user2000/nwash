@@ -18,6 +18,16 @@ public partial class WqsContext : DbContext
         : base(options)
     {
     }
+
+    //Added Models
+    public virtual DbSet<WqsRangeSummary> WqsRangeSummary { get; set; }
+    public virtual DbSet<DateAndInt> DateAndInt { get; set; }
+    public virtual DbSet<WqsDataCollProvincewise> WqsDataCollProvincewise { get; set; }
+    public virtual DbSet<MatWqProvincewise> MatWqProvincewise { get; set; }
+
+
+
+
     public virtual DbSet<WSIncomeDetails> WSIncomeDetails { get; set; }
     public virtual DbSet<SustainabilityDetails> SustainabilityDetails { get; set; }
     public virtual DbSet<ProjectBasicDetails> ProjectBasicDetails { get; set; }

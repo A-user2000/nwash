@@ -1,0 +1,295 @@
+﻿@{
+    ViewData["Title"] = "WQs Dashboard";
+    var DataCollectionCount = ViewBag.DataCollectionCount;
+    var DataCollectionCountProvince = ViewBag.DataCollectionCountProvince;
+    var WspImlpementedPop = ViewBag.WspImlpementedPop;
+    var WspNotImlpementedPop = ViewBag.WspNotImlpementedPop;
+    var WqTblProvince = ViewBag.WqTblProvince;
+}
+<style>
+    .dot {
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .line {
+        width: 100%;
+        height: 12px;
+        border: 0;
+        box-shadow: 0 10px 10px -10px #b0b0b1 inset;
+    }
+    .title {
+        color: #002f84;
+        text-align: center;
+        font-weight: bold
+    }
+
+    .tap_table, .tap_table td {
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+    .count-title {
+        font-size: 30px !important;
+    }
+</style>
+<link href="~/css/styles.css" rel="stylesheet" />
+<div class="container col-12" style="display:contents;">
+    <div class="row">
+        <div class="col">
+            <div></div>
+            <div>
+                <h5>Data Collection</h5>
+                <div id="datacollection_linechart" style="height:500px"></div>
+            </div>
+
+        </div>
+
+        <div class="col">
+            <div id="SurveillanceOverview">
+                <h5>Surveillance Overview</h5>
+                <div class="col" style=" background: linear-gradient(230deg, #003f1c, #6aab86);border-radius: 10px;padding: 20px;color: white;text-align: center;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                     width: 300px;
+                     margin: 20px auto;">
+                    <p>Population Served by WSS where WSP is Not Implemented</p>
+                    <h2>@WspImlpementedPop</h2>
+                    <p>Population Served by WSS where WSP is Implemented</p>
+                    <h2>@WspNotImlpementedPop</h2>
+                </div>
+            </div>
+            <div id="datacolprovincewise" style="height:500px"></div>
+        </div>
+    </div>
+    <br />
+    <div>
+        <h5>Water Quality - No. of Sample</h5>
+        <table class="table table-responsive table-bordered" style="display:inline-table !important">
+            <thead>
+                <tr>
+                    <th>Water Quality Paramaeter</th>
+                    <th colspan="2">E-Coli</th>
+                    <th colspan="2">PH</th>
+                    <th colspan="2">Turbidity</th>
+                    <th colspan="2">Iron</th>
+                    <th colspan="2">Arsenic</th>
+                    <th colspan="2">Residual Chlorine</th>
+                </tr>
+                <tr>
+                    <td>Standard Value</td>
+                    <td>0</td>
+                    <td>>0</td>
+                    <td>6.5 - 8.5</td>
+                    <td>Out of Range</td>
+                    <td>0 - 5</td>
+                    <td>Out of Range</td>
+                    <td>0 - 30</td>
+                    <td>Out of Range</td>
+                    <td>0 - 0.5</td>
+                    <td>Out of Range</td>
+                    <td>0.10 - 0.50</td>
+                    <td>Out of Range</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in WqTblProvince)
+                {
+                    <tr>
+                        <td>@item.province_name</td>
+                        <td>@item.ecoli_0</td>
+                        <td>@item.ecoli_less0</td>
+                        <td>@item.ph_between</td>
+                        <td>@item.ph_out_of_range</td>
+                        <td>@item.turbid_between</td>
+                        <td>@item.turbid_out_of_range</td>
+                        <td>@item.iron_between</td>
+                        <td>@item.iron_out_of_range</td>
+                        <td>@item.arsenic_between</td>
+                        <td>@item.arsenic_out_of_range</td>
+                        <td>@item.residual_between</td>
+                        <td>@item.residual_out_of_range</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+        am4core.useTheme(am4themes_animated);
+        am4core.addLicense("ch-custom-attribution");
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("datacollection_linechart", am4charts.XYChart);
+
+        var mModel = @Json.Serialize(DataCollectionCount);
+        var guideArray = [];
+
+        chart.data = (function () {
+            var guideArray = [];
+            $.each(mModel, function (el) {
+                var TempDate = new Date(mModel[el].added_date);
+                var formattedDate = TempDate.toISOString().split('T')[0]; // This will give you 'YYYY-MM-DD'
+                guideArray.push({
+                    "date": formattedDate,
+                    "form1cnt": mModel[el].form1count,
+                    "form2cnt": mModel[el].form2count,
+                    "form3cnt": mModel[el].form3count
+                })
+            })
+            return guideArray;
+        }())
+
+        //export img
+        chart.exporting.menu = new am4core.ExportMenu();
+        chart.exporting.menu.background = '#fff';
+        chart.exporting.menu.items = [
+            {
+                "label": "...",
+                "menu": [
+                    {
+                        "label": "Image",
+                        "menu": [
+                            { "type": "png", "label": "PNG" },
+                            { "type": "pdfdata", "label": "PDF" },
+                            { "type": "jpg", "label": "JPG" },
+                            { "type": "svg", "label": "SVG" },
+                        ]
+                    }, {
+                        "label": "Print", "type": "print"
+                    }
+                ]
+            }
+        ];
+
+        // Create axes
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = "date";
+        categoryAxis.title.text = "Date";
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.renderer.minGridDistance = 20;
+
+
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        // valueAxis.title.text = "Total";
+
+        //rotate label
+        categoryAxis.renderer.labels.template.rotation = 270;
+        categoryAxis.renderer.labels.template.horizontalCenter = "right";
+        categoryAxis.renderer.labels.template.verticalCenter = "middle";
+
+        // Create series
+        var series = chart.series.push(new am4charts.LineSeries());
+        series.dataFields.valueY = "form1cnt";
+        series.dataFields.categoryX = "date";
+        series.name = "Preliminary assessment of the status  WSP";
+        series.tooltipText = "{name}: [bold]{valueY}[/]";
+        series.strokeWidth = 3;
+        series.stroke = am4core.color("#ff914d"); // orange
+        series.tooltip.getFillFromObject = false;
+        series.tooltip.background.fill = am4core.color("#ff914d");
+
+        var series2 = chart.series.push(new am4charts.LineSeries());
+        series2.dataFields.valueY = "form2cnt";
+        series2.dataFields.categoryX = "date";
+        series2.name = "Audit of the WSP";
+        series2.tooltipText = "{name}: [bold]{valueY}[/]";
+        series2.strokeWidth = 3;
+        series2.stroke = am4core.color("#2a4a3d"); // green
+        series2.tooltip.getFillFromObject = false;
+        series2.tooltip.background.fill = am4core.color("#2a4a3d");
+
+        var series3 = chart.series.push(new am4charts.LineSeries());
+        series3.dataFields.valueY = "form3cnt";
+        series3.dataFields.categoryX = "date";
+        series3.name = "Direct Assessment Form";
+        series3.tooltipText = "{name}: [bold]{valueY}[/]";
+        series3.strokeWidth = 3;
+        series3.stroke = am4core.color("#8a8a8a"); // grey
+        series3.tooltip.getFillFromObject = false;
+        series3.tooltip.background.fill = am4core.color("#8a8a8a");
+
+        // Add cursor
+        chart.cursor = new am4charts.XYCursor();
+
+        // Add legend
+        chart.legend = new am4charts.Legend();
+
+
+
+    //------Pie chart province wise
+        am4core.ready(function () {
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            am4core.addLicense("ch-custom-attribution");
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("datacolprovincewise", am4charts.PieChart);
+
+            chart.exporting.menu = new am4core.ExportMenu();
+            chart.exporting.menu.items = [
+                {
+                    "label": "...",
+                    "menu": [
+                        {
+                            "label": "Image",
+                            "menu": [
+                                { "type": "png", "label": "PNG" },
+                                { "type": "pdfdata", "label": "PDF" },
+                                { "type": "jpg", "label": "JPG" },
+                                { "type": "svg", "label": "SVG" }
+                            ]
+                        },
+                        {
+                            "label": "Print",
+                            "type": "print"
+                        }
+                    ]
+                }
+            ];
+
+            var piedata = @Json.Serialize(DataCollectionCountProvince);
+
+            // Add and configure Series
+            var pieSeries = chart.series.push(new am4charts.PieSeries());
+            pieSeries.dataFields.value = "litres";
+            pieSeries.dataFields.category = "country";
+
+            pieSeries.ticks.template.disabled = true;
+            pieSeries.alignLabels = false;
+            pieSeries.labels.template.text = "{value.percent.formatNumber('#.0')}%";
+            pieSeries.labels.template.radius = am4core.percent(-20);
+            pieSeries.labels.template.fill = am4core.color("white");
+
+            chart.legend = new am4charts.Legend();
+            pieSeries.slices.template.propertyFields.fill = "color"; // Apply colors to pie slices
+            chart.legend.disabled = false;
+
+            // Define an array of colors for each province
+            var colors = ["#5e3967", "#895273", "#6ce5e8", "#41b8d5", "#2d8bba", "#2f5f98", "#31356e"];
+            console.log(piedata);
+            // Prepare chart data with dynamic colors
+            chart.data = piedata.map((item, index) => ({
+                "country": "Province" + item.province_code,
+                "litres": item.form1count + item.form2count + item.form3count,
+                "color": colors[index % colors.length] // Assign colors cyclically
+            }));
+
+            // Handle the percentage validation event
+            var step = 1;
+            pieSeries.events.on("datavalidated", function (ev) {
+                pieSeries.dataItems.each(function (dataItem) {
+                    var percent = dataItem.values.value.percent;
+                    // Perform custom logic with percent here if needed
+                    step = step + 1;
+                });
+            });
+        });
+
+
+</script>
+
+
