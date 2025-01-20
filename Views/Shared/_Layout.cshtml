@@ -1,0 +1,376 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var contextHost = HttpContextAccessor.HttpContext.Request.Host;
+    var usertyp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups");
+    var province = HttpContextAccessor.HttpContext.Session.GetString("SProvince");
+    var municipality = HttpContextAccessor.HttpContext.Session.GetInt32("SMunicipality");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="NWASH System">
+    <meta name="keywords" content="NWASH, Wash, Water supply, Sanitation, SGD, Wash plan, Nepal, water, dwss" />
+    @if (contextHost.Host.Contains("training"))
+    {
+        <title>@ViewData["Title"] - NWASH Training</title>
+    }
+    else
+    {
+        <title>@ViewData["Title"] - NWASH</title>
+    }
+
+    <link rel="shortcut icon" href="~/images/logos/NWASH.svg" />
+    <link rel="stylesheet" href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/solid.min.css" crossorigin="anonymous">
+    @*  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">*@
+    <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/DataTables/media/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/styles.css" />
+    @*<link href="~/css/loading-bar.css" rel="stylesheet" />*@
+    <link href="~/css/barber-shop.css" rel="stylesheet" />
+    <link href="~/css/modalbox.css" rel="stylesheet" />
+    <link href="~/css/WPDashboard.css" rel="stylesheet" />
+    <link href="~/css/aos.css" rel="stylesheet" />
+    <link href="~/css/select2.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/select2.min.js"></script>
+
+    <script defer src="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/js/solid.min.js"></script>
+    @*    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+    *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/styles.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="~/lib/DataTables/media/js/jquery.dataTables.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/pace.js"></script>
+    <script src="~/js/aos.js"></script>
+    <script src="~/js/amchart 4/core.js"></script>
+    <script src="~/js/amchart 4/chart.js"></script>
+    <script src="~/js/amchart 4/animated.js"></script>
+    <script src="~/js/amchart 4/frozen.js"></script>
+    <script src="~/js/amchart 4/kelly.js"></script>
+    <script>
+        function TitleLoad(typ, prov_mun) {
+            $.ajax({
+                type: "POST",
+                url: '/Dashboard/GetMunProvName',
+                data: { 'typ': typ, 'prov_mun': prov_mun },
+                success: function (data) {
+                    if (typ == "mun") {
+                        var spanElement1 = $('#titleDiv');
+                        spanElement1.text(data.munName + ", Office of Municipal Executive");
+                        var spanElement2 = $('#titleDiv2');
+                        spanElement2.text(data.districtName);
+
+                    }
+                    var spanElement3 = $('#titleDiv3');
+                    spanElement3.text(data.provinceName + ", Nepal");
+
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }</script>
+    <style>
+        .activity_table > thead > tr > td {
+            vertical-align: middle;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .activity_table > thead > tr > th {
+            vertical-align: middle;
+            text-align: center;
+            background: white;
+        }
+
+        .other_service > thead > tr > td {
+            vertical-align: middle;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .other_service > tbody > tr > td {
+            z-index: 5;
+        }
+
+        .other_service > thead tr:nth-child(1) td {
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .other_service > thead tr:nth-child(2) td {
+            background: white;
+            position: sticky;
+            top: 48px;
+            z-index: 11;
+        }
+
+        .other_service > thead tr:nth-child(3) td {
+            background: white;
+            position: sticky;
+            top: 90px;
+            z-index: 12;
+        }
+
+        .activity_table > thead tr:nth-child(1) td {
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .activity_table > thead tr:nth-child(1) th {
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .activity_table > thead tr:nth-child(2) td {
+            background: #e9f5f4;
+            position: sticky;
+            top: 48px;
+            z-index: 11;
+        }
+
+        .activity_table > thead tr:nth-child(2) th {
+            background: white;
+            position: sticky;
+            top: 48px;
+            z-index: 11;
+        }
+
+        .activity_table > thead tr:nth-child(3) td {
+            background: #e9f5f4;
+            position: sticky;
+            top: 90px;
+            z-index: 12;
+        }
+
+        .crunchify-top {
+            display: none;
+            position: fixed;
+            bottom: 6rem;
+            right: 1rem;
+            width: 3.2rem;
+            height: 3.2rem;
+            line-height: 3.2rem;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .bsv {
+            width: 210mm;
+            padding: 15mm 20mm;
+            margin: 10mm auto;
+            border: 1px #D3D3D3 solid;
+            border-radius: 0px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .lbl-strong {
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="MainDiv" class="page-wrapper chiller-theme toggled">
+        <partial name="_MenuView" />
+        <main class="page-content" style="padding-top: 0px !important;">
+            <div class="container-fluid" style="padding-top: 0px !important; padding-left: 20px !important; margin-left:10px;">
+                <div class="container-fluid" style="float: left; position: fixed; padding-top: 20px; padding-bottom: 20px; top: 0px;background: #fff !important;z-index: 999;">
+                    <div style="float:left;">
+                        @{
+                            var typ = "";
+                            if (usertyp == null)
+                            {
+                                typ = "Index";
+                            }
+                            else if (usertyp == 7 || (int)usertyp == 8 || (usertyp == 3 && province != "0" && province != null && (municipality == 0 || municipality == null)))
+                            {
+                                typ = "ProIndex";
+                            }
+                            else if ((int)usertyp == 5 || (int)usertyp == 6 || (usertyp == 3 && (municipality != 0 && municipality != null)))
+                            {
+                                typ = "MunIndex";
+                            }
+                            else
+                            {
+                                typ = "Index";
+                            }
+                        }
+                        <a class="item" asp-area="" asp-controller="Dashboard" asp-action="@typ">
+                            @if (usertyp == null)
+                            {
+                                <img src="~/images/logos/nwash_logo.png" class="img-responsive" alt="Ministry of Water Supply &amp; Sanitation" style="width: 80%;">
+                            }
+                            else if (usertyp == 7 || (int)usertyp == 8 || (usertyp == 3 && province != "0" && province != null && (municipality == 0 || municipality == null))) //province edit/admin
+                            {
+                                <div class="row">
+                                    <div class="col-1 pr-0">
+                                        <img src="~/images/logos/Nepal.png" class="img-responsive" alt="Ministry  &amp; " style="width: 80%;" onload="TitleLoad('prov',@Convert.ToInt32(province))">
+                                    </div>
+                                    <div class="col pl-0">
+                                        <span class="font-weight-bold" id="titleDiv3" style="color:#953c57;font-size:20px"></span>
+                                    </div>
+                                </div>
+                            }
+                            else if ((int)usertyp == 5 || (int)usertyp == 6 || (usertyp == 3 && (municipality != 0 && municipality != null))) //mun edit/admin
+                            {
+                                <div class="row">
+                                    <div class="col-1 pr-0">
+                                        <img src="~/images/logos/Nepal.png" class="img-responsive" alt="Ministry  &amp; " style="width: 80%;" onload="TitleLoad('mun', @municipality)">
+                                    </div>
+                                    <div class="col" style="margin-left:-30px">
+                                        <span class="font-weight-bold pl-0" style="color:#953c57;font-size:20px;" id="titleDiv"></span><br />
+                                        <span class="pl-0" id="titleDiv2" style="color:#953c57;"></span><br />
+                                        <span class="pl-0" id="titleDiv3" style="color:#953c57;"></span>
+                                    </div>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <img src="~/images/logos/nwash_logo.png" class="img-responsive" alt="Ministry of Water Supply &amp; Sanitation" style="width: 80%;">
+                            }
+                            @*<h5 class="ui red header" style=" margin: 0px !important; padding-left: 20%; color: #002f84; ">
+                            Government of Nepal <br />
+                            Ministry of Water Supply<br />
+                            Singhadurbar, Kathmandu, Nepal<br />
+                            NWASH
+                            </h5>*@
+                        </a>
+                    </div>
+                    <div style="float:right">
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="width: 40%; right:10px; position: fixed;">
+                                <strong>Error!!</strong> <br />@TempData["ErrorMessage"]
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        else if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert" style="width: 40%; right:10px; position: fixed;">
+                                <strong>Congratulations!!</strong><br />  @TempData["SuccessMessage"]
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                        else if (TempData["WarningMessage"] != null)
+                        {
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="width: 40%; right:10px; position: fixed;">
+                                <strong>Warning!!</strong><br />  @TempData["WarningMessage"]
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div class="dropdown-divider" style="border-top: 1px solid #002f84;"></div>
+                    @if (contextHost.Host.Contains("training"))
+                    {
+                        <div class="container-fluid" style="background:#0330467a; padding:5px; float:left;">
+                            <h5 style="margin-bottom:0px;">@ViewData["Title"]</h5>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="container-fluid" id="namefield" style="background:#e9ebf4; padding:5px; float:left;">
+                            <h5 style="margin-bottom:0px;">@ViewData["Title"]</h5>
+                        </div>
+                    }
+                    <div style="clear: both;"></div>
+                </div>
+                @if (usertyp == null)
+                {
+                    <div class="content" id="subDiv" style="margin-top:160px; margin-left: 15px;">
+                        @RenderBody()
+                    </div>
+                }
+                else if (usertyp == 7 || (int)usertyp == 8 || (usertyp == 3 && province != "0" && province != null && (municipality == 0 || municipality == null))) //province edit/admin
+                {
+                    <div class="content" id="subDiv" style="margin-top:180px; margin-left: 15px;">
+                        @RenderBody()
+                    </div>
+                }
+                else if ((int)usertyp == 5 || (int)usertyp == 6 || (usertyp == 3 && (municipality != 0 && municipality != null))) //mun edit/admin
+                {
+                    <div class="content" id="subDiv" style="margin-top:180px; margin-left: 15px;">
+                        @RenderBody()
+                    </div>
+                }
+                else
+                {
+                    <div class="content" id="subDiv" style="margin-top:160px; margin-left: 15px;">
+                        @RenderBody()
+                    </div>
+                }
+            </div>
+        </main>
+        <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+    @*   <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/frozen.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/kelly.js"></script>*@
+    <script src="~/js/amchart 4/dataviz.js"></script>
+    <script src="~/js/tus.min.js"></script>
+
+
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    @RenderSection("Scripts", required: false)
+    <script>
+
+        $(document).ready(function () {
+            $('#UserAll').DataTable({
+                "iDisplayLength": 10,
+                "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
+            });
+            $('#LabData').DataTable({
+                "iDisplayLength": 10,
+                "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
+            });
+
+            //$('#allMun').DataTable({
+            //    "iDisplayLength": 10,
+            //    "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
+            //});
+        });
+        $(".alert").delay(6000).slideUp(10000, function () {
+            $(this).alert('close');
+        });
+
+
+    </script>
+
+
+</body>
+
+</html>

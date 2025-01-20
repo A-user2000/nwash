@@ -1,0 +1,8 @@
+CASE WHEN a.toilet_type='No' THEN 'No Toilet'
+        WHEN a.toilet_type = 'Hanging' or a.toilet_type = 'Bucket' THEN 'Unimproved'
+        WHEN a.private_toilet = 'No' THEN 'Limited'
+        WHEN a.private_toilet = 'Yes' and a.presence_of_handwashing = 'Yes' and a.soap_hand_washing_facilities = 'Yes' and a.presence_of_water_in_toilet='Yes' and 
+(a.toilet_connection='सेप्टिक ट्यांक' or a.toilet_connection='Septic tank' or a.toilet_connection='डबल लिच पिट'
+or a.toilet_connection='डबल पिट' or a.toilet_connection = 'Double Leach Pit (Dry wall/Ring)'
+a.toilet_connection = 'पिट भरिएको छैन' or a.toilet_connection='पिट भरिएपछि लगेर प्रशोधन गरिन्छ' or a.toilet_connection='पिट प्रशोधन सहितको ढलमा जोडेको छ') THEN 'Safely Managed'
+        ELSE 'Basic'

@@ -1,0 +1,19 @@
+/*html, body
+{
+    height: 100%;
+    margin: 0;
+    padding: 0px;
+    overflow: scroll;
+}*/
+
+#canvas1 
+{
+  width: 297px;
+  height: 210px;
+  background: rgb(138, 135, 135);
+}
+#canvas11 {
+    width: 297px;
+    height: 210px;
+    background: rgb(138, 135, 135);
+}

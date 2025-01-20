@@ -1,0 +1,25 @@
+﻿@page portrait_A4_page {
+    size: 595.3pt 841.9pt;
+    margin: 72.0pt 72.0pt 72.0pt 72.0pt;
+    mso-header-margin: 35.4pt;
+    mso-footer-margin: 35.4pt;
+    mso-paper-source: 0;
+}
+
+div.portrait_A4_page {
+    page: portrait_A4_page;
+}
+
+@page Divlandscape {
+    size: 841.9pt 595.3pt;
+    mso-page-orientation: landscape;
+    margin: 72.0pt 72.0pt 72.0pt 72.0pt;
+    mso-header-margin: 35.45pt;
+    mso-footer-margin: 35.45pt;
+    mso-paper-source: 0;
+    transform:r;
+}
+
+div.Divlandscape {
+    page: Divlandscape;
+}

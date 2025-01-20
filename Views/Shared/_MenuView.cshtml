@@ -1,0 +1,708 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var contextHost = HttpContextAccessor.HttpContext.Request.Host;
+    var usertyp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups");
+    var province = HttpContextAccessor.HttpContext.Session.GetString("SProvince");
+    var municipality = HttpContextAccessor.HttpContext.Session.GetInt32("SMunicipality");
+}
+<a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+    <i class="fas fa-bars"></i>
+
+</a>
+
+@if (contextHost.Host.Contains("training"))
+{
+    <style>
+        .navcolor {
+            background-color: #023047 !important;
+        }
+    </style>
+}
+else
+{
+    <style>
+        .navcolor {
+            background-color: #002F84 !important;
+        }
+    </style>
+}
+<nav id="sidebar" class="sidebar-wrapper navcolor" style=" color: #fff !important;z-index:1100;">
+    <div class="sidebar-content">
+        <div class="sidebar-brand">
+            @{
+                var typ = "";
+                if (usertyp == null)
+                {
+                    typ = "Index";
+                }
+                else if (usertyp == 7 || (int)usertyp == 8 || (usertyp == 3 && province != "0" && province != null && (municipality == 0 || municipality == null)))
+                {
+                    typ = "ProIndex";
+                }
+                else if ((int)usertyp == 5 || (int)usertyp == 6 || (usertyp == 3 && (municipality != 0 && municipality != null)))
+                {
+                    typ = "MunIndex";
+                }
+                else
+                {
+                    typ = "Index";
+                }
+            }
+            @if (contextHost.Host.Contains("training"))
+            {
+                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">NWASH - Training</a>
+            }
+            else
+            {
+                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">NWASH</a>
+            }
+            <div id="close-sidebar">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("SUserID")))
+        {
+            <div class="sidebar-header">
+                <div class="user-pic">
+                    <img src="~/images/logos/nwashIcnUser.png" alt="Avatar" class="avatar img-responsive img-rounded" style="width: 45px;">
+                </div>
+                <div class="user-info">
+                    <span class="user-name" style="color: #fff !important;">
+                        <strong>@HttpContextAccessor.HttpContext.Session.GetString("SName")</strong>
+                    </span>
+                    @if (HttpContextAccessor.HttpContext.Session.GetInt32("SUserCat") == 1)
+                    {
+                        <span class="user-role">@HttpContextAccessor.HttpContext.Session.GetString("SUserType")</span>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- sidebar-header  -->
+        <div class="sidebar-menu" style="font-size: 10pt;">
+            <ul>
+                <!--- Home -->
+                <li class="sidebar-dropdown">
+                    <a class="item" href="#">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a class="item" href="#">
+                                    <i class="fas fa-info"></i>
+                                    <span>About Us</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item" asp-area="" asp-controller="Faqs" asp-action="Index">
+                                    <i class="fa fa-question-circle"></i>
+                                    <span>FAQs</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item" asp-area="" asp-controller="Documents" asp-action="Index" title="Reference Documents">
+                                    <i class="fa fa-file"></i>
+                                    <span>Reference Documents</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                <!--- National Data Profile -->
+                <li class="sidebar-dropdown">
+                    <a class="item" href="#">
+                        <i class="fa fa-database" aria-hidden="true"></i>
+                        <span>National Data Profile</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a asp-area="" asp-controller="ProjectData" asp-action="Index" title="Inventory Data">
+                                    <i class="fa fa-tasks"></i>
+                                    <span>Water Supply Project</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Tubewell" asp-action="Index" title="Tubewell Data">
+                                    <i class="fa fa-faucet"></i>
+                                    <span>Tubewell Data</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item" asp-area="" asp-controller="WashData" asp-action="Index" title="Wash Data">
+                                    <i class="fas fa-hands-wash"></i>
+                                    <span>Wash Data</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item" asp-area="" asp-controller="DataSummary" asp-action="Index" title="Data Summary Tables">
+                                    <i class="fas fa-hands-wash"></i>
+                                    <span>Data Summary Table</span>
+                                </a>
+                            </li>
+                            @if ((municipality == 30803 && (usertyp == 6 || usertyp == 5)) || usertyp == 1)
+                            {
+                                <li>
+                                    <a class="item" asp-area="" asp-controller="SolidWasteManagement" asp-action="Index" title="Solid Waste Management">
+                                        <i class="fas fa-hands-wash"></i>
+                                        <span>Solid Waste Management</span>
+                                    </a>
+                                </li>
+                            }
+                            <li>
+                            <li>
+                                <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="Index" title="Water Quality Data">
+                                    <i class="fas fa-water"></i>
+                                    <span>Water Quality</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item" asp-area="" asp-controller="FuncReport" asp-action="AgencyReport">
+                                    <i class="fas fa-building"></i>
+                                    <span>Agency Summary</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <!--- Provincial Dashboards -->
+                <li class="sidebar-dropdown">
+                    <a class="item" href="#">
+                        <i class="fa fa-cubes" aria-hidden="true"></i>
+                        <span>Provincial Dashboard</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="DashboardMiniProvince" asp-route-province="1" title="Koshi Dashboard" target="_blank">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Koshi Province</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="DashboardMiniProvince" asp-route-province="2" title="Madhesh Dashboard" target="_blank">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Madhesh Province</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="DashboardMiniProvince" asp-route-province="3" title="Bagmati Dashboard" target="_blank">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Bagmati Province</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="DashboardMiniProvince" asp-route-province="4" title="Gandaki Dashboard" target="_blank">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Gandaki Province</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="DashboardMiniProvince" asp-route-province="5" title="Lumbini Dashboard" target="_blank">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Lumbini Province</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="DashboardMiniProvince" asp-route-province="6" title="Karnali Dashboard" target="_blank">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Karnali Province</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Dashboard" asp-action="DashboardMiniProvince" asp-route-province="7" title="Sudurpaschim Dashboard" target="_blank">
+                                    <i class="fa fa-folder"></i>
+                                    <span>Sudurpaschim Province</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                @*  wash plan report and wash status Report Download *@
+                @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("SUserID")))
+                {
+                    <li class="sidebar-dropdown">
+                        <a class="item" href="#">
+                            <i class="fas fa-city"></i>
+                            <span>WASH Report</span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                <li>
+                                    <a class="item" asp-area="" asp-controller="WashPlan" asp-action="ApprovedDocIndex">
+                                        <i class="fas fa-mobile"></i>
+                                        <span>WASH Plan Report</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="item" asp-area="" asp-controller="WashStatusReport" asp-action="Index">
+                                        <i class="fa fa-table"></i>
+                                        <span>WASH Status Report</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                }
+                <!--- Map  -->
+                <li>
+                    @if (contextHost.Host.Contains("training"))
+                    {
+                        <a class="item" asp-area="" asp-controller="Map" asp-action="TrainingIndex" target="_blank">
+                            <i class="fas fa-map"></i>
+                            <span>Map</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="item" asp-area="" asp-controller="Map" asp-action="Index" target="_blank">
+                            @*<a class="item" href="https://nwash2.softwel.com.np/Map" target="_blank">*@
+                            <i class="fas fa-map"></i>
+                            <span>Map</span>
+                        </a>
+                    }
+
+                </li>
+                <li>
+                    <a class="item" href="https://sp.nwash.gov.np/" target="_blank">
+                        <i class="fas fa-toolbox"></i>
+                        <span>Service Provider Tool</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="item" asp-area="" asp-controller="ApkDownload" asp-action="Index" target="_blank">
+                        <i class="fas fa-mobile"></i>
+                        <span>NWASH App Store</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="item" asp-area="" asp-controller="MunicipalityCarousel2" asp-action="Index">
+                        <i class="fas fa-camera"></i>
+                        <span>Media Carousel</span>
+                    </a>
+                </li>
+
+                @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("SUserID")))
+                {
+                    if (HttpContextAccessor.HttpContext.Session.GetInt32("SUserCat") == 1)
+                    {
+                        <!--- Inventory Assessment -->
+                        <li class="sidebar-dropdown">
+                            <a class="item" href="#" title="Inventory Assessment">
+                                <i class="fas fa-tasks"></i>
+                                <span>Inventory Assessment</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="Indicator" asp-action="Index" title="Functionality and Sustaianability Indicator">
+                                            <i class="fas fa-edit"></i>
+                                            <span>F&S Indicator</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="CostEstimation" asp-action="Index" title="Inventory Cost Estimation">
+                                            <i class="fas fa-rupee-sign"></i>
+                                            <span>Inventory Estimation</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="FuncReport" asp-action="Index" title="Functionality Report">
+                                            <i class="fas fa-file"></i>
+                                            <span>Functionality Report</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="FuncReport" asp-action="TapReport">
+                                            <i class="fas fa-faucet"></i>
+                                            <span>Tap Report</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <!--- WashPlan -->
+                        <li class="sidebar-dropdown">
+                            <a class="item" href="#" title="Washplan">
+                                <i class="fa fa-hand-holding-water"></i>
+                                <span>WaSH Plan</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="wpdashboard" asp-action="Index">
+                                            <i class="fa fa-stopwatch"></i>
+                                            <span>WaSH Plan Tools</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="JMP" asp-action="Index">
+                                            <i class="fa fa-stopwatch"></i>
+                                            <span>
+                                                Service Level Indicator
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WPSdgProvince" asp-action="Index">
+                                            <i class="fa fa-globe"></i>
+                                            <span>WaSH SDG</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WashGovernance" asp-action="Index">
+                                            <i class="fa fa-check-circle"></i>
+                                            <span>WaSH Governance</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="Washplan" asp-action="Rates">
+                                            <i class="fas fa-coins"></i>
+                                            <span>Rate Data</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" href="#">
+                                            <i class="fas fa-tasks"></i>
+                                            <span>Reference Data</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <!--- Project Bank -->
+                        <li>
+                            <a class="item" asp-area="" asp-controller="ProjectBank" asp-action="Index">
+                                <i class="fas fa-university"></i>
+                                <span>Project Bank</span>
+                            </a>
+                        </li>
+                        <!--- Water Quality -->
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-tint"></i>
+                                <span>Water Quality</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="WQParameter">
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                            WQ Scheme-Wise
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="WQScheme">
+                                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                                            WQ Parameter-Wise
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="SanitaryInspection" asp-action="Index">
+                                            <i class="fa fa-toilet"></i>
+                                            <span>Sanitary Inspection</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WqTestData" asp-action="Index">
+                                            <i class="fas fa-flask"></i>
+                                            <span>WQ Test Data</span>
+                                        </a>
+                                    </li>
+
+                                    @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 2 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 5 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 7)
+                                    {
+                                        if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1)
+                                        {
+                                            @* <li>
+                            <a class="item" asp-area="" asp-controller="WqDataMigrate" asp-action="Index">
+                            <i class="fas fa-arrows-cross"></i>
+                            <span>WQ Data Migrate</span>
+                            </a>
+                            </li>*@
+                                        }
+                                        <li>
+                                            <a class="item" asp-area="" asp-controller="Lab" asp-action="Index">
+                                                <i class="fas fa-tags"></i>
+                                                <span>Lab Module</span>
+                                            </a>
+                                        </li>
+                                        @*  <li>
+                            <a class="item" href="#">
+                            <i class="fa fa-flask"></i>
+                            <span>Lab Network</span>
+                            </a>
+                            </li>            *@
+                                    }
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="HHArsenicResult">
+                                            <i class="fa fa-history"></i>
+                                            <span>Arsenic Data</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <!--- Municipal Input -->
+                        <li class="sidebar-dropdown">
+                            <a class="item" href="#">
+                                <i class="fas fa-city"></i>
+                                <span>Municipal Input</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="MunProfile" asp-action="Main">
+                                            <i class="fa fa-building"></i>
+                                            <span>Municipality Profile</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="CensusData" asp-action="Index">
+                                            <i class="fa fa-table"></i>
+                                            <span>Census Data</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-action="WpProgressData" asp-controller="Washplan">
+                                            <i class="fas fa-check-circle"></i>
+                                            Progress Details
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="Documents" asp-action="UserDocumentation">
+                                            <i class="fa fa-file"></i>
+                                            <span>Documentation</span>
+                                        </a>
+                                    </li>
+                                    @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1)
+                                    {
+                                        <li>
+                                            <a class="item" asp-area="" asp-controller="MunicipalData" asp-action="Index">
+                                                <i class="fa fa-file"></i>
+                                                <span>Municipal Data</span>
+                                            </a>
+                                        </li>
+
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1)
+                        {
+                            <li>
+                                <a class="item" asp-area="" asp-controller="HelvetasDashboard" asp-action="Index">
+                                    <i class="fa fa-bullhorn"></i>
+                                    <span>Municipal Dashboard</span>
+                                </a>
+                            </li>
+                        }
+
+
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 2 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 5 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 7)
+                        {
+                            <li class="sidebar-dropdown">
+                                <a href="#">
+                                    <i class="fas fa-cogs"></i>
+                                    <span>Projects</span>
+                                </a>
+                                <div class="sidebar-submenu">
+                                    <ul>
+                                        <li>
+                                            <a class="item" asp-area="" asp-controller="Project" asp-action="AddProjects">
+                                                <i class="fa fa-plus"></i>
+                                                <span>Add Projects</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="item" asp-area="" asp-controller="Project" asp-action="Index">
+                                                <i class="fas fa-list"></i>
+                                                <span>Project Lists</span>
+                                            </a>
+                                        </li>
+                                        @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1)
+                                        {
+                                            <li>
+                                                <a class="item" asp-area="" asp-controller="Project" asp-action="InvAgency">
+                                                    <i class="fas fa-building" aria-hidden="true"></i>
+                                                    <span>Agency</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1)
+                        {
+                            <li>
+                                <a class="item" asp-area="" asp-controller="DataExport" asp-action="Index">
+                                    <i class="fas fa-file"></i>
+                                    <span>Export Data</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a class="item" asp-area="" asp-controller="QueryBuilder" asp-action="Index">
+                                <i class="fas fa-filter"></i>
+                                <span>Query Builder</span>
+                            </a>
+                        </li>
+                        <li class="header-menu">
+                            <span>User Management</span>
+                        </li>
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 2 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 5 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 7)
+                        {
+                            <li>
+                                <a class="item" asp-area="" asp-controller="Users" asp-action="Index">
+                                    <i class="fa fa-user"></i>
+                                    <span>User Registration</span>
+                                </a>
+                            </li>
+                        }
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1)
+                        {
+                            <li>
+                                <a class="item" asp-area="" asp-controller="WqLab" asp-action="Index">
+                                    <i class="fa fa-flask" aria-hidden="true"></i>
+                                    <span>Lab Registration</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="item" asp-area="" asp-controller="DashboardNotices" asp-action="Index">
+                                    <i class="fa fa-clipboard"></i>
+                                    <span>Notice Board Update</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="item" asp-area="" asp-controller="DownloadGis" asp-action="Index">
+                                    <i class="fa fa-globe"></i>
+                                    <span>Download GIS</span>
+                                </a>
+                            </li>
+
+
+                        }
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 1 || HttpContextAccessor.HttpContext.Session.GetInt32("SGroups") == 5)
+                        {
+                            <li>
+                                <a class="item" asp-area="" asp-controller="InventoryUpload" asp-action="Index">
+                                    <i class="fa fa-upload"></i>
+                                    <span>Upload Inventory</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="item" asp-area="" asp-controller="WSCPlotting" asp-action="Index">
+                                    <i class="fa fa-map-pin"></i>
+                                    <span>WSC Plotting</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Users" asp-action="ChangePassword">
+                                <i class="fa fa-lock"></i>
+                                <span>Change Password</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Login" asp-action="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <!--- Water Quality -->
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-tint"></i>
+                                <span>Water Quality</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="WQParameter">
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                            WQ Scheme-Wise
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="WQScheme">
+                                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                                            WQ Parameter-Wise
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="SanitaryInspection" asp-action="Index">
+                                            <i class="fa fa-toilet"></i>
+                                            <span>Sanitary Inspection</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" href="#">
+                                            <i class="fa fa-flask"></i>
+                                            <span>Lab Network</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Lab" asp-action="Index">
+                                <i class="fas fa-flask"></i>
+                                <span>Lab Module</span>
+                            </a>
+                        </li>
+
+                        <li class="header-menu">
+                            <span>User Management</span>
+                        </li>
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Users" asp-action="ChangePassword">
+                                <i class="fa fa-lock"></i>
+                                <span>Change Password</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Login" asp-action="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li>
+                        <a class="item" asp-area="" asp-controller="Login" asp-action="Index">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Log In</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <!-- sidebar-menu  -->
+    </div>
+    <!-- sidebar-content  -->
+</nav>
+<!-- sidebar-wrapper  -->

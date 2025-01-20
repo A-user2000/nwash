@@ -1,0 +1,164 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.Dto.Form3Dto>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var contextHost = HttpContextAccessor.HttpContext.Request.Host;
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Form 3 Data - NWASH</title>
+    <link rel="stylesheet" href="~/css/doc.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="shortcut icon" href="~/images/logos/NWASH.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
+    @*  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">*@
+    <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.css" rel="stylesheet" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/styles.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <style>
+        .bsv {
+            width: 275mm;
+            padding: 15mm 20mm;
+            margin: 10mm auto;
+            border: 1px #D3D3D3 solid;
+            border-radius: 0px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container-fluid" style="float: left; position: fixed; padding-top: 20px; padding-bottom: 20px; top: 0px;background: #fff !important;z-index: 999;">
+        <div style="float:left;">
+            <a class="item" asp-area="" asp-controller="Dashboard" asp-action="Index">
+                <img src="~/images/logos/nwash_logo.png" class="img-responsive" alt="Ministry of Water Supply &amp; Sanitation" style="width: 80%;">
+            </a>
+        </div>
+        <div style="clear:both;"></div>
+        <div class="dropdown-divider" style="border-top: 1px solid #002f84;"></div>
+
+        <div style="clear: both;"></div>
+        @if (contextHost.Host.Contains("training"))
+        {
+            <div class="container-fluid" style="background:#0330467a; padding:5px; float:left;">
+                <h5 style="margin-bottom:0px;">अनुगमनको समयमा प्रणालीको अवस्था</h5>
+            </div>
+        }
+        else
+        {
+            <div class="container-fluid" style="background:#e9ebf4; padding:5px; float:left;">
+                <h5 style="margin-bottom:0px;">
+                    अनुगमनको समयमा प्रणालीको अवस्था
+                </h5>
+            </div>
+        }
+
+    </div>
+    <div class="bsv" style="margin-top:165px;">
+
+
+        <div class="table-responsive">
+            <table class="table table-borderless" style="width:90%;">
+               @*  <table class="table table-borderless" style="width:90%;">
+                    <tr><td>Name of schema</td><td>data</td></tr>
+                    <tr><td>Project code</td><td>@Model.ProCode</td></tr>
+                    <tr><td>Address</td><td>@Model.Address</td></tr>
+                    <tr><td>Total HH served</td><td>@Model.TotalHhServed</td> </tr>
+                    <tr>
+                        <td>Population served</td>
+                        <td>@Model.TotalPop</td>
+                    </tr>
+
+            </table> *@
+            <div style="color:#002F84;">
+                <h4 style="text-align: center;">
+                    प्रणालीको अनुगमन गरेको स्थान  र अवस्था
+                </h4>
+            </div>
+            <style>
+                .form-table3 {
+                    border-collapse: collapse;
+                    width: 100%;
+                    border: 1px solid black; /* Outer border */
+                }
+
+                .form-table3 td {
+                    border: 1px solid black; /* Inner borders for rows and columns */
+                    text-align: center;
+                }
+            </style>
+
+
+
+<table class="form-table3">
+    <thead>
+        <tr>
+            <td rowspan="2">महिना</td>
+            <td colspan="5">विरामी संख्या</td>
+        </tr>
+        <tr>
+            <td>झाडापखाला</td>
+            <td>हैजा</td>
+            <td>टाईफाईड</td>
+            <td>आउँ</td>
+            <td>हेपाटाईटीस "ए"<td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Month</td>
+                <td>@item.DiarrheaCount</td>
+                <td>@item.CholeraCount</td>
+                <td>@item.TyphoidCount</td>
+                <td>@item.DysenteryCount</td>
+                <td>@item.HepatitisCount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+        </div>
+
+
+    </div>
+    <div id="imgModal" class="modal fade">
+        <div class="modal-dialog modal-lg" style="width: auto !important; display: block !important;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" title="Close">&times;</button>
+                    <br />
+                    <center><img class="showimage img-fluid" src="" /></center>
+                    <br />
+                    <a class="dlod btn btn-outline-primary btn-sm" href="" download style="float:right;" title="Download"><i class="fa fa-download"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('img').on('click', function () {
+                var image = $(this).attr('src');
+                //alert(image);
+                $('#imgModal').on('show.bs.modal', function () {
+                    $(".showimage").attr("src", image);
+                    $(".dlod").attr("href", image);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

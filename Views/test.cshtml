@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.WqSurvellianceMain>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var munCode = ViewData["munCode"] as string;
+
+    // var sGrp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups"); //acutual code
+    var sGrp = 10;
+    var sMun = HttpContextAccessor.HttpContext.Session.GetInt32("SMunicipality");
+    var sDcode = HttpContextAccessor.HttpContext.Session.GetInt32("SDistrict");
+    var sProvince = HttpContextAccessor.HttpContext.Session.GetInt32("SProvince");
+    var sn = 1;
+}
+<div class="table-responsive" style="width:85%; margin: 0 auto;">
+    <table id="SanitaryInd" class="table table-bordered table-striped" border="1">
+        <thead>
+            <tr style="background: #e8ecfd;">
+                <th>S. No.</th>
+                <th>Name of Scheme</th>
+                <th>Project Code</th>
+                <th>Available Forms</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                string uuid = item.Uuid;
+
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(uuid);
+                string encodedUUID = System.Convert.ToBase64String(plainTextBytes);
+                <tr>
+                    <td>@sn</td>
+                    <td>@item.Surveyor</td>
+                    <td>@item.ProjectName</td>
+                    <td>@item.ProjectName</td>
+                    <td>
+                        @*   <a asp-action="FormViewA" asp-route-encode="@encodedFormId" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+
+                        <a asp-controller="Home" asp-action="Form1AEdit" asp-route-id="@encodedFormId" class="btn btn-sm btn-outline-info" target="_blank">Edit</a> *@
+
+
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#SanitaryInd').DataTable({
+            "iDisplayLength": 10,
+            "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
+        });
+    });
+
+    function delete_tubewell_data(uuid) {
+        if (confirm('Are you sure to delete this data?')) {
+            $.ajax({
+                type: "POST",
+                url: '/Tubewell/TubewellDataDelete',
+                data: { 'id': uuid },
+                success: function (data) {
+                    if (data == 1) {
+                        alert("Data Deleted Successfully.");
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                    }
+                    tdataLoad();
+                },
+                failure: function () {
+                    alert('Something went wrong. Please try again');
+                }
+            });
+
+        }
+    }
+</script>
