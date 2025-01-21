@@ -8,17 +8,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Wq_Surveillance.Models;
+using Wq_Surveillance.NwashModels;
 
 namespace Wq_Surveillance.Controllers
 {
     public class SystemController : Controller
     {
         private readonly WqsContext _wqsContext;
+        private readonly NwashContext _nwashContext;
         private readonly ISession session;
 
-        public SystemController(WqsContext nwash_dnContext, IHttpContextAccessor HttpContextAccessor)
+        public SystemController(WqsContext nwash_dnContext, IHttpContextAccessor HttpContextAccessor, NwashContext nwashContext)
         {
             _wqsContext = nwash_dnContext;
+            _nwashContext = nwashContext;
             this.session = HttpContextAccessor.HttpContext.Session;
 
         }
@@ -79,7 +82,7 @@ namespace Wq_Surveillance.Controllers
         [HttpPost]
         public JsonResult GetProjectTapList(string proUuid)
         {
-            var dict = _wqsContext.Taps
+            var dict = _nwashContext.Taps
                             .Where(s => (s.ProUuid == proUuid))
                             .Where(s => (!(s.Lat == null) && !(s.Lon == null)))      // checking for empty geometry.
                             .Select(s => new { s.ProUuid, s.Uuid, s.TapNo })

@@ -4,18 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wq_Surveillance.Service;
+using Wq_Surveillance.NwashModels;
 
 namespace Wq_Surveillance.Service
 {
     public class WQSservices : IWQSservices 
     {
         private readonly WqsContext _wqsContext;
-        public WQSservices(WqsContext nwash_dnContext)
+        private readonly NwashContext _nwashContext;
+        public WQSservices(WqsContext wqsContext, NwashContext nwashContext)
         {
-            _wqsContext = nwash_dnContext;
+            _wqsContext = wqsContext;
+            _nwashContext = nwashContext;
         }
 
-        public List<Province> GetProvince()
+        public List<Models.Province> GetProvince()
         {
             return _wqsContext.Provinces.OrderBy(item => item.ProvinceCode).ToList();
         }
@@ -54,7 +57,7 @@ namespace Wq_Surveillance.Service
             var pd = _wqsContext.ProjectDetails.FirstOrDefault(p => p.ProCode.Equals(ProCode));
             if (pd != null)
             {
-                var projectData = _wqsContext.Taps
+                var projectData = _nwashContext.Taps
                 .Where(t => t.ProUuid.Equals(pd.Uuid)).ToList();
 
                 if (projectData != null)

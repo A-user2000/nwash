@@ -126,8 +126,5 @@ public partial class ProjectDetail
 
   
 
-    public virtual ICollection<Tap> Taps { get; } = new List<Tap>();
-
-
-    public virtual ICollection<WaterSource> WaterSources { get; } = new List<WaterSource>();
+  
 }

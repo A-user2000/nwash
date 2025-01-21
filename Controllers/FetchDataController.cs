@@ -311,7 +311,7 @@ namespace Nwash.Controllers.API
             {
                 if (checkUser.Groups == 1)
                 {
-                    var SourceName = _wqsContext.WaterSource
+                    var SourceName = _nwashContext.WaterSources
                     .OrderBy(s => s.Uuid)
                     .Select(s => new { s.Uuid, s.ProUuid, SouName = ReplaceDoubleQuotes(s.SouName) })
                     .ToList(); // Convert to a List of anonymous objects
@@ -348,7 +348,7 @@ namespace Nwash.Controllers.API
                 if (checkUser.Groups == 1)
                 {
                     // Group taps by ProUuid and calculate TotalPop and HhServed
-                    var projectData = _wqsContext.Taps
+                    var projectData = _nwashContext.Taps
                         .GroupBy(tap => tap.ProUuid)
                         .Select(group => new
                         {

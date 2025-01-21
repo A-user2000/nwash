@@ -133,7 +133,7 @@ namespace Wq_Surveillance.Controllers
 
                 if (pd != null)
                 {
-                    var projectData = _wqsContext.Taps
+                    var projectData = _nwashContext.Taps
                     .Where(t => t.ProUuid.Equals(pd.Uuid)).ToList();
 
                     if (projectData != null)

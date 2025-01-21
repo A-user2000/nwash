@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NetTopologySuite.Geometries;
 
-namespace Wq_Surveillance.Models;
+namespace Wq_Surveillance.NwashModels;
 
 public partial class WaterSource
 {
