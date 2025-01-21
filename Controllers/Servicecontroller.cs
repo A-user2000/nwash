@@ -31,13 +31,13 @@ namespace Wq_Surveillance.Controllers
             _utc = utc;
 
         }
-        [HttpPost("FileCreation")] //for img folder in nwash_images
+        [HttpPost("FileCreation")] //for img folder in wqs_images
         public string FileCreationMain()
         {
             List<string> Folders = new List<string> { "wqs" };
             foreach (var folder in Folders)
             {
-                string baseDirectory = Path.Combine(_hostEnvironment.ContentRootPath, "nwash_images", folder);
+                string baseDirectory = Path.Combine(_hostEnvironment.ContentRootPath, "wqs_images", folder);
                 int nestingLevels = 3;
                 CreateFolders(baseDirectory, nestingLevels);
                 Console.WriteLine("Folders created successfully.");

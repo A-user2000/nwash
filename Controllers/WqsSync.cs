@@ -832,8 +832,8 @@ public class WqsSync
             var path = _utc.GetImgPath(imgUuid);
 
             // Define file paths
-            var originalPath = Path.Combine(_hostEnvironment.ContentRootPath, "nwash_images", "wqs", path, $"{imgUuid}_original.jpg");
-            var resizedPath = Path.Combine(_hostEnvironment.ContentRootPath, "nwash_images", "wqs", path, $"{imgUuid}.jpg");
+            var originalPath = Path.Combine(_hostEnvironment.ContentRootPath, "wqs_images", "wqs", path, $"{imgUuid}_original.jpg");
+            var resizedPath = Path.Combine(_hostEnvironment.ContentRootPath, "wqs_images", "wqs", path, $"{imgUuid}.jpg");
 
             // Convert base64 string to byte array
             //byte[] imageBytes = Convert.FromBase64String(base64Image);

@@ -15,7 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Wq_Surveillance.Models;
 using Wq_Surveillance.Models.API;
-using Newtonsoft.Json;  
+using Newtonsoft.Json;
+using Wq_Surveillance.NwashModels;
 
 
 namespace Nwash.Controllers.API
@@ -25,11 +26,13 @@ namespace Nwash.Controllers.API
     public class FetchDataController : ControllerBase
     {
         private readonly WqsContext _wqsContext;
+        private readonly NwashContext  _nwashContext;
         private static IWebHostEnvironment _hostEnvironment;
         private readonly IHttpContextAccessor _sessionData;
-        public FetchDataController(WqsContext nwash_dnContext, IWebHostEnvironment hostEnvironment, IHttpContextAccessor contextAccessor)
+        public FetchDataController(WqsContext wqsContext, IWebHostEnvironment hostEnvironment, IHttpContextAccessor contextAccessor, NwashContext nwashContext)
         {
-            _wqsContext = nwash_dnContext;
+            _wqsContext = wqsContext;
+            _nwashContext = nwashContext;
             _hostEnvironment = hostEnvironment;
             _sessionData = contextAccessor;
         }
@@ -160,8 +163,9 @@ namespace Nwash.Controllers.API
                     // var agency = checkUser.InvAgency;
                     var agency = _wqsContext.Organizations.Where(s => s.OrgName == checkUser.InvAgency).OrderBy(item => item.OrgName).ToList();
 
-                    Tuple<bool, List<Province>, List<District>, List<Municipality>, List<Organization>> returnTuple = new Tuple<bool, List<Province>, List<District>, List<Municipality>, List<Organization>>(true, province, district, municipality, agency);
-
+                    Tuple<bool, List<Wq_Surveillance.Models.Province>, List<Wq_Surveillance.Models.District>, List<Wq_Surveillance.Models.Municipality>, List<Wq_Surveillance.Models.Organization>> returnTuple =
+         new Tuple<bool, List<Wq_Surveillance.Models.Province>, List<Wq_Surveillance.Models.District>, List<Wq_Surveillance.Models.Municipality>, List<Wq_Surveillance.Models.Organization>>(
+             true, province, district, municipality, agency);
                     string json = JsonConvert.SerializeObject(returnTuple);
                     Console.WriteLine(json);
 
@@ -179,7 +183,9 @@ namespace Nwash.Controllers.API
                     var municipality = _wqsContext.Municipalities.OrderBy(item => item.MunCode).ToList();
                     var agency = _wqsContext.Organizations.OrderBy(item => item.OrgName).ToList();
 
-                    Tuple<bool, List<Province>, List<District>, List<Municipality>, List<Organization>> returnTuple = new Tuple<bool, List<Province>, List<District>, List<Municipality>, List<Organization>>(true, province, district, municipality, agency);
+                    Tuple<bool, List<Wq_Surveillance.Models.Province>, List<Wq_Surveillance.Models.District>, List<Wq_Surveillance.Models.Municipality>, List<Wq_Surveillance.Models.Organization>> returnTuple =
+        new Tuple<bool, List<Wq_Surveillance.Models.Province>, List<Wq_Surveillance.Models.District>, List<Wq_Surveillance.Models.Municipality>, List<Wq_Surveillance.Models.Organization>>(
+            true, province, district, municipality, agency);
 
                     string json = JsonConvert.SerializeObject(returnTuple);
                     Console.WriteLine(json);

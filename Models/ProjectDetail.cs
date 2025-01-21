@@ -124,25 +124,10 @@ public partial class ProjectDetail
 
     public string? Photo6PathUuid { get; set; }
 
-    public virtual ICollection<Junction> Junctions { get; } = new List<Junction>();
-
-    public virtual ICollection<LeftoutTap> LeftoutTaps { get; } = new List<LeftoutTap>();
-
-    public virtual ICollection<PipeRoutePoint> PipeRoutePoints { get; } = new List<PipeRoutePoint>();
-
-    public virtual ICollection<Pipe> Pipes { get; } = new List<Pipe>();
-
-    public virtual ICollection<ProjectCoverage> ProjectCoverages { get; } = new List<ProjectCoverage>();
-
-    public virtual ICollection<Reservoir> Reservoirs { get; } = new List<Reservoir>();
-
-    public virtual ICollection<Sanitation> Sanitations { get; } = new List<Sanitation>();
-
-    public virtual ICollection<Structure> Structures { get; } = new List<Structure>();
+  
 
     public virtual ICollection<Tap> Taps { get; } = new List<Tap>();
 
-    public virtual ICollection<WaterSourceMeasure> WaterSourceMeasures { get; } = new List<WaterSourceMeasure>();
 
     public virtual ICollection<WaterSource> WaterSources { get; } = new List<WaterSource>();
 }

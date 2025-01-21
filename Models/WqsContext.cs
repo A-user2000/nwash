@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Wq_Surveillance.Models;
-using Wq_Surveillance.Models.QueryTables;
 using Wq_Surveillance.Models.API;
 using Wq_Surveillance.Models.MapData;
+using Wq_Surveillance.Models.QueryTables;
 
 namespace Wq_Surveillance.Models;
 
@@ -25,22 +25,6 @@ public partial class WqsContext : DbContext
     public virtual DbSet<WqsDataCollProvincewise> WqsDataCollProvincewise { get; set; }
     public virtual DbSet<MatWqProvincewise> MatWqProvincewise { get; set; }
 
-
-
-
-    public virtual DbSet<WSIncomeDetails> WSIncomeDetails { get; set; }
-    public virtual DbSet<SustainabilityDetails> SustainabilityDetails { get; set; }
-    public virtual DbSet<ProjectBasicDetails> ProjectBasicDetails { get; set; }
-    public virtual DbSet<LocalLevelDetails> LocalLevelDetails { get; set; }
-    public virtual DbSet<FuncWSDetails> FuncWSDetails { get; set; }
-    public virtual DbSet<FunctionalityScoreDetails> FunctionalityScoreDetails { get; set; }
-    public virtual DbSet<FunctionalityMunWiseDetails> FunctionalityMunWiseDetails { get; set; }
-
-    public virtual DbSet<FunctionalityDistrictWiseDetail> FunctionalityDistrictWiseDetail { get; set; }
-
-    public virtual DbSet<FuncTapDetails> FuncTapDetails { get; set; }
-    public virtual DbSet<FuncStrDetails> FuncStrDetails { get; set; }
-    public virtual DbSet<FuncProjectDetails> FuncProjectDetails { get; set; }
     public virtual DbSet<ProjectDetailData> ProjectDetailData { get; set; }
     
     public virtual DbSet<SyncFileCredential> SyncFileCredential { get; set; }
@@ -84,19 +68,13 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<Form3> Form3s { get; set; }
 
-    public virtual DbSet<Functionality> Functionalities { get; set; }
-
-   
-
-    public virtual DbSet<Junction> Junctions { get; set; }
-
 
     public virtual DbSet<LabRegistration> LabRegistration { get; set; }
 
 
     public virtual DbSet<LayerDetail> LayerDetails { get; set; }
 
-    public virtual DbSet<LeftoutTap> LeftoutTaps { get; set; }
+   
 
 
     public virtual DbSet<LocalbodiesLine> LocalbodiesLines { get; set; }
@@ -123,23 +101,6 @@ public partial class WqsContext : DbContext
 
     
 
-    public virtual DbSet<Pipe> Pipes { get; set; }
-
-    public virtual DbSet<PipeDrawnRoute> PipeDrawnRoutes { get; set; }
-
-    
-
-    public virtual DbSet<PipeRoutePoint> PipeRoutePoints { get; set; }
-
-   
-
-    public virtual DbSet<PopServed> PopServeds { get; set; }
-
-  
-
-    public virtual DbSet<ProjectCoverage> ProjectCoverages { get; set; }
-
-   
 
     public virtual DbSet<ProjectDetail> ProjectDetails { get; set; }
 
@@ -155,13 +116,6 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<Rate> Rates { get; set; }
 
-    
-
-    public virtual DbSet<ReportDatum> ReportData { get; set; }
-
-    public virtual DbSet<Reservoir> Reservoirs { get; set; }
-
-
     public virtual DbSet<ReservoirSanitary> ReservoirSanitaries { get; set; }
 
    
@@ -172,28 +126,12 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<SanitaryInspectionValue> SanitaryInspectionValues { get; set; }
 
-    public virtual DbSet<Sanitation> Sanitations { get; set; }
-
-
     public virtual DbSet<Settlement> Settlements { get; set; }
     public virtual DbSet<SourceSanitary> SourceSanitaries { get; set; }
 
     public virtual DbSet<Srn> Srns { get; set; }
-
   
-
-    public virtual DbSet<Structure> Structures { get; set; }
-
-
     public virtual DbSet<StructureSanitary> StructureSanitaries { get; set; }
-
-    public virtual DbSet<Support> Supports { get; set; }
-
-   
-
-    public virtual DbSet<Sustainability> Sustainabilities { get; set; }
-
-   
 
     public virtual DbSet<TableDictionary> TableDictionaries { get; set; }
 
@@ -207,10 +145,6 @@ public partial class WqsContext : DbContext
    
 
     public virtual DbSet<TrainingHeld> TrainingHelds { get; set; }
-
-    public virtual DbSet<Tubewell> Tubewells { get; set; }
-
-   
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -236,11 +170,6 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<WaterSource> WaterSources { get; set; }
 
-  
-
-    public virtual DbSet<WaterSourceMeasure> WaterSourceMeasures { get; set; }
-
-   
     public virtual DbSet<WatersafeCommunity> WatersafeCommunities { get; set; }
 
     public virtual DbSet<WqGeneralLocation> WqGeneralLocations { get; set; }
@@ -847,106 +776,7 @@ public partial class WqsContext : DbContext
               .HasColumnName("uuid");
         });
 
-        modelBuilder.Entity<Functionality>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("functionality_pkey");
-
-            entity.ToTable("functionality", "existing_projects");
-
-            entity.HasIndex(e => e.Uuid, "functionality_uuid").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.AnExp).HasColumnName("an_exp");
-            entity.Property(e => e.AnIncome).HasColumnName("an_income");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.NoComplaints).HasColumnName("no_complaints");
-            entity.Property(e => e.NoLeakYear).HasColumnName("no_leak_year");
-            entity.Property(e => e.NoMeetDemand).HasColumnName("no_meet_demand");
-            entity.Property(e => e.NoMonthsFlowAdequate).HasColumnName("no_months_flow_adequate");
-            entity.Property(e => e.NoStr).HasColumnName("no_str");
-            entity.Property(e => e.NoStrRepair).HasColumnName("no_str_repair");
-            entity.Property(e => e.NoVmw).HasColumnName("no_vmw");
-            entity.Property(e => e.NoVmwToolMeet).HasColumnName("no_vmw_tool_meet");
-            entity.Property(e => e.PipeLen).HasColumnName("pipe_len");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.SupHours).HasColumnName("sup_hours");
-            entity.Property(e => e.TapNoTurbidity).HasColumnName("tap_no_turbidity");
-            entity.Property(e => e.TotalTap).HasColumnName("total_tap");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-            entity.Property(e => e.YardTap)
-                .HasMaxLength(10)
-                .HasColumnName("yard_tap");
-        });
-
-        modelBuilder.Entity<Junction>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("junction_pkey");
-
-            entity.ToTable("junction", "existing_projects");
-
-            entity.HasIndex(e => e.Uuid, "junc_uuid").IsUnique();
-
-            entity.HasIndex(e => e.TheGeom, "junction_geom_idx").HasMethod("gist");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.CollectedBy).HasColumnName("collected_by");
-            entity.Property(e => e.CollectedOn).HasColumnName("collected_on");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.Ele).HasColumnName("ele");
-            entity.Property(e => e.JuncNo)
-                .HasMaxLength(20)
-                .HasColumnName("junc_no");
-            entity.Property(e => e.JuncType)
-                .HasMaxLength(20)
-                .HasColumnName("junc_type");
-            entity.Property(e => e.Lat).HasColumnName("lat");
-            entity.Property(e => e.Lon).HasColumnName("lon");
-            entity.Property(e => e.Photo1Desc).HasColumnName("photo1_desc");
-            entity.Property(e => e.Photo1Path).HasColumnName("photo1_path");
-            entity.Property(e => e.Photo1PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path_uuid");
-            entity.Property(e => e.Photo2Desc).HasColumnName("photo2_desc");
-            entity.Property(e => e.Photo2Path).HasColumnName("photo2_path");
-            entity.Property(e => e.Photo2PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path_uuid");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.Junctions)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("pro_uuid");
-        });
-
-     
+            
         modelBuilder.Entity<LabRegistration>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("lr_pkey");
@@ -1080,73 +910,7 @@ public partial class WqsContext : DbContext
                 .HasColumnName("tbl_name");
         });
 
-        modelBuilder.Entity<LeftoutTap>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("lotap_pkey");
-
-            entity.ToTable("leftout_taps", "existing_projects");
-
-            entity.HasIndex(e => e.TheGeom, "leftout_taps_geom_idx").HasMethod("gist");
-
-            entity.HasIndex(e => e.Uuid, "ltap_uuid").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.BcHh).HasColumnName("bc_hh");
-            entity.Property(e => e.CollectedBy).HasColumnName("collected_by");
-            entity.Property(e => e.CollectedOn).HasColumnName("collected_on");
-            entity.Property(e => e.CurrentSource).HasColumnName("current_source");
-            entity.Property(e => e.DalHh).HasColumnName("dal_hh");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.Ele).HasColumnName("ele");
-            entity.Property(e => e.FemalePop).HasColumnName("female_pop");
-            entity.Property(e => e.HhServed).HasColumnName("hh_served");
-            entity.Property(e => e.HhToilet).HasColumnName("hh_toilet");
-            entity.Property(e => e.JanHh).HasColumnName("jan_hh");
-            entity.Property(e => e.Lat).HasColumnName("lat");
-            entity.Property(e => e.LeftoutReason)
-                .HasColumnType("character varying")
-                .HasColumnName("leftout_reason");
-            entity.Property(e => e.Lon).HasColumnName("lon");
-            entity.Property(e => e.MalePop).HasColumnName("male_pop");
-            entity.Property(e => e.MiHh).HasColumnName("mi_hh");
-            entity.Property(e => e.PhotoPath).HasColumnName("photo_path");
-            entity.Property(e => e.PhotoPathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo_path_uuid");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.TapContact)
-                .HasColumnType("character varying")
-                .HasColumnName("tap_contact");
-            entity.Property(e => e.TapNo)
-                .HasColumnType("character varying")
-                .HasColumnName("tap_no");
-            entity.Property(e => e.TapOwner)
-                .HasDefaultValueSql("''::character varying")
-                .HasColumnType("character varying")
-                .HasColumnName("tap_owner");
-            entity.Property(e => e.TapType)
-                .HasMaxLength(100)
-                .HasColumnName("tap_type");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.LeftoutTaps)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .HasConstraintName("pro_uuid");
-        });
+       
 
 
         modelBuilder.Entity<LocalbodiesLine>(entity =>
@@ -1478,259 +1242,7 @@ public partial class WqsContext : DbContext
                 .HasColumnName("prg_short_name");
         });
 
-        modelBuilder.Entity<Pipe>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("pipe_pkey");
-
-            entity.ToTable("pipe", "existing_projects");
-
-            entity.HasIndex(e => e.TheGeom, "pipe_geom_idx").HasMethod("gist");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.CollectedBy).HasColumnName("collected_by");
-            entity.Property(e => e.CollectedOn).HasColumnName("collected_on");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.LeakageCount).HasColumnName("leakage_count");
-            entity.Property(e => e.Photo1Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_desc");
-            entity.Property(e => e.Photo1Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path");
-            entity.Property(e => e.Photo1PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path_uuid");
-            entity.Property(e => e.Photo2Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_desc");
-            entity.Property(e => e.Photo2Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path");
-            entity.Property(e => e.Photo2PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path_uuid");
-            entity.Property(e => e.PipeClass)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_class");
-            entity.Property(e => e.PipeCond)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_cond");
-            entity.Property(e => e.PipeCons)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_cons");
-            entity.Property(e => e.PipeDia).HasColumnName("pipe_dia");
-            entity.Property(e => e.PipeEqk)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_eqk");
-            entity.Property(e => e.PipeLayCon)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_lay_con");
-            entity.Property(e => e.PipeLcon)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_lcon");
-            entity.Property(e => e.PipeLen).HasColumnName("pipe_len");
-            entity.Property(e => e.PipeName)
-                .HasMaxLength(200)
-                .HasColumnName("pipe_name");
-            entity.Property(e => e.PipePart)
-                .HasMaxLength(25)
-                .HasColumnName("pipe_part");
-            entity.Property(e => e.PipeRem)
-                .HasColumnType("character varying")
-                .HasColumnName("pipe_rem");
-            entity.Property(e => e.PipeType)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_type");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.Pipes)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("pro_uuid");
-        });
-
-        modelBuilder.Entity<PipeDrawnRoute>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("pipe_drawn_route_pkey");
-
-            entity.ToTable("pipe_drawn_route", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.CollectedBy).HasColumnName("collected_by");
-            entity.Property(e => e.CollectedOn).HasColumnName("collected_on");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.PipeClass)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_class");
-            entity.Property(e => e.PipeCond)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_cond");
-            entity.Property(e => e.PipeCons)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_cons");
-            entity.Property(e => e.PipeDia).HasColumnName("pipe_dia");
-            entity.Property(e => e.PipeEqk)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_eqk");
-            entity.Property(e => e.PipeLcon)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_lcon");
-            entity.Property(e => e.PipePart)
-                .HasMaxLength(25)
-                .HasColumnName("pipe_part");
-            entity.Property(e => e.PipeType)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_type");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-        });
-
-    
-
-        modelBuilder.Entity<PipeRoutePoint>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("pipe_route_point_pkey");
-
-            entity.ToTable("pipe_route_point", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.CollectedBy).HasColumnName("collected_by");
-            entity.Property(e => e.CollectedOn).HasColumnName("collected_on");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.Ele).HasColumnName("ele");
-            entity.Property(e => e.Lat).HasColumnName("lat");
-            entity.Property(e => e.Lon).HasColumnName("lon");
-            entity.Property(e => e.PipeClass)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_class");
-            entity.Property(e => e.PipeCond)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_cond");
-            entity.Property(e => e.PipeCons)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_cons");
-            entity.Property(e => e.PipeDia).HasColumnName("pipe_dia");
-            entity.Property(e => e.PipeEqk)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_eqk");
-            entity.Property(e => e.PipeLcon)
-                .HasMaxLength(100)
-                .HasColumnName("pipe_lcon");
-            entity.Property(e => e.PipePart)
-                .HasMaxLength(25)
-                .HasColumnName("pipe_part");
-            entity.Property(e => e.PipeType)
-                .HasMaxLength(20)
-                .HasColumnName("pipe_type");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.PipeRoutePoints)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .HasConstraintName("pro_uuid");
-        });
-
-        modelBuilder.Entity<PopServed>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("pop_served_pkey");
-
-            entity.ToTable("pop_served", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.BcHh).HasColumnName("bc_hh");
-            entity.Property(e => e.DalHh).HasColumnName("dal_hh");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.FemPop).HasColumnName("fem_pop");
-            entity.Property(e => e.HhServerd).HasColumnName("hh_serverd");
-            entity.Property(e => e.JanHh).HasColumnName("jan_hh");
-            entity.Property(e => e.MalePop).HasColumnName("male_pop");
-            entity.Property(e => e.MiHh).HasColumnName("mi_hh");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-        });
-
-      
-
-        modelBuilder.Entity<ProjectCoverage>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("project_coverage_pkey");
-
-            entity.ToTable("project_coverage", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.Area).HasColumnName("area");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.ProjectCoverages)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .HasConstraintName("pro_uuid");
-        });
-
-       
+     
 
         modelBuilder.Entity<ProjectDetail>(entity =>
         {
@@ -1958,121 +1470,6 @@ public partial class WqsContext : DbContext
 
       
 
-        modelBuilder.Entity<ReportDatum>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("rdata_pkey_id");
-
-            entity.ToTable("report_data", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DistrictCode)
-                .HasColumnType("character varying")
-                .HasColumnName("district_code");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.MunicipalityCode)
-                .HasColumnType("character varying")
-                .HasColumnName("municipality_code");
-            entity.Property(e => e.ProCode)
-                .HasColumnType("character varying")
-                .HasColumnName("pro_code");
-            entity.Property(e => e.ProvinceCode)
-                .HasColumnType("character varying")
-                .HasColumnName("province_code");
-            entity.Property(e => e.SchemeCondition)
-                .HasColumnType("character varying")
-                .HasColumnName("scheme_condition");
-            entity.Property(e => e.SchemePrioritizationScore)
-                .HasColumnType("character varying")
-                .HasColumnName("scheme_prioritization_score");
-            entity.Property(e => e.TotalPopulation)
-                .HasColumnType("character varying")
-                .HasColumnName("total_population");
-        });
-
-        modelBuilder.Entity<Reservoir>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("reservoir_pkey");
-
-            entity.ToTable("reservoir", "existing_projects");
-
-            entity.HasIndex(e => e.TheGeom, "reservoir_geom_idx").HasMethod("gist");
-
-            entity.HasIndex(e => e.Uuid, "reservoir_uuid").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.CollectedBy).HasColumnName("collected_by");
-            entity.Property(e => e.CollectedOn).HasColumnName("collected_on");
-            entity.Property(e => e.ConsYear).HasColumnName("cons_year");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.Ele).HasColumnName("ele");
-            entity.Property(e => e.Lat).HasColumnName("lat");
-            entity.Property(e => e.Lon).HasColumnName("lon");
-            entity.Property(e => e.Photo1Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_desc");
-            entity.Property(e => e.Photo1Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path");
-            entity.Property(e => e.Photo1PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path_uuid");
-            entity.Property(e => e.Photo2Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_desc");
-            entity.Property(e => e.Photo2Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path");
-            entity.Property(e => e.Photo2PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path_uuid");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.RvtCap).HasColumnName("rvt_cap");
-            entity.Property(e => e.RvtCon)
-                .HasMaxLength(100)
-                .HasColumnName("rvt_con");
-            entity.Property(e => e.RvtCons)
-                .HasMaxLength(20)
-                .HasColumnName("rvt_cons");
-            entity.Property(e => e.RvtEqk)
-                .HasMaxLength(100)
-                .HasColumnName("rvt_eqk");
-            entity.Property(e => e.RvtNo)
-                .HasMaxLength(20)
-                .HasColumnName("rvt_no");
-            entity.Property(e => e.RvtQua)
-                .HasMaxLength(100)
-                .HasColumnName("rvt_qua");
-            entity.Property(e => e.RvtRem)
-                .HasColumnType("character varying")
-                .HasColumnName("rvt_rem");
-            entity.Property(e => e.RvtType)
-                .HasMaxLength(100)
-                .HasColumnName("rvt_type");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.Reservoirs)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .HasConstraintName("pro_uuid");
-        });
-
-      
 
         modelBuilder.Entity<ReservoirSanitary>(entity =>
         {
@@ -2161,76 +1558,6 @@ public partial class WqsContext : DbContext
             entity.Property(e => e.Value).HasColumnName("value");
         });
 
-        modelBuilder.Entity<Sanitation>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sanitation_pkey");
-
-            entity.ToTable("sanitation", "existing_projects");
-
-            entity.HasIndex(e => e.Uuid, "san_uuid").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.Ele).HasColumnName("ele");
-            entity.Property(e => e.Lat).HasColumnName("lat");
-            entity.Property(e => e.Lon).HasColumnName("lon");
-            entity.Property(e => e.OwnerContact)
-                .HasColumnType("character varying")
-                .HasColumnName("owner_contact");
-            entity.Property(e => e.OwnerName)
-                .HasColumnType("character varying")
-                .HasColumnName("owner_name");
-            entity.Property(e => e.Photo1Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_desc");
-            entity.Property(e => e.Photo1Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path");
-            entity.Property(e => e.Photo1PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path_uuid");
-            entity.Property(e => e.Photo2Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_desc");
-            entity.Property(e => e.Photo2Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path");
-            entity.Property(e => e.Photo2PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path_uuid");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.SanOwner)
-                .HasMaxLength(50)
-                .HasColumnName("san_owner");
-            entity.Property(e => e.SanRem)
-                .HasColumnType("character varying")
-                .HasColumnName("san_rem");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.ToiletTreatment)
-                .HasColumnType("character varying")
-                .HasColumnName("toilet_treatment");
-            entity.Property(e => e.ToiletType)
-                .HasColumnType("character varying")
-                .HasColumnName("toilet_type");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.Sanitations)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .HasConstraintName("pro_uuid");
-        });
 
        
 
@@ -2398,91 +1725,6 @@ public partial class WqsContext : DbContext
         });
 
 
-        modelBuilder.Entity<Structure>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("structure_pkey");
-
-            entity.ToTable("structure", "existing_projects");
-
-            entity.HasIndex(e => e.Uuid, "structure_uuid").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.CollectedBy).HasColumnName("collected_by");
-            entity.Property(e => e.CollectedOn).HasColumnName("collected_on");
-            entity.Property(e => e.ConsYear).HasColumnName("cons_year");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.Ele).HasColumnName("ele");
-            entity.Property(e => e.Lat).HasColumnName("lat");
-            entity.Property(e => e.Lon).HasColumnName("lon");
-            entity.Property(e => e.Photo1Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_desc");
-            entity.Property(e => e.Photo1Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path");
-            entity.Property(e => e.Photo1PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path_uuid");
-            entity.Property(e => e.Photo2Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_desc");
-            entity.Property(e => e.Photo2Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path");
-            entity.Property(e => e.Photo2PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path_uuid");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.StrCond)
-                .HasMaxLength(100)
-                .HasColumnName("str_cond");
-            entity.Property(e => e.StrCons)
-                .HasMaxLength(25)
-                .HasColumnName("str_cons");
-            entity.Property(e => e.StrDim)
-                .HasColumnType("character varying")
-                .HasColumnName("str_dim");
-            entity.Property(e => e.StrDimHeight).HasColumnName("str_dim_height");
-            entity.Property(e => e.StrDimLen).HasColumnName("str_dim_len");
-            entity.Property(e => e.StrDimWidth).HasColumnName("str_dim_width");
-            entity.Property(e => e.StrEqk)
-                .HasMaxLength(100)
-                .HasColumnName("str_eqk");
-            entity.Property(e => e.StrNo)
-                .HasMaxLength(50)
-                .HasColumnName("str_no");
-            entity.Property(e => e.StrNrp)
-                .HasMaxLength(100)
-                .HasColumnName("str_nrp");
-            entity.Property(e => e.StrOther)
-                .HasColumnType("character varying")
-                .HasColumnName("str_other");
-            entity.Property(e => e.StrRem)
-                .HasColumnType("character varying")
-                .HasColumnName("str_rem");
-            entity.Property(e => e.StrType)
-                .HasMaxLength(100)
-                .HasColumnName("str_type");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.Structures)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .HasConstraintName("pro_uuid");
-        });
 
 
         modelBuilder.Entity<StructureSanitary>(entity =>
@@ -2543,94 +1785,7 @@ public partial class WqsContext : DbContext
 
         });
 
-        modelBuilder.Entity<Support>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("support_pkey");
-
-            entity.ToTable("support", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.SupportAgencyId).HasColumnName("support_agency_id");
-            entity.Property(e => e.SupportAmount).HasColumnName("support_amount");
-            entity.Property(e => e.SupportNote)
-                .HasColumnType("character varying")
-                .HasColumnName("support_note");
-            entity.Property(e => e.SupportTypeId).HasColumnName("support_type_id");
-            entity.Property(e => e.SupportYear).HasColumnName("support_year");
-        });
-
-
-        modelBuilder.Entity<Sustainability>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sustainability_pkey");
-
-            entity.ToTable("sustainability", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.AddDate).HasColumnName("add_date");
-            entity.Property(e => e.DataYear).HasColumnName("data_year");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.NoWomenWuscMem).HasColumnName("no_women_wusc_mem");
-            entity.Property(e => e.NoWuscMem).HasColumnName("no_wusc_mem");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.SusAcc)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_acc");
-            entity.Property(e => e.SusAgm)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_agm");
-            entity.Property(e => e.SusBookeeping)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_bookeeping");
-            entity.Property(e => e.SusInsurance)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_insurance");
-            entity.Property(e => e.SusNoMeeting)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_no_meeting");
-            entity.Property(e => e.SusPerHh)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_per_hh");
-            entity.Property(e => e.SusSop)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_sop");
-            entity.Property(e => e.SusSourceReg)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_source_reg");
-            entity.Property(e => e.SusSourceSafety)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_source_safety");
-            entity.Property(e => e.SusVmw)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_vmw");
-            entity.Property(e => e.SusWaterQuality)
-                .HasColumnType("character varying")
-                .HasColumnName("sus_water_quality");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-        });
-
+     
         modelBuilder.Entity<TableDictionary>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("care_ims_01_id_pk");
@@ -2843,82 +1998,7 @@ public partial class WqsContext : DbContext
             entity.Property(e => e.TrainingHappening).HasColumnName("training_happening");
         });
 
-        modelBuilder.Entity<Tubewell>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("tw_pkey");
-
-            entity.ToTable("tubewells", "existing_projects");
-
-            entity.HasIndex(e => e.Uuid, "tubewell_uuid").IsUnique();
-
-            entity.HasIndex(e => e.Uuid, "u_uuid").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AddBy)
-                .HasColumnType("character varying")
-                .HasColumnName("add_by");
-            entity.Property(e => e.CommunityName)
-                .HasColumnType("character varying")
-                .HasColumnName("community_name");
-            entity.Property(e => e.Condition)
-                .HasColumnType("character varying")
-                .HasColumnName("condition");
-            entity.Property(e => e.ConsYear).HasColumnName("cons_year");
-            entity.Property(e => e.DepthFt).HasColumnName("depth_ft");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.Ele).HasColumnName("ele");
-            entity.Property(e => e.FemalePop).HasColumnName("female_pop");
-            entity.Property(e => e.HhServed).HasColumnName("hh_served");
-            entity.Property(e => e.Lat).HasColumnName("lat");
-            entity.Property(e => e.Lon).HasColumnName("lon");
-            entity.Property(e => e.MalePop).HasColumnName("male_pop");
-            entity.Property(e => e.MunCode)
-                .HasColumnType("character varying")
-                .HasColumnName("mun_code");
-            entity.Property(e => e.OwnerName)
-                .HasColumnType("character varying")
-                .HasColumnName("owner_name");
-            entity.Property(e => e.Photo1)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1");
-            entity.Property(e => e.Photo1Uuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_uuid");
-            entity.Property(e => e.Photo2)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2");
-            entity.Property(e => e.Photo2Uuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_uuid");
-            entity.Property(e => e.PlatformCondition)
-                .HasColumnType("character varying")
-                .HasColumnName("platform_condition");
-            entity.Property(e => e.PopServed).HasColumnName("pop_served");
-            entity.Property(e => e.ProjectBeingConstructed).HasColumnName("project_being_constructed");
-            entity.Property(e => e.RecTime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("rec_time");
-            entity.Property(e => e.Remarks)
-                .HasColumnType("character varying")
-                .HasColumnName("remarks");
-            entity.Property(e => e.TheGeom).HasColumnName("the_geom");
-            entity.Property(e => e.TubewellType)
-                .HasColumnType("character varying")
-                .HasColumnName("tubewell_type");
-            entity.Property(e => e.UploadTime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("upload_time");
-            entity.Property(e => e.Uuid)
-                .HasMaxLength(100)
-                .HasColumnName("uuid");
-            entity.Property(e => e.WardNo).HasColumnName("ward_no");
-            entity.Property(e => e.WsSchemePresent).HasColumnName("ws_scheme_present");
-        });
-
-       
+     
      
         modelBuilder.Entity<User>(entity =>
         {
@@ -3274,54 +2354,6 @@ public partial class WqsContext : DbContext
                 .HasForeignKey(d => d.ProUuid)
                 .HasConstraintName("pro_uuid");
         });
-
-        modelBuilder.Entity<WaterSourceMeasure>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("water_source_measure_pkey");
-
-            entity.ToTable("water_source_measure", "existing_projects");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.EditedBy)
-                .HasColumnType("character varying")
-                .HasColumnName("edited_by");
-            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
-            entity.Property(e => e.MeaDate)
-                .HasColumnType("character varying")
-                .HasColumnName("mea_date");
-            entity.Property(e => e.MeaDis).HasColumnName("mea_dis");
-            entity.Property(e => e.Photo1Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_desc");
-            entity.Property(e => e.Photo1Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path");
-            entity.Property(e => e.Photo1PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo1_path_uuid");
-            entity.Property(e => e.Photo2Desc)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_desc");
-            entity.Property(e => e.Photo2Path)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path");
-            entity.Property(e => e.Photo2PathUuid)
-                .HasColumnType("character varying")
-                .HasColumnName("photo2_path_uuid");
-            entity.Property(e => e.ProUuid)
-                .HasMaxLength(100)
-                .HasColumnName("pro_uuid");
-            entity.Property(e => e.SourceUuid)
-                .HasMaxLength(100)
-                .HasColumnName("source_uuid");
-
-            entity.HasOne(d => d.ProUu).WithMany(p => p.WaterSourceMeasures)
-                .HasPrincipalKey(p => p.Uuid)
-                .HasForeignKey(d => d.ProUuid)
-                .HasConstraintName("pro_uuid");
-        });
-
-     
 
         modelBuilder.Entity<WatersafeCommunity>(entity =>
         {

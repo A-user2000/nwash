@@ -1,0 +1,162 @@
+﻿@model Wq_Surveillance.Models.StructureSanitary
+
+<!-- Add the multisteps-form styling and structure -->
+<div class="row">
+    <div class="col-12 col-lg-8 m-auto">
+        <div class="multisteps-form__form">
+            <div class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn">
+                <h3 class="multisteps-form__title">Structure</h3>
+                <div class="multisteps-form__content">
+                    <style>
+                        .button-row {
+                            display: flex;
+                            justify-content: space-between; /* Space between Prev and Next buttons */
+                        }
+                    </style> 
+                    <div class="button-row d-flex mt-4">
+                        <button class="btn btn-primary btn-sm js-btn-prev" type="button" title="Prev" id="source" onclick="btnNextPrev('source')">Prev</button>
+                        <button class="btn btn-primary btn-sm ml-auto js-btn-next" type="button" title="Next" id="tap" onclick="btnNextPrev('tap')">Next</button>
+                    </div>
+
+                    <!-- Your form starts here -->
+                    <form method="post" asp-action="FormStrEditPost" asp-controller="Wqs">
+                        <input type="hidden" asp-for="FormId" />
+
+                        <!-- Sanitary Inspection Section -->
+                        <div style="background-color: #eee; color: rgba(0, 0, 0, 0.77) !important; margin-top:10px">
+                            <h7>Structure Details</h7>
+                        </div>
+
+                        <table class="table table-borderless" style="width:90%;">
+                            <tr>
+                                <td>
+                                    पानी टंकि वरिपरि बार नभएको र छोप्ने ढक्कन नभएको कारण अनावस्यक मानिस तथा जनावर को प्रवेश तथा प्रदुषित गतिबिधि हुने गरेको ।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition1">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    बिपिटि वरी परी पेटि नभएको वा सतहको पानी तर्काउने ढल नभएको वा वरी परी फोहर भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition2">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    बिपिटि टंकिको पर्खालमा चुहावट भएको या पाईप फिटिंगहरुमा चुहावट भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition3">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    बाढी पहिरो को कारण बिपिटिमा फोहर पानी ले पुरिएको कारण या भल्भमा फोहर पानी पसेको कारण प्रदुषण भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition4">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    बिपिटिको उचित सन्चालन नभएको कारण प्रसोधित पानी प्रदुषित भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition5">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    मुहानमा अत्तेधिक धमिलो पानी भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण सेडिमेन्ट वा रफिंग इकाइ बाट प्रसोद्धित पानीमा बढि धमिलो पानी भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition6">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    मुहानमा अत्तेधिक घुलित पदार्थ भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण फिल्टर इकाइ बाट प्रसोद्धित पानीमा बढि घुलित पदार्थ भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition7">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    मुहानमा रसयनिक पदार्थ भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण प्रसोधित पानीमा बढि रसायनिक तत्व भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition8">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    क्लोरिन को मात्रा कम भएको या सम्पर्क समय कम भएको या उचित रुपमा सन्चालन नभएको कारण प्रसोधित पानीमा इ-कोलि देखिएको छ।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition9">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    प्रसोधित पानीमा अपर्याप्त क्लोरिन अवशेष भएको ले पाइप प्रणालिमा हुने प्रदुषण को जोखिम भएको।
+                                </td>
+                                <td>
+                                    <select class="form-control" asp-for="StructureSanitationCondition10">
+                                        <option value="छ">छ</option>
+                                        <option value="छैन">छैन</option>
+                                        <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Save and Cancel Buttons -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Wq_Surveillance.Models;
-using Wq_Surveillance.Models.QueryTables;
 using Wq_Surveillance.Models.API;
 using Wq_Surveillance.Models.MapData;
 

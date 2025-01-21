@@ -16,9 +16,6 @@ namespace Wq_Surveillance.Controllers
         private readonly WqsContext _wqsContext;
         private readonly ISession session;
 
-        //const string PDistrict = "";
-        //const string PMunicipality = "";
-        //const string PProvince = "";
         public SystemController(WqsContext nwash_dnContext, IHttpContextAccessor HttpContextAccessor)
         {
             _wqsContext = nwash_dnContext;
