@@ -40,14 +40,9 @@
                     typ = "Index";
                 }
             }
-            @if (contextHost.Host.Contains("training"))
-            {
-                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">NWASH - Training</a>
-            }
-            else
-            {
-                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">NWASH</a>
-            }
+           
+                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">Wq Surveillance</a>
+          
             <div id="close-sidebar">
                 <i class="fas fa-arrow-left"></i>
             </div>
@@ -85,8 +80,7 @@
                             <li>
                                 <a class="item" href="#">
                                     <a class="item" asp-area="" asp-controller="AboutUs" asp-action="Index" title="About Us">
-                                        <i class="fa fa-info"></i>
-                                        <span>Reference Documents</span>
+                                        <i class="fa fa-info"></i><span>About Us</span>
                                     </a>
                                 </a>
                             </li>                           
@@ -137,14 +131,14 @@
                         </li>
 
                         <li>
-                            <a class="item" asp-area="" asp-controller="Lab" asp-action="Index">
+                            <a class="item" asp-area="" asp-controller="Wqs" asp-action="Index">
                                 <i class="fas fa-flask"></i>
-                                <span>Lab Module</span>
+                                <span>Surveillance Data</span>
                             </a>
                         </li>
-                       @*  ///User Management *@
+                        @*  ///User Management *@
 
-                        <li class="header-menu">
+                @* <li class="header-menu">
                             <span>User Management</span>
                         </li>
                         <li>
@@ -159,7 +153,7 @@
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Log Out</span>
                             </a>
-                        </li>
+                        </li> *@
                
                @*  else
                 {
