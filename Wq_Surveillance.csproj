@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\DataTables\media\images\" />
+    <Folder Include="wwwroot\NewFolder\" />
   </ItemGroup>
 
 </Project>
