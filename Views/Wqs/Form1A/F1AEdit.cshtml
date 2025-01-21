@@ -1,0 +1,258 @@
+﻿@model Wq_Surveillance.Models.Dto.Form1ADto
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var contextHost = HttpContextAccessor.HttpContext.Request.Host;
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit Tubewell Data - NWASH</title>
+    <link rel="stylesheet" href="~/css/doc.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="shortcut icon" href="~/images/logos/NWASH.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
+    <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.css" rel="stylesheet" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/styles.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <style>
+        .bsv {
+            width: 275mm;
+            padding: 15mm 20mm;
+            margin: 10mm auto;
+            border: 1px #D3D3D3 solid;
+            border-radius: 0px;
+            background: white;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container-fluid" style="float: left; position: fixed; padding-top: 20px; padding-bottom: 20px; top: 0px;background: #fff !important;z-index: 999;">
+        <div style="float:left;">
+            <a class="item" asp-area="" asp-controller="Dashboard" asp-action="Index">
+                <img src="~/images/logos/nwash_logo.png" class="img-responsive" alt="Ministry of Water Supply &amp; Sanitation" style="width: 80%;">
+            </a>
+        </div>
+        <div style="clear:both;"></div>
+        <div class="dropdown-divider" style="border-top: 1px solid #002f84;"></div>
+        <div style="clear: both;"></div>
+        <div class="container-fluid" style="background:#e9ebf4; padding:5px; float:left;">
+            <h5 style="margin-bottom:0px;">खानेपानी सुरक्षा थोजना कायान्वियन लेखाजोखा फारम</h5>
+        </div>
+    </div>
+
+    <div class="bsv" style="margin-top:165px;">
+        <form method="post" asp-action="FormAEditPost" asp-controller="Wqs">
+            <input type="hidden" asp-for="FormId" />
+            <div style="color:#002F84;">
+                <h4 style="text-align: center;">योजना बारे सूचना</h4>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-borderless" style="width:90%;">
+                    <tr>
+                        <td>Name of schema</td>
+                        <td><input type="text" class="form-control" asp-for="Address" /></td>
+                    </tr>
+                    <tr>
+                        <td>Project code</td>
+                        <td>@Model.ProCode</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td><input type="text" class="form-control" asp-for="Address" value="@Model.Address" /></td>
+                    </tr>
+                    <tr>
+                        <td>Total HH served</td>
+                        <td>@Model.TotalHhServed</td>
+                    </tr>
+                    <tr>
+                        <td>Population served</td>
+                        <td>@Model.TotalPop</td>
+                    </tr>
+                </table>
+
+                <div style="color:#002F84;">
+                    <h4 style="text-align: center;">खानेपानी सुरक्षा योजनाको अवस्था</h4>
+                </div>
+                <table class="table table-borderless" style="width:90%;">
+
+                <table class="table table-bordered" style="width:90%;">
+                    <tr>
+                        <th>खानेपानी सुरक्षा योजनाको मुख्य गतिविधि</th>
+                        <th>अवस्था</th>
+                        <th>कैफियत</th>
+                    </tr>
+                    <tr>
+                        <td>खानेपानी सुरक्षा योजना टोली गठन तथा कार्यभार वहन</td>
+                            <td>
+                                <select class="form-control" asp-for="WspInitiativeStatus1">
+                                    <option value="नराम्रो">नराम्रो</option>
+                                    <option value="ठिकै">ठिकै</option>
+                                    <option value="राम्रो">राम्रो</option>
+                                    <option value="धेरै राम्रो">धेरै राम्रो</option>
+                                </select>
+                             </td>
+                            <td><input type="text" class="form-control" asp-for="WspInitiativeRemarks1" value="@Model.WspInitiativeRemarks1" /></td>
+                    </tr>
+                    <tr>
+                        <td>मुहानदेखि बितरण प्रणालीसम्म योजनाको विश्लेषण तथा जोखिम पहिचान</td>
+                            <td>
+                                <select class="form-control" asp-for="WspInitiativeStatus2">
+                                    <option value="नराम्रो">नराम्रो</option>
+                                    <option value="ठिकै">ठिकै</option>
+                                    <option value="राम्रो">राम्रो</option>
+                                    <option value="धेरै राम्रो">धेरै राम्रो</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" asp-for="WspInitiativeRemarks2" value="@Model.WspInitiativeRemarks2" /></td>
+                    </tr>
+                    <tr>
+                        <td>जोखिम नियन्त्रण तथा प्रभावकारीता विश्लेषण</td>
+                            <td>
+                                <select class="form-control" asp-for="WspInitiativeStatus3">
+                                    <option value="नराम्रो">नराम्रो</option>
+                                    <option value="ठिकै">ठिकै</option>
+                                    <option value="राम्रो">राम्रो</option>
+                                    <option value="धेरै राम्रो">धेरै राम्रो</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" asp-for="WspInitiativeRemarks3" value="@Model.WspInitiativeRemarks3" /></td>
+                    </tr>
+                    <tr>
+                        <td>अनुगमन योजना तयारी, कार्य संचालन तथा नियमित प्रमाणीकरण</td>
+                            <td>
+                                <select class="form-control" asp-for="WspInitiativeStatus4">
+                                    <option value="नराम्रो">नराम्रो</option>
+                                    <option value="ठिकै">ठिकै</option>
+                                    <option value="राम्रो">राम्रो</option>
+                                    <option value="धेरै राम्रो">धेरै राम्रो</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" asp-for="WspInitiativeRemarks4" value="@Model.WspInitiativeRemarks4" /></td>
+                    </tr>
+                    <tr>
+                        <td>उपभोक्ता सन्तुष्टि पहिचान तथा जनचेतना कार्यक्रम</td>
+                            <td>
+                                <select class="form-control" asp-for="WspInitiativeStatus5">
+                                    <option value="नराम्रो">नराम्रो</option>
+                                    <option value="ठिकै">ठिकै</option>
+                                    <option value="राम्रो">राम्रो</option>
+                                    <option value="धेरै राम्रो">धेरै राम्रो</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" asp-for="WspInitiativeRemarks5" value="@Model.WspInitiativeRemarks5" /></td>
+                    </tr>
+                    <tr>
+                        <td>पानी शुद्धिकरण योजनाको कागजात तयारी</td>
+                            <td>
+                                <select class="form-control" asp-for="WspInitiativeStatus6">
+                                    <option value="नराम्रो">नराम्रो</option>
+                                    <option value="ठिकै">ठिकै</option>
+                                    <option value="राम्रो">राम्रो</option>
+                                    <option value="धेरै राम्रो">धेरै राम्रो</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" asp-for="WspInitiativeRemarks6" value="@Model.WspInitiativeRemarks6" /></td>
+                    </tr>
+                    <tr>
+                        <td>पानी वितरणको विवरण</td>
+                            <td>
+                                <select class="form-control" asp-for="WspInitiativeStatus7">
+                                    <option value="नराम्रो">नराम्रो</option>
+                                    <option value="ठिकै">ठिकै</option>
+                                    <option value="राम्रो">राम्रो</option>
+                                    <option value="धेरै राम्रो">धेरै राम्रो</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control" asp-for="WspInitiativeRemarks7" value="@Model.WspInitiativeRemarks7" /></td>
+                    </tr>
+                </table>
+                <tr>
+                    <td>
+                        खानेपानी सुरक्षा योजनाको अवस्था :
+                    </td>
+                        <td>
+                            <select class="form-control" asp-for="WspInitiativeSecurityPlan">
+                                <option value="पुरा गरेको">पुरा गरेको</option>
+                                <option value="पुरा गर्नुपर्ने">पुरा गर्नुपर्ने</option>
+                                <option value="सरुनै नगरेको">रासरुनै नगरेकोम्रो</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <br />
+                <tr>
+                    <td>
+                        पानीको गुणस्तर अवस्था :
+                    </td>
+                        <td>
+                            <select class="form-control" asp-for="WspInitiativeWaterQualityStatus">
+                                <option value="सुरक्षित">सुरक्षित</option>
+                                <option value="असुरक्षित">असुरक्षित</option>
+                                <option value="परीक्षण भएको छैन">परीक्षण भएको छैन</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                </br>
+                <div style="color:#002F84;">
+                    <h4 style="text-align: center;">पानीजन्य रोगको अबस्था</h4>
+                </div>
+                <br />
+                <table>
+                    <tr>
+                        <!-- First Q&A -->
+                        <td>झाडापखाला लाग्नेको संख्या :</td>
+                        <td>
+                            <input type="number" class="form-control" asp-for="WspInitiativeInfectedByDiarrhea" value="@Model.WspInitiativeInfectedByDiarrhea" style="width:100px;" />
+                        </td>
+
+                        <!-- Second Q&A -->
+                        <td>झाडापखालाबाट मर्नेको संख्या :</td>
+                        <td>
+                            <input type="number" class="form-control" asp-for="WspInitiativeDiedByDiarrhea" value="@Model.WspInitiativeDiedByDiarrhea" style="width:100px;" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- Third Q&A -->
+                        <td>कायक्षेत्रमा सामान्य पानीजन्य रोग :</td>
+                        <td>
+                            <input type="number" class="form-control" asp-for="WspInitiativeWaterDisease" value="@Model.WspInitiativeWaterDisease" style="width:100px;" />
+                        </td>
+
+                        <!-- Fourth Q&A -->
+                        <td>सूचनाको स्रोत :</td>
+                        <td>
+                            <input type="number" class="form-control" asp-for="WspInitiativeNoticeSource" value="@Model.WspInitiativeNoticeSource" style="width:100px;" />
+                        </td>
+                    </tr>
+                </table>
+                <div style="color:#002F84; padding: 10px;">
+                    <h4 style="text-align: center;">लेखाजोखाको नतिजा :</h4>
+                </div>
+                <br />
+                <textarea class="form-control" asp-for="WspInitiativeWrittenResult" value="@Model.WspInitiativeWrittenResult"></textarea>
+                <div style="color:#002F84; padding: 10px;">
+                    <h4 style="text-align: center;">आयोजना ब्यबस्यापनको लागि सु्ाव :</h4>
+                </div>
+                <textarea class="form-control" asp-for="WspInitiativeSuggestion" value="@Model.WspInitiativeSuggestion"></textarea>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary" as>Save</button>
+                    <a class="btn btn-secondary" asp-action="Index" asp-controller="Dashboard">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

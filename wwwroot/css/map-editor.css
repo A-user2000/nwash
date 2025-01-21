@@ -1,0 +1,235 @@
+.pipe-icon
+{
+    background-image: url(../img/pipe-icon.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+.pipe-drawn-icon
+{
+    background-image: url(../img/pipeDrawn.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+.pipe-route-icon
+{
+    background-image: url(../img/pipeRoutepoint.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+.reservoir-icon
+{
+    background-image: url(../img/reservoir.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.tap-icon
+{
+    background-image: url(../img/tap.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 5px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+
+.structure-icon
+{
+    background-image: url(../img/structure.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+.junction-icon
+{
+    background-image: url(../img/junction.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 5px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+.coverage-icon
+{
+    background-image: url(../img/polygon.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+.source-icon
+{
+    background-image: url(../img/source.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.new-source-icon
+{
+    background-image: url(../img/new-source-icon.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.community-ws-icon
+{
+    background-image: url(../img/community-ws-icon.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.community-irr-icon{
+    background-image: url(../img/community-irr-icon.png); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 3px 3px;  /* equivalent to 'top left' */
+    border: 1px solid #ccc;           /* assuming we don't want any borders */
+    border-radius: 5px;
+    height:32px;           /* make this the size of your image */
+    width: 32px;           /* make this the size of your image */
+    vertical-align: middle; /* align the text vertically centered */
+}
+
+.editor-legend
+{
+    background-position-x: right;
+    margin-left: 16px;
+    height: 30px;
+    width: 75px;
+    display: block;
+    background-repeat: no-repeat;
+    font-size: 10px;
+    font-style: italic;
+}
+.ws-legend
+{
+    background-image: url(../img/new-source-icon.png);
+
+}
+
+.community-ws-legend
+{
+    background-image: url(../img/community-ws-icon.png);
+}
+
+.community-irr-legend
+{
+    background-image: url(../img/community-irr-icon.png);
+}
+
+.view{
+    height:600px;
+    overflow-y: scroll;
+}
+
+/**-----------------legend of drawAPP------------*/
+.prop-button-container
+{
+    margin-top:10px;
+}
+
+.structure-legend
+{
+    background-image: url(../img/structure.png);
+
+}
+.junction-legend
+{
+    background-image: url(../img/junction.png);
+
+}
+.coverage-legend
+{
+    background-image: url(../img/polygon.png);
+
+}
+.pipe-legend
+{
+    background-image: url(../img/pipe-icon.png);
+}
+.pipe-drawn-legend
+{
+    background-image: url(../img/pipeDrawn.png);
+}
+.project-legend
+{
+    background-image: url(../img/project.png);
+}
+
+.reservoir-legend
+{
+    background-image: url(../img/reservoir.png);
+}
+
+.tap-legend
+{
+    background-image: url(../img/tap.png);
+}
+
+.water-source-legend
+{
+    background-image: url(../img/source.png);
+}
+.pipe-route-legend{
+    background-image: url(../img/pipeRoutepoint.png);  
+}
+
+/**-----------------End of legend of drawAPP------------*/

@@ -1,0 +1,179 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var contextHost = HttpContextAccessor.HttpContext.Request.Host;
+    var usertyp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups");
+    var province = HttpContextAccessor.HttpContext.Session.GetString("SProvince");
+    var municipality = HttpContextAccessor.HttpContext.Session.GetInt32("SMunicipality");
+}
+<a id="show-sidebar" class="btn btn-sm btn-dark" href="#">
+    <i class="fas fa-bars"></i>
+
+</a>
+
+
+    <style>
+        .navcolor {
+        background-color: rgb(42 74 61) !important;
+        }
+    </style>
+
+<nav id="sidebar" class="sidebar-wrapper navcolor" style=" color: #fff !important;z-index:1100;">
+    <div class="sidebar-content">
+        <div class="sidebar-brand">
+            @{
+                var typ = "";
+                if (usertyp == null)
+                {
+                    typ = "Index";
+                }
+                else if (usertyp == 7 || (int)usertyp == 8 || (usertyp == 3 && province != "0" && province != null && (municipality == 0 || municipality == null)))
+                {
+                    typ = "ProIndex";
+                }
+                else if ((int)usertyp == 5 || (int)usertyp == 6 || (usertyp == 3 && (municipality != 0 && municipality != null)))
+                {
+                    typ = "MunIndex";
+                }
+                else
+                {
+                    typ = "Index";
+                }
+            }
+            @if (contextHost.Host.Contains("training"))
+            {
+                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">NWASH - Training</a>
+            }
+            else
+            {
+                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">NWASH</a>
+            }
+            <div id="close-sidebar">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("SUserID")))
+        {
+            <div class="sidebar-header">
+                <div class="user-pic">
+                    <img src="~/images/logos/nwashIcnUser.png" alt="Avatar" class="avatar img-responsive img-rounded" style="width: 45px;">
+                </div>
+                <div class="user-info">
+                    <span class="user-name" style="color: #fff !important;">
+                        <strong>@HttpContextAccessor.HttpContext.Session.GetString("SName")</strong>
+                    </span>
+                    @if (HttpContextAccessor.HttpContext.Session.GetInt32("SUserCat") == 1)
+                    {
+                        <span class="user-role">@HttpContextAccessor.HttpContext.Session.GetString("SUserType")</span>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- sidebar-header  -->
+        <div class="sidebar-menu" style="font-size: 10pt;">
+            <ul>
+                <!--- Home -->
+                <li class="sidebar-dropdown">
+                    <a class="item" href="#">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a class="item" href="#">
+                                    <a class="item" asp-area="" asp-controller="AboutUs" asp-action="Index" title="About Us">
+                                        <i class="fa fa-info"></i>
+                                        <span>Reference Documents</span>
+                                    </a>
+                                </a>
+                            </li>                           
+                            <li>
+                                <a class="item" asp-area="#" asp-controller="" asp-action="Index" title="Reference Documents">
+                                    <i class="fa fa-file"></i>
+                                    <span>Reference Documents</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+                        <!--- Water Quality -->
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-tint"></i>
+                                <span>Water Quality</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="WQParameter">
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                            WQ Scheme-Wise
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="WaterQualityData" asp-action="WQScheme">
+                                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                                            WQ Parameter-Wise
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" asp-area="" asp-controller="SanitaryInspection" asp-action="Index">
+                                            <i class="fa fa-toilet"></i>
+                                            <span>Sanitary Inspection</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="item" href="#">
+                                            <i class="fa fa-flask"></i>
+                                            <span>Lab Network</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Lab" asp-action="Index">
+                                <i class="fas fa-flask"></i>
+                                <span>Lab Module</span>
+                            </a>
+                        </li>
+                       @*  ///User Management *@
+
+                        <li class="header-menu">
+                            <span>User Management</span>
+                        </li>
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Users" asp-action="ChangePassword">
+                                <i class="fa fa-lock"></i>
+                                <span>Change Password</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Login" asp-action="Logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </li>
+               
+               @*  else
+                {
+                    <li>
+                        <a class="item" asp-area="" asp-controller="Login" asp-action="Index">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Log In</span>
+                        </a>
+                    </li>
+                } *@
+            </ul>
+        </div>
+        <!-- sidebar-menu  -->
+    </div>
+    <!-- sidebar-content  -->
+</nav>
+<!-- sidebar-wrapper  -->

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.Dto.FormTapDto>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var munCode = ViewData["munCode"] as string;
+    var sGrp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups");
+    var sMun = HttpContextAccessor.HttpContext.Session.GetInt32("SMunicipality");
+    var sDcode = HttpContextAccessor.HttpContext.Session.GetInt32("SDistrict");
+    var sProvince = HttpContextAccessor.HttpContext.Session.GetInt32("SProvince");
+    var sn = 1;
+}
+<div class="table-responsive" style="width:85%; margin: 0 auto;">
+    <div style="clear:both;"></div>
+    @if (munCode != null)
+    {
+        <button class="btn btn-success btn-sm" style="background-color: rgb(33,115,70); box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; float: left; margin-left:5px"
+                onclick="window.location = '@Url.Action("ExportTapSanToExcel", "Wqs", new { MunCode=munCode })'">
+            Export SWM Data
+        </button>
+    }
+    else
+    {
+        <p>MunCode is null. Cannot export data.</p>
+    }
+
+
+    <table id="TapSan" class="table table-bordered table-striped" border="1">
+        <thead>
+            <tr style="background: #e8ecfd;">
+                <th>S.N.</th>
+                <th>Name of Scheme</th>
+                <th>Project Code</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+            @foreach (var item in Model)
+            {
+                // Encode FormId to Base64
+                var encodedFormId = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(item.FormId));
+
+                <tr>
+                    <td>@sn</td>
+                    <td>@Html.DisplayFor(modelItem => item.FormId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ProCode)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                    <td>
+                        <!-- View Button with Base64-encoded FormId -->
+                        <a asp-action="FormViewTap" asp-route-encode="@encodedFormId" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+
+                        <!-- Edit Button with Base64-encoded FormId -->
+                        <a asp-controller="Wqs" asp-action="FormTapEdit" asp-route-id="@encodedFormId" class="btn btn-sm btn-outline-info" target="_blank">Edit</a>
+
+                        <button class="btn btn-sm btn-outline-danger" onclick="DeleteDataTap('@encodedFormId')">Delete</button>
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#TapSan').DataTable({
+            "iDisplayLength": 10,
+            "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
+        });
+    });
+
+    function DeleteDataTap(uuid) {
+        if (confirm('Are you sure to delete this data?')) {
+            $.ajax({
+                type: "POST",
+                url: '/Wqs/DeleteDataTap',
+                data: { 'id': uuid },
+                success: function (data) {
+                    if (data == 1) {
+                        alert("Data Deleted Successfully.");
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                    }
+                    tdataLoad();
+                },
+                failure: function () {
+                    alert('Something went wrong. Please try again');
+                }
+            });
+
+        }
+    }
+</script>
