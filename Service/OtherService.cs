@@ -263,7 +263,7 @@ namespace wq.Service.OtherService
         //            if (ImguuidP != null && ImguuidP.txt != "" && ImguuidP.txt != null)
         //            {
         //                var temppath = GetImgPath(ImguuidP.txt);
-        //                var path = Path.Combine(_hostEnvironment.ContentRootPath, "nwash_images", imgFolder, temppath, ImguuidP.txt);
+        //                var path = Path.Combine(_hostEnvironment.ContentRootPath, "wqs_images", imgFolder, temppath, ImguuidP.txt);
         //                if (System.IO.File.Exists(path))
         //                {
         //                    System.IO.File.Delete(path);
