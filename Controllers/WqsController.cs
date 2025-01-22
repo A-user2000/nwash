@@ -138,6 +138,7 @@ namespace Wq_Surveillance.Controllers
 
                     if (projectData != null)
                     {
+                        
                         val.TotalPop = 0;
                         val.TotalHhServed = 0;
                         foreach (var pdl in projectData)
