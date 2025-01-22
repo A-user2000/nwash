@@ -154,7 +154,13 @@ namespace Wq_Surveillance.Service
                 .ToDictionary(item => item.Uuid, item => item.TotalBenificiaryPopulation ?? 0); // Handle null TotalHHServed
         }
 
-
+        public string GetName(string procode)
+        {
+            return _wqsContext.ProjectDetails
+                .Where(s => s.ProCode != null && s.ProCode == procode)
+                .Select(s => s.ProName)
+                             .FirstOrDefault();
+        }
 
 
         public Form1a UpdateWQSDataFA (Form1a WData, string username)

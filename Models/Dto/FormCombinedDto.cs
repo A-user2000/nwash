@@ -7,6 +7,6 @@
         public FormSouDto SourceSanitationData { get; set; }
         public FormStrDto StructureSanitationData { get; set; }
         public FormTapDto TapSanitationData { get; set; }
-        public WqSurvellianceMain WqData { get; set; }
+        public WQDto WqData { get; set; }
     }
 }
