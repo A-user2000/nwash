@@ -74,6 +74,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=WqsDashboard}/{action=Index}/{id?}");
+    pattern: "{controller=Wqs}/{action=Index}/{id?}");
 
 app.Run();

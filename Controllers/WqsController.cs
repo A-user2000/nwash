@@ -2495,5 +2495,183 @@ namespace Wq_Surveillance.Controllers
 
             return File(fileBytes, contentType, fileName);
         }
+        public ActionResult ExportAllSanitationToExcel(string MunCode)
+        {
+            // List of table names (will be used as sheet names in Excel)
+            List<string> tbls = new List<string>()
+    {
+        "Reservoir Sanitation",
+        "Source Sanitary",
+        "Structure Sanitation",
+        "Tap Sanitation"
+    };
+
+            // List of SQL queries for each table
+            List<string> pgsQuerys = new List<string>()
+    {
+        $@"
+        SELECT 
+            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
+            wm.province AS Province, 
+            wm.district AS District, 
+            wm.municipality AS Municipality, 
+            f.*
+        FROM 
+            wqs.reservoir_sanitary f
+        LEFT JOIN 
+            wqs.wq_survelliance_main wm 
+        ON 
+            f.form_Id = wm.Uuid
+        WHERE 
+            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
+        ORDER BY 
+            f.id;",
+        $@"
+        SELECT 
+            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
+            wm.province AS Province, 
+            wm.district AS District, 
+            wm.municipality AS Municipality, 
+            f.*
+        FROM 
+            wqs.source_sanitary f
+        LEFT JOIN 
+            wqs.wq_survelliance_main wm 
+        ON 
+            f.form_Id = wm.Uuid
+        WHERE 
+            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
+        ORDER BY 
+            f.id;",
+        $@"
+        SELECT 
+            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
+            wm.province AS Province, 
+            wm.district AS District, 
+            wm.municipality AS Municipality, 
+            f.*
+        FROM 
+            wqs.structure_sanitary f
+        LEFT JOIN 
+            wqs.wq_survelliance_main wm 
+        ON 
+            f.form_Id = wm.Uuid
+        WHERE 
+            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
+        ORDER BY 
+            f.id;",
+        $@"
+        SELECT 
+            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
+            wm.province AS Province, 
+            wm.district AS District, 
+            wm.municipality AS Municipality, 
+            f.*
+        FROM 
+            wqs.tap_sanitary f
+        LEFT JOIN 
+            wqs.wq_survelliance_main wm 
+        ON 
+            f.form_Id = wm.Uuid
+        WHERE 
+            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
+        ORDER BY 
+            f.id;"
+    };
+
+            // Set up the Excel file
+            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            string fileName = MunCode + "_AllSanitation_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
+            string pathDownload = Path.Combine(_hostEnvironment.WebRootPath, "TEMP");
+
+            if (!Directory.Exists(pathDownload))
+            {
+                Directory.CreateDirectory(pathDownload);
+            }
+
+            // Create the Excel workbook
+            using var workbook = new XLWorkbook();
+            workbook.Properties.Company = "WQS";
+
+            // Loop through each table and create a sheet in the Excel file
+            for (int i = 0; i < tbls.Count; i++)
+            {
+                DataTable dt = new DataTable();
+                DbConnection connection = _wqsContext.Database.GetDbConnection();
+                DbProviderFactory dbFactory = DbProviderFactories.GetFactory(connection);
+
+                using (var cmd = dbFactory.CreateCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = pgsQuerys[i];
+
+                    using DbDataAdapter adapter = dbFactory.CreateDataAdapter();
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(dt);
+                }
+
+                IXLWorksheet worksheet = workbook.Worksheets.Add(tbls[i]);
+                IXLCell xcl;
+                int row = 1;
+
+                // Adding headers to Excel
+                for (int col = 1; col <= dt.Columns.Count; col++)
+                {
+                    xcl = worksheet.Cell(1, col);
+                    xcl.Value = dt.Columns[col - 1].ToString();
+                    xcl.Style.Font.Bold = true;
+                    xcl.Style.Font.Italic = false;
+                    xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    xcl.Style.Fill.BackgroundColor = XLColor.Aqua;
+                }
+                row++;
+
+                // Adding data rows to Excel
+                foreach (DataRow dr in dt.Rows)
+                {
+                    for (int col = 1; col <= dt.Columns.Count; col++)
+                    {
+                        xcl = worksheet.Cell(row, col);
+                        decimal itemVal;
+                        DateTime dateText;
+
+                        if (Decimal.TryParse(dr[col - 1].ToString(), out itemVal))
+                        {
+                            xcl.Value = itemVal;
+                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        }
+                        else if (DateTime.TryParse(dr[col - 1].ToString(), out dateText))
+                        {
+                            xcl.Value = $"'{dr[col - 1].ToString().Split(" ")[0]}";
+                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                        }
+                        else
+                        {
+                            xcl.Value = $"{dr[col - 1]}";
+                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                        }
+
+                        xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                    }
+                    row++;
+                }
+
+                // Adjusting column width to fit content
+                worksheet.Columns().AdjustToContents();
+            }
+
+            // Save and return the file
+            using var stream = new MemoryStream();
+            var content = stream.ToArray();
+            string actualFilePath = pathDownload + "\\" + fileName;
+            workbook.SaveAs(actualFilePath);
+            workbook.Dispose();
+            byte[] fileBytes = System.IO.File.ReadAllBytes(actualFilePath);
+            System.IO.File.Delete(actualFilePath);
+
+            return File(fileBytes, contentType, fileName);
+        }
     }
 }
