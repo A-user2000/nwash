@@ -186,6 +186,7 @@ namespace Wq_Surveillance.Controllers
                     Municipality = item.Municipality,
                     ProjectName = item.ProjectName,
                     Surveyor = item.Surveyor,
+                    AddedBy=item.AddedBy,
                     ReservoirExists = _wqsContext.ReservoirSanitaries.Any(f => f.FormId == item.Uuid),
                     SourceExists = _wqsContext.SourceSanitaries.Any(f => f.FormId == item.Uuid),
                     StructureExists = _wqsContext.StructureSanitaries.Any(f => f.FormId == item.Uuid),
@@ -1445,25 +1446,52 @@ namespace Wq_Surveillance.Controllers
 
                 // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
                 pgsQuerys = new string[1]
- {
-   $@"
-   SELECT 
-       ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-       wm.province AS Province, 
-       wm.district AS District, 
-       wm.municipality AS Municipality, 
-       f.*
-   FROM 
-       wqs.form_1a f
-   LEFT JOIN 
-       wqs.wq_survelliance_main wm 
-   ON 
-       f.form_Id = wm.Uuid
-   WHERE 
-       SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-   ORDER BY 
-       f.id;"
- };
+   {
+    $@"
+    SELECT 
+        ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
+        wm.province AS Province, 
+        wm.district AS District, 
+        wm.municipality AS Municipality, 
+        f.added_by AS AddedBy,
+        f.added_on AS AddedOn,
+        f.edited_by AS EditedBy,
+        f.edited_on AS EditedOn,
+        f.wsp_initiative_status_1 AS WspInitiativeStatus1,
+        f.wsp_initiative_remarks_1 AS WspInitiativeRemarks1,
+        f.wsp_initiative_status_2 AS WspInitiativeStatus2,
+        f.wsp_initiative_remarks_2 AS WspInitiativeRemarks2,
+        f.wsp_initiative_status_3 AS WspInitiativeStatus3,
+        f.wsp_initiative_remarks_3 AS WspInitiativeRemarks3,
+        f.wsp_initiative_status_4 AS WspInitiativeStatus4,
+        f.wsp_initiative_remarks_4 AS WspInitiativeRemarks4,
+        f.wsp_initiative_status_5 AS WspInitiativeStatus5,
+        f.wsp_initiative_remarks_5 AS WspInitiativeRemarks5,
+        f.wsp_initiative_status_6 AS WspInitiativeStatus6,
+        f.wsp_initiative_remarks_6 AS WspInitiativeRemarks6,
+        f.wsp_initiative_status_7 AS WspInitiativeStatus7,
+        f.wsp_initiative_remarks_7 AS WspInitiativeRemarks7,
+        f.wsp_initiative_security_plan AS WspInitiativeSecurityPlan,
+        f.wsp_initiative_water_quality_status AS WspInitiativeWaterQualityStatus,
+        f.wsp_initiative_infected_by_diarrhea AS WspInitiativeInfectedByDiarrhea,
+        f.wsp_initiative_died_by_diarrhea AS WspInitiativeDiedByDiarrhea,
+        f.wsp_initiative_water_disease AS WspInitiativeWaterDisease,
+        f.wsp_initiative_notice_source AS WspInitiativeNoticeSource,
+        f.wsp_initiative_written_result AS WspInitiativeWrittenResult,
+        f.wsp_initiative_suggestion AS WspInitiativeSuggestion
+    FROM 
+        wqs.form_1a f
+    LEFT JOIN 
+        wqs.wq_survelliance_main wm 
+    ON 
+        f.form_id = wm.uuid
+    WHERE 
+        SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
+    ORDER BY 
+        f.id;"
+   };
+
+
 
 
 
@@ -1580,25 +1608,47 @@ namespace Wq_Surveillance.Controllers
 
                 // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
                 pgsQuerys = new string[1]
- {
-   $@"
-   SELECT 
-       ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-       wm.province AS Province, 
-       wm.district AS District, 
-       wm.municipality AS Municipality, 
-       f.*
-   FROM 
-       wqs.form_1b f
-   LEFT JOIN 
-       wqs.wq_survelliance_main wm 
-   ON 
-       f.form_Id = wm.Uuid
-   WHERE 
-       SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-   ORDER BY 
-       f.id;"
- };
+   {
+    $@"
+    SELECT 
+        ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
+        wm.province AS Province, 
+        wm.district AS District, 
+        wm.municipality AS Municipality, 
+        f.""added_by"" AS AddedBy,
+        f.""added_on"" AS AddedOn,
+        f.""edited_by"" AS EditedBy,
+        f.""edited_on"" AS EditedOn,
+        f.""certification_photo"" AS CertificationPhoto,
+        f.""certification_score"" AS CertificationScore,
+        f.""collaborative_activitiesPhoto"" AS CollaborativeActivitiesPhoto,
+        f.""collaborative_activitiesScore"" AS CollaborativeActivitiesScore,
+        f.""improvement_plan_photo"" AS ImprovementPlanPhoto,
+        f.""improvement_plan_score"" AS ImprovementPlanScore,
+        f.""monitoring_photo"" AS MonitoringPhoto,
+        f.""monitoring_score"" AS MonitoringScore,
+        f.""pollution_risk_control_measure_score"" AS PollutionRiskControlMeasureScore,
+        f.""pollution_risk_control_photo"" AS PollutionRiskControlPhoto,
+        f.""review_photo"" AS ReviewPhoto,
+        f.""review_score"" AS ReviewScore,
+        f.""system_analysis_photo"" AS SystemAnalysisPhoto,
+        f.""system_analysis_score"" AS SystemAnalysisScore,
+        f.""team_formation_photo"" AS TeamFormationPhoto,
+        f.""team_formation_score"" AS TeamFormationScore,
+        f.""total_score"" AS TotalScore
+    FROM 
+        wqs.""form_1b"" f
+    LEFT JOIN 
+        wqs.""wq_survelliance_main"" wm 
+    ON 
+        f.""form_id"" = wm.""uuid""
+    WHERE 
+        SPLIT_PART(wm.""municipality"", ' - ', 1) = '{MunCode}'
+    ORDER BY 
+        f.id;"
+   };
+
+
 
 
 
@@ -1715,24 +1765,46 @@ namespace Wq_Surveillance.Controllers
                 // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
                 pgsQuerys = new string[1]
  {
-   $@"
-   SELECT 
-       ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-       wm.province AS Province, 
-       wm.district AS District, 
-       wm.municipality AS Municipality, 
-       f.*
-   FROM 
-       wqs.form_2 f
-   LEFT JOIN 
-       wqs.wq_survelliance_main wm 
-   ON 
-       f.form_Id = wm.Uuid
-   WHERE 
-       SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-   ORDER BY 
-       f.id;"
+    $@"
+    SELECT 
+        ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
+        wm.province AS Province, 
+        wm.district AS District, 
+        wm.municipality AS Municipality, 
+        f.""added_by"" AS AddedBy,
+        f.""added_on"" AS AddedOn,
+        f.""edited_by"" AS EditedBy,
+        f.""edited_on"" AS EditedOn,
+        f.""def_died_by_diarrhea"" AS DefDiedByDiarrhea,
+        f.""def_infected_by_diarrhea"" AS DefInfectedByDiarrhea,
+        f.""def_notice_source"" AS DefNoticeSource,
+        f.""def_suggestion"" AS DefSuggestion,
+        f.""def_water_disease"" AS DefWaterDisease,
+        f.""def_written_result"" AS DefWrittenResult,
+        f.""pipeline_basic_evaluation"" AS PipelineBasicEvaluation,
+        f.""pipeline_basic_evaluation_remarks"" AS PipelineBasicEvaluationRemarks,
+        f.""pollution_possibility"" AS PollutionPossibility,
+        f.""pollution_possibility_types"" AS PollutionPossibilityTypes,
+        f.""source_basic_evaluation"" AS SourceBasicEvaluation,
+        f.""source_basic_evaluation_remarks"" AS SourceBasicEvaluationRemarks,
+        f.""storage_usage_basic_evaluation"" AS StorageUsageBasicEvaluation,
+        f.""storage_usage_basic_evaluation_remarks"" AS StorageUsageBasicEvaluationRemarks,
+        f.""treatment_center_basic_evaluation"" AS TreatmentCenterBasicEvaluation,
+        f.""treatment_center_basic_evaluation_remarks"" AS TreatmentCenterBasicEvaluationRemarks,
+        f.""water_reservoir_basic_evaluation"" AS WaterReservoirBasicEvaluation,
+        f.""water_reservoir_basic_evaluation_remarks"" AS WaterReservoirBasicEvaluationRemarks
+    FROM 
+        wqs.""form_2"" f
+    LEFT JOIN 
+        wqs.""wq_survelliance_main"" wm 
+    ON 
+        f.""form_id"" = wm.""uuid""
+    WHERE 
+        SPLIT_PART(wm.""municipality"", ' - ', 1) = '{MunCode}'
+    ORDER BY 
+        f.id;"
  };
+
 
 
 
@@ -1848,25 +1920,35 @@ namespace Wq_Surveillance.Controllers
 
                 // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
                 pgsQuerys = new string[1]
- {
-   $@"
+{
+    $@"
     SELECT 
         ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
         wm.province AS Province, 
         wm.district AS District, 
         wm.municipality AS Municipality, 
-        f.*
+        f.""added_by"" AS AddedBy,
+        f.""added_on"" AS AddedOn,
+        f.""edited_by"" AS EditedBy,
+        f.""edited_on"" AS EditedOn,
+        f.""cholera_count"" AS CholeraCount,
+        f.""diarrhea_count"" AS DiarrheaCount,
+        f.""hepatitis_count"" AS HepatitisCount,
+        f.""month"" AS Month,
+        f.""typhoid_count"" AS TyphoidCount,
+        f.""dysentery_count"" AS DysenteryCount,
+        f.""form_id"" AS FormId
     FROM 
-        wqs.form_3 f
+        wqs.""form_3"" f
     LEFT JOIN 
-        wqs.wq_survelliance_main wm 
+        wqs.""wq_survelliance_main"" wm 
     ON 
-        f.""form_Id"" = wm.""uuid""
+        f.""form_id"" = wm.""uuid""
     WHERE 
-        SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
+        SPLIT_PART(wm.""municipality"", ' - ', 1) = '{MunCode}'
     ORDER BY 
         f.id;"
-            };
+};
 
 
 
@@ -1968,539 +2050,6 @@ namespace Wq_Surveillance.Controllers
             return File(fileBytes, contentType, fileName);
         }
 
-        public ActionResult ExportResSanToExcel(string MunCode) 
-        {
-            string[] pgsQuerys;
-            List<DataTable> dts = new List<DataTable>();
-            List<string> tbls = new List<string>();
-            if (MunCode != "")
-            {
-                tbls = new List<string>()
-        {
-            "Reservoir Sanitation"
-        };
-
-                // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
-                pgsQuerys = new string[1]
- {
-   $@"
-   SELECT 
-       ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-       wm.province AS Province, 
-       wm.district AS District, 
-       wm.municipality AS Municipality, 
-       f.*
-   FROM 
-       wqs.reservoir_sanitary f
-   LEFT JOIN 
-       wqs.wq_survelliance_main wm 
-   ON 
-       f.form_Id = wm.Uuid
-   WHERE 
-       SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-   ORDER BY 
-       f.id;"
- };
-
-
-
-            }
-            else
-            {
-                pgsQuerys = new string[1] { "SELECT" };
-            }
-
-            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            string fileName = MunCode + "_ResSan_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
-            string pathDownload = Path.Combine(_hostEnvironment.WebRootPath, "TEMP");
-
-            if (!Directory.Exists(pathDownload))
-            {
-                Directory.CreateDirectory(pathDownload);
-            }
-
-            using var workbook = new XLWorkbook();
-            workbook.Properties.Company = "WQS";
-
-            for (int item = 1; item <= tbls.Count; item++)  // or do pgsQuerys.Count
-            {
-                DataTable dt = new DataTable();
-                DbConnection connection = _wqsContext.Database.GetDbConnection();
-                DbProviderFactory dbFactory = DbProviderFactories.GetFactory(connection);
-
-                using (var cmd = dbFactory.CreateCommand())
-                {
-                    cmd.Connection = connection;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = pgsQuerys[item - 1];
-
-                    using DbDataAdapter adapter = dbFactory.CreateDataAdapter();
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(dt);
-                }
-
-                IXLWorksheet worksheet = workbook.Worksheets.Add(tbls[item - 1]);
-                IXLCell xcl;
-                int row = 1;
-
-                // Adding headers to Excel
-                for (int i = 1; i <= dt.Columns.Count; i++)
-                {
-                    xcl = worksheet.Cell(1, i);
-                    xcl.Value = dt.Columns[i - 1].ToString();
-                    xcl.Style.Font.Bold = true;
-                    xcl.Style.Font.Italic = false;
-                    xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    xcl.Style.Fill.BackgroundColor = XLColor.Aqua;
-                }
-                row++;
-
-                // Adding data rows to Excel
-                foreach (DataRow dr in dt.Rows)
-                {
-                    for (int i = 1; i <= dt.Columns.Count; i++)
-                    {
-                        xcl = worksheet.Cell(row, i);
-                        decimal itemVal;
-                        DateTime dateText;
-
-                        if (Decimal.TryParse(dr[i - 1].ToString(), out itemVal))
-                        {
-                            xcl.Value = itemVal;
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        }
-                        else if (DateTime.TryParse(dr[i - 1].ToString(), out dateText))
-                        {
-                            xcl.Value = $"'{dr[i - 1].ToString().Split(" ")[0]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-                        else
-                        {
-                            xcl.Value = $"{dr[i - 1]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-
-                        xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    }
-                    row++;
-                }
-
-                // Adjusting column width to fit content
-                worksheet.Columns().AdjustToContents();
-            }
-
-            // Save and return the file
-            using var stream = new MemoryStream();
-            var content = stream.ToArray();
-            string actualFilePath = pathDownload + "\\" + fileName;
-            workbook.SaveAs(actualFilePath);
-            workbook.Dispose();
-            byte[] fileBytes = System.IO.File.ReadAllBytes(actualFilePath);
-            System.IO.File.Delete(actualFilePath);
-
-            return File(fileBytes, contentType, fileName);
-        }
-        public ActionResult ExportSouSanToExcel(string MunCode)
-        {
-            string[] pgsQuerys;
-            List<DataTable> dts = new List<DataTable>();
-            List<string> tbls = new List<string>();
-            if (MunCode != "")
-            {
-                tbls = new List<string>()
-        {
-            "Source Sanitary"
-        };
-
-                // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
-                pgsQuerys = new string[1]
- {
-   $@"
-   SELECT 
-       ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-       wm.province AS Province, 
-       wm.district AS District, 
-       wm.municipality AS Municipality, 
-       f.*
-   FROM 
-       wqs.source_sanitary f
-   LEFT JOIN 
-       wqs.wq_survelliance_main wm 
-   ON 
-       f.form_Id = wm.Uuid
-   WHERE 
-       SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-   ORDER BY 
-       f.id;"
- };
-
-
-
-            }
-            else
-            {
-                pgsQuerys = new string[1] { "SELECT" };
-            }
-
-            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            string fileName = MunCode + "_SouSan_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
-            string pathDownload = Path.Combine(_hostEnvironment.WebRootPath, "TEMP");
-
-            if (!Directory.Exists(pathDownload))
-            {
-                Directory.CreateDirectory(pathDownload);
-            }
-
-            using var workbook = new XLWorkbook();
-            workbook.Properties.Company = "WQS";  
-
-            for (int item = 1; item <= tbls.Count; item++)  // or do pgsQuerys.Count
-            {
-                DataTable dt = new DataTable();
-                DbConnection connection = _wqsContext.Database.GetDbConnection();
-                DbProviderFactory dbFactory = DbProviderFactories.GetFactory(connection);
-
-                using (var cmd = dbFactory.CreateCommand())
-                {
-                    cmd.Connection = connection;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = pgsQuerys[item - 1];
-
-                    using DbDataAdapter adapter = dbFactory.CreateDataAdapter();
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(dt);
-                }
-
-                IXLWorksheet worksheet = workbook.Worksheets.Add(tbls[item - 1]);
-                IXLCell xcl;
-                int row = 1;
-
-                // Adding headers to Excel
-                for (int i = 1; i <= dt.Columns.Count; i++)
-                {
-                    xcl = worksheet.Cell(1, i);
-                    xcl.Value = dt.Columns[i - 1].ToString();
-                    xcl.Style.Font.Bold = true;
-                    xcl.Style.Font.Italic = false;
-                    xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    xcl.Style.Fill.BackgroundColor = XLColor.Aqua;
-                }
-                row++;
-
-                // Adding data rows to Excel
-                foreach (DataRow dr in dt.Rows)
-                {
-                    for (int i = 1; i <= dt.Columns.Count; i++)
-                    {
-                        xcl = worksheet.Cell(row, i);
-                        decimal itemVal;
-                        DateTime dateText;
-
-                        if (Decimal.TryParse(dr[i - 1].ToString(), out itemVal))
-                        {
-                            xcl.Value = itemVal;
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        }
-                        else if (DateTime.TryParse(dr[i - 1].ToString(), out dateText))
-                        {
-                            xcl.Value = $"'{dr[i - 1].ToString().Split(" ")[0]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-                        else
-                        {
-                            xcl.Value = $"{dr[i - 1]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-
-                        xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    }
-                    row++;
-                }
-
-                // Adjusting column width to fit content
-                worksheet.Columns().AdjustToContents();
-            }
-
-            // Save and return the file
-            using var stream = new MemoryStream();
-            var content = stream.ToArray();
-            string actualFilePath = pathDownload + "\\" + fileName;
-            workbook.SaveAs(actualFilePath);
-            workbook.Dispose();
-            byte[] fileBytes = System.IO.File.ReadAllBytes(actualFilePath);
-            System.IO.File.Delete(actualFilePath);
-
-            return File(fileBytes, contentType, fileName);
-        }
-        public ActionResult ExportStrSanToExcel(string MunCode)
-        {
-            string[] pgsQuerys;
-            List<DataTable> dts = new List<DataTable>();
-            List<string> tbls = new List<string>();
-            if (MunCode != "")
-            {
-                tbls = new List<string>()
-        {
-            "Structure Sanitation"
-        };
-
-                // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
-                pgsQuerys = new string[1]
- {
-   $@"
-   SELECT 
-       ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-       wm.province AS Province, 
-       wm.district AS District, 
-       wm.municipality AS Municipality, 
-       f.*
-   FROM 
-       wqs.structure_sanitary f
-   LEFT JOIN 
-       wqs.wq_survelliance_main wm 
-   ON 
-       f.form_Id = wm.Uuid
-   WHERE 
-       SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-   ORDER BY 
-       f.id;"
- };
-
-
-
-            }
-            else
-            {
-                pgsQuerys = new string[1] { "SELECT" };
-            }
-
-            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            string fileName = MunCode + "_StrSan_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
-            string pathDownload = Path.Combine(_hostEnvironment.WebRootPath, "TEMP");
-
-            if (!Directory.Exists(pathDownload))
-            {
-                Directory.CreateDirectory(pathDownload);
-            }
-
-            using var workbook = new XLWorkbook();
-            workbook.Properties.Company = "WQS";
-
-            for (int item = 1; item <= tbls.Count; item++)  // or do pgsQuerys.Count
-            {
-                DataTable dt = new DataTable();
-                DbConnection connection = _wqsContext.Database.GetDbConnection();
-                DbProviderFactory dbFactory = DbProviderFactories.GetFactory(connection);
-
-                using (var cmd = dbFactory.CreateCommand())
-                {
-                    cmd.Connection = connection;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = pgsQuerys[item - 1];
-
-                    using DbDataAdapter adapter = dbFactory.CreateDataAdapter();
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(dt);
-                }
-
-                IXLWorksheet worksheet = workbook.Worksheets.Add(tbls[item - 1]);
-                IXLCell xcl;
-                int row = 1;
-
-                // Adding headers to Excel
-                for (int i = 1; i <= dt.Columns.Count; i++)
-                {
-                    xcl = worksheet.Cell(1, i);
-                    xcl.Value = dt.Columns[i - 1].ToString();
-                    xcl.Style.Font.Bold = true;
-                    xcl.Style.Font.Italic = false;
-                    xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    xcl.Style.Fill.BackgroundColor = XLColor.Aqua;
-                }
-                row++;
-
-                // Adding data rows to Excel
-                foreach (DataRow dr in dt.Rows)
-                {
-                    for (int i = 1; i <= dt.Columns.Count; i++)
-                    {
-                        xcl = worksheet.Cell(row, i);
-                        decimal itemVal;
-                        DateTime dateText;
-
-                        if (Decimal.TryParse(dr[i - 1].ToString(), out itemVal))
-                        {
-                            xcl.Value = itemVal;
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        }
-                        else if (DateTime.TryParse(dr[i - 1].ToString(), out dateText))
-                        {
-                            xcl.Value = $"'{dr[i - 1].ToString().Split(" ")[0]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-                        else
-                        {
-                            xcl.Value = $"{dr[i - 1]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-
-                        xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    }
-                    row++;
-                }
-
-                // Adjusting column width to fit content
-                worksheet.Columns().AdjustToContents();
-            }
-
-            // Save and return the file
-            using var stream = new MemoryStream();
-            var content = stream.ToArray();
-            string actualFilePath = pathDownload + "\\" + fileName;
-            workbook.SaveAs(actualFilePath);
-            workbook.Dispose();
-            byte[] fileBytes = System.IO.File.ReadAllBytes(actualFilePath);
-            System.IO.File.Delete(actualFilePath);
-
-            return File(fileBytes, contentType, fileName);
-        }
-        public ActionResult ExportTapSanToExcel(string MunCode)
-        {
-            string[] pgsQuerys;
-            List<DataTable> dts = new List<DataTable>();
-            List<string> tbls = new List<string>();
-            if (MunCode != "")
-            {
-                tbls = new List<string>()
-        {
-            "Tap Sanitation"
-        };
-
-                // Join the necessary tables with 'form1_a' based on the 'MunCode' or 'FormId'
-                pgsQuerys = new string[1]
- {
-   $@"
-   SELECT 
-       ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-       wm.province AS Province, 
-       wm.district AS District, 
-       wm.municipality AS Municipality, 
-       f.*
-   FROM 
-       wqs.tap_sanitary f
-   LEFT JOIN 
-       wqs.wq_survelliance_main wm 
-   ON 
-       f.form_Id = wm.Uuid
-   WHERE 
-       SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-   ORDER BY 
-       f.id;"
- };
-
-
-
-            }
-            else
-            {
-                pgsQuerys = new string[1] { "SELECT" };
-            }
-
-            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            string fileName = MunCode + "_TapSan_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx";
-            string pathDownload = Path.Combine(_hostEnvironment.WebRootPath, "TEMP");
-
-            if (!Directory.Exists(pathDownload))
-            {
-                Directory.CreateDirectory(pathDownload);
-            }
-
-            using var workbook = new XLWorkbook();
-            workbook.Properties.Company = "WQS";
-
-            for (int item = 1; item <= tbls.Count; item++)  // or do pgsQuerys.Count
-            {
-                DataTable dt = new DataTable();
-                DbConnection connection = _wqsContext.Database.GetDbConnection();
-                DbProviderFactory dbFactory = DbProviderFactories.GetFactory(connection);
-
-                using (var cmd = dbFactory.CreateCommand())
-                {
-                    cmd.Connection = connection;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = pgsQuerys[item - 1];
-
-                    using DbDataAdapter adapter = dbFactory.CreateDataAdapter();
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(dt);
-                }
-
-                IXLWorksheet worksheet = workbook.Worksheets.Add(tbls[item - 1]);
-                IXLCell xcl;
-                int row = 1;
-
-                // Adding headers to Excel
-                for (int i = 1; i <= dt.Columns.Count; i++)
-                {
-                    xcl = worksheet.Cell(1, i);
-                    xcl.Value = dt.Columns[i - 1].ToString();
-                    xcl.Style.Font.Bold = true;
-                    xcl.Style.Font.Italic = false;
-                    xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                    xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    xcl.Style.Fill.BackgroundColor = XLColor.Aqua;
-                }
-                row++;
-
-                // Adding data rows to Excel
-                foreach (DataRow dr in dt.Rows)
-                {
-                    for (int i = 1; i <= dt.Columns.Count; i++)
-                    {
-                        xcl = worksheet.Cell(row, i);
-                        decimal itemVal;
-                        DateTime dateText;
-
-                        if (Decimal.TryParse(dr[i - 1].ToString(), out itemVal))
-                        {
-                            xcl.Value = itemVal;
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        }
-                        else if (DateTime.TryParse(dr[i - 1].ToString(), out dateText))
-                        {
-                            xcl.Value = $"'{dr[i - 1].ToString().Split(" ")[0]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-                        else
-                        {
-                            xcl.Value = $"{dr[i - 1]}";
-                            xcl.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
-                        }
-
-                        xcl.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                    }
-                    row++;
-                }
-
-                // Adjusting column width to fit content
-                worksheet.Columns().AdjustToContents();
-            }
-
-            // Save and return the file
-            using var stream = new MemoryStream();
-            var content = stream.ToArray();
-            string actualFilePath = pathDownload + "\\" + fileName;
-            workbook.SaveAs(actualFilePath);
-            workbook.Dispose();
-            byte[] fileBytes = System.IO.File.ReadAllBytes(actualFilePath);
-            System.IO.File.Delete(actualFilePath);
-
-            return File(fileBytes, contentType, fileName);
-        }
-      
          public ActionResult ExportAllSanitationToExcel(string MunCode)
         {
             // List of table names (will be used as sheet names in Excel)
@@ -2516,73 +2065,146 @@ namespace Wq_Surveillance.Controllers
             List<string> pgsQuerys = new List<string>()
     {
         $@"
-        SELECT 
-            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-            wm.province AS Province, 
-            wm.district AS District, 
-            wm.municipality AS Municipality, 
-            f.*
-        FROM 
-            wqs.reservoir_sanitary f
-        LEFT JOIN 
-            wqs.wq_survelliance_main wm 
-        ON 
-            f.form_Id = wm.Uuid
-        WHERE 
-            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-        ORDER BY 
-            f.id;",
+       SELECT 
+        ROW_NUMBER() OVER(ORDER BY r.""id"") AS SN, 
+        wm.province AS Province, 
+        wm.district AS District, 
+        wm.municipality AS Municipality, 
+        r.""added_by"" AS AddedBy,
+        r.""added_on"" AS AddedOn,
+        r.""edited_by"" AS EditedBy,
+        r.""edited_on"" AS EditedOn,
+        r.""latitude"" AS Latitude,
+        r.""longitude"" AS Longitude,
+        r.""resorvoir_sanitation_condition_1"" AS ResorvoirSanitationCondition1,
+        r.""resorvoir_sanitation_condition_2"" AS ResorvoirSanitationCondition2,
+        r.""resorvoir_sanitation_condition_3"" AS ResorvoirSanitationCondition3,
+        r.""resorvoir_sanitation_condition_4"" AS ResorvoirSanitationCondition4,
+        r.""resorvoir_sanitation_condition_5"" AS ResorvoirSanitationCondition5,
+        r.""the_geom"" AS TheGeom,
+        r.""visit_date"" AS VisitDate
+    FROM 
+        wqs.""reservoir_sanitary"" r
+    LEFT JOIN 
+        wqs.""wq_survelliance_main"" wm 
+    ON 
+        r.""form_id"" = wm.""uuid""
+    WHERE 
+        SPLIT_PART(wm.""municipality"", ' - ', 1) = '{MunCode}'
+    ORDER BY 
+        r.""id"";",
+
         $@"
         SELECT 
-            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-            wm.province AS Province, 
-            wm.district AS District, 
-            wm.municipality AS Municipality, 
-            f.*
-        FROM 
-            wqs.source_sanitary f
-        LEFT JOIN 
-            wqs.wq_survelliance_main wm 
-        ON 
-            f.form_Id = wm.Uuid
-        WHERE 
-            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-        ORDER BY 
-            f.id;",
+        ROW_NUMBER() OVER(ORDER BY s.""id"") AS SN, 
+        wm.province AS Province, 
+        wm.district AS District, 
+        wm.municipality AS Municipality, 
+        s.""added_by"" AS AddedBy,
+        s.""added_on"" AS AddedOn,
+        s.""edited_by"" AS EditedBy,
+        s.""edited_on"" AS EditedOn,
+        s.""latitude"" AS Latitude,
+        s.""longitude"" AS Longitude,
+        s.""source_sanitation_condition_1"" AS SourceSanitationCondition1,
+        s.""source_sanitation_condition_2"" AS SourceSanitationCondition2,
+        s.""source_sanitation_condition_3"" AS SourceSanitationCondition3,
+        s.""source_sanitation_condition_4"" AS SourceSanitationCondition4,
+        s.""source_sanitation_condition_5"" AS SourceSanitationCondition5,
+        s.""source_sanitation_condition_6"" AS SourceSanitationCondition6,
+        s.""source_sanitation_condition_7"" AS SourceSanitationCondition7,
+        s.""source_sanitation_condition_8"" AS SourceSanitationCondition8,
+        s.""source_sanitation_condition_9"" AS SourceSanitationCondition9,
+        s.""source_sanitation_condition_10"" AS SourceSanitationCondition10,
+        s.""source_sanitation_condition_11"" AS SourceSanitationCondition11,
+        s.""source_sanitation_condition_12"" AS SourceSanitationCondition12,
+        s.""source_sanitation_condition_13"" AS SourceSanitationCondition13,
+        s.""source_sanitation_condition_14"" AS SourceSanitationCondition14,
+        s.""source_sanitation_condition_15"" AS SourceSanitationCondition15,
+        s.""the_geom"" AS TheGeom,
+        s.""visit_date"" AS VisitDate
+        
+    FROM 
+        wqs.""source_sanitary"" s
+    LEFT JOIN 
+        wqs.""wq_survelliance_main"" wm 
+    ON 
+        s.""form_id"" = wm.""uuid""
+    WHERE 
+        SPLIT_PART(wm.""municipality"", ' - ', 1) = '{MunCode}'
+    ORDER BY 
+        s.""id"";",
         $@"
         SELECT 
-            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-            wm.province AS Province, 
-            wm.district AS District, 
-            wm.municipality AS Municipality, 
-            f.*
-        FROM 
-            wqs.structure_sanitary f
-        LEFT JOIN 
-            wqs.wq_survelliance_main wm 
-        ON 
-            f.form_Id = wm.Uuid
-        WHERE 
-            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-        ORDER BY 
-            f.id;",
+        ROW_NUMBER() OVER(ORDER BY s.""id"") AS SN, 
+        wm.province AS Province, 
+        wm.district AS District, 
+        wm.municipality AS Municipality, 
+        s.""added_by"" AS AddedBy,
+        s.""added_on"" AS AddedOn,
+        s.""edited_by"" AS EditedBy,
+        s.""edited_on"" AS EditedOn,
+        s.""latitude"" AS Latitude,
+        s.""longitude"" AS Longitude,
+        s.""source_sanitation_condition_1"" AS SourceSanitationCondition1,
+        s.""source_sanitation_condition_2"" AS SourceSanitationCondition2,
+        s.""source_sanitation_condition_3"" AS SourceSanitationCondition3,
+        s.""source_sanitation_condition_4"" AS SourceSanitationCondition4,
+        s.""source_sanitation_condition_5"" AS SourceSanitationCondition5,
+        s.""source_sanitation_condition_6"" AS SourceSanitationCondition6,
+        s.""source_sanitation_condition_7"" AS SourceSanitationCondition7,
+        s.""source_sanitation_condition_8"" AS SourceSanitationCondition8,
+        s.""source_sanitation_condition_9"" AS SourceSanitationCondition9,
+        s.""source_sanitation_condition_10"" AS SourceSanitationCondition10,
+        s.""source_sanitation_condition_11"" AS SourceSanitationCondition11,
+        s.""source_sanitation_condition_12"" AS SourceSanitationCondition12,
+        s.""source_sanitation_condition_13"" AS SourceSanitationCondition13,
+        s.""source_sanitation_condition_14"" AS SourceSanitationCondition14,
+        s.""source_sanitation_condition_15"" AS SourceSanitationCondition15,
+        s.""the_geom"" AS TheGeom,
+        s.""visit_date"" AS VisitDate
+       
+    FROM 
+        wqs.""source_sanitary"" s
+    LEFT JOIN 
+        wqs.""wq_survelliance_main"" wm 
+    ON 
+        s.""form_id"" = wm.""uuid""
+    WHERE 
+        SPLIT_PART(wm.""municipality"", ' - ', 1) = '{MunCode}'
+    ORDER BY 
+        s.""id"";",
         $@"
-        SELECT 
-            ROW_NUMBER() OVER(ORDER BY f.id) AS SN, 
-            wm.province AS Province, 
-            wm.district AS District, 
-            wm.municipality AS Municipality, 
-            f.*
-        FROM 
-            wqs.tap_sanitary f
-        LEFT JOIN 
-            wqs.wq_survelliance_main wm 
-        ON 
-            f.form_Id = wm.Uuid
-        WHERE 
-            SPLIT_PART(wm.municipality, ' - ', 1) = '{MunCode}'
-        ORDER BY 
-            f.id;"
+       SELECT 
+        ROW_NUMBER() OVER(ORDER BY t.""id"") AS SN, 
+        wm.province AS Province, 
+        wm.district AS District, 
+        wm.municipality AS Municipality, 
+        t.""added_by"" AS AddedBy,
+        t.""added_on"" AS AddedOn,
+        t.""edited_by"" AS EditedBy,
+        t.""edited_on"" AS EditedOn,
+        t.""latitude"" AS Latitude,
+        t.""longitude"" AS Longitude,
+        t.""tap_sanitation_condition_1"" AS TapSanitationCondition1,
+        t.""tap_sanitation_condition_2"" AS TapSanitationCondition2,
+        t.""tap_sanitation_condition_3"" AS TapSanitationCondition3,
+        t.""tap_sanitation_condition_4"" AS TapSanitationCondition4,
+        t.""tap_sanitation_condition_5"" AS TapSanitationCondition5,
+        t.""tap_sanitation_condition_6"" AS TapSanitationCondition6,
+        t.""tap_sanitation_condition_7"" AS TapSanitationCondition7,
+        t.""the_geom"" AS TheGeom,
+        t.""visit_date"" AS VisitDate
+    FROM 
+        wqs.""tap_sanitary"" t
+    LEFT JOIN 
+        wqs.""wq_survelliance_main"" wm 
+    ON 
+        t.""form_id"" = wm.""uuid""
+    WHERE 
+        SPLIT_PART(wm.""municipality"", ' - ', 1) = '{MunCode}'
+    ORDER BY 
+        t.""id"";"
     };
 
             // Set up the Excel file

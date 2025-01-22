@@ -15,8 +15,8 @@
         <thead>
             <tr style="background: #e8ecfd;">
                 <th>S. No.</th>
-                <th>Name of Scheme</th>
                 <th>Project Code</th>
+                <th>Surveyor</th>
                 <th>Available Forms</th>
                 <th>Actions</th>
             </tr>
@@ -34,7 +34,7 @@
                 <tr>
                     <td>@sn</td>
                     <td>@item.ProjectName</td>
-                    <td>@item.ProjectName</td>
+                    <td>@item.AddedBy</td>
                     <td>
                         <div style="display: flex; gap: 10px;">
                             <div style="border: 2px solid @(item.ReservoirExists ? "green" : "red"); padding: 5px;">
@@ -42,7 +42,7 @@
                                 {
                                     var encodedUuid = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(item.Uuid));
 
-                                    <a href="@Url.Action("FormViewRes", "Wqs", new { encode  = encodedUuid })" class="text-success">Reservoir</a>
+                                    <a href="@Url.Action("FormViewRes", "Wqs", new { encode  = encodedUuid })" class="text-success" target="_blank">Reservoir</a>
                                 }
                                 else
                                 {
@@ -54,7 +54,7 @@
                                 {
                                     var encodedUuid = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(item.Uuid));
 
-                                    <a href="@Url.Action("FormViewSou", "Wqs", new { encode  = encodedUuid })" class="text-success">Source</a>
+                                    <a href="@Url.Action("FormViewSou", "Wqs", new { encode  = encodedUuid })" class="text-success" target="_blank">Source</a>
                                 }
                                 else
                                 {
@@ -66,7 +66,7 @@
                                 {
                                     var encodedUuid = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(item.Uuid));
 
-                                    <a href="@Url.Action("FormViewStr", "Wqs", new { encode  = encodedUuid })" class="text-success">Structure</a>
+                                    <a href="@Url.Action("FormViewStr", "Wqs", new { encode  = encodedUuid })" class="text-success" target="_blank">Structure</a>
                                 }
                                 else
                                 {
@@ -78,7 +78,7 @@
                                 {
                                     var encodedUuid = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(item.Uuid));
 
-                                    <a href="@Url.Action("FormViewTap", "Wqs", new { encode  = encodedUuid })" class="text-success">Tap</a>
+                                    <a href="@Url.Action("FormViewTap", "Wqs", new { encode  = encodedUuid })" class="text-success" target="_blank">Tap</a>
                                 }
                                 else
                                 {
