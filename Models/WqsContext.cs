@@ -447,7 +447,10 @@ public partial class WqsContext : DbContext
                .HasColumnType("character varying")
                .HasColumnName("added_by");
             entity.Property(e => e.AddedOn).HasColumnName("added_on");
-
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.Id)
                  .ValueGeneratedOnAdd()
                 .HasColumnName("id");
@@ -550,6 +553,10 @@ public partial class WqsContext : DbContext
             entity.Property(e => e.CollaborativeActivitiesScore)
                 .HasColumnType("character varying")
                 .HasColumnName("collaborative_activitiesScore");
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.FormId)
                 .HasColumnType("character varying")
                 .HasColumnName("form_id");
@@ -626,6 +633,10 @@ public partial class WqsContext : DbContext
             entity.Property(e => e.DefWrittenResult)
                 .HasMaxLength(255)
                 .HasColumnName("def_written_result");
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.FormId)
                 .HasMaxLength(255)
                 .HasColumnName("form_id");
@@ -755,6 +766,10 @@ public partial class WqsContext : DbContext
             entity.Property(e => e.DiarrheaCount)
                 .HasColumnType("character varying")
                 .HasColumnName("diarrhea_count");
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.FormId)
                 .HasColumnType("character varying")
                 .HasColumnName("form_id");
@@ -1479,6 +1494,10 @@ public partial class WqsContext : DbContext
                .HasColumnType("character varying")
                .HasColumnName("added_by");
             entity.Property(e => e.AddedOn).HasColumnName("added_on");
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.Id)
                  .ValueGeneratedOnAdd()
                 .HasColumnName("id");
@@ -1585,7 +1604,10 @@ public partial class WqsContext : DbContext
                .HasColumnType("character varying")
                .HasColumnName("added_by");
             entity.Property(e => e.AddedOn).HasColumnName("added_on");
-
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.Id)
                  .ValueGeneratedOnAdd()
                 .HasColumnName("id");
@@ -1735,7 +1757,10 @@ public partial class WqsContext : DbContext
                .HasColumnType("character varying")
                .HasColumnName("added_by");
             entity.Property(e => e.AddedOn).HasColumnName("added_on");
-
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.Id)
                  .ValueGeneratedOnAdd()
                 .HasColumnName("id");
@@ -1819,7 +1844,10 @@ public partial class WqsContext : DbContext
                .HasColumnType("character varying")
                .HasColumnName("added_by");
             entity.Property(e => e.AddedOn).HasColumnName("added_on");
-
+            entity.Property(e => e.EditedBy)
+               .HasColumnType("character varying")
+               .HasColumnName("edited_by");
+            entity.Property(e => e.EditedOn).HasColumnName("edited_on");
             entity.Property(e => e.Id)
                  .ValueGeneratedOnAdd()
                 .HasColumnName("id");

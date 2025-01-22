@@ -707,7 +707,6 @@ namespace Wq_Surveillance.Controllers
             var hhData = _wqsContext.Form1bs
                             .Where(s => (s.FormId == FormId))
                             .FirstOrDefault();
-            //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhDataList.AddBy).Select(s => s.Name).SingleOrDefault();
             var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<Form1BDto>(hhData);
@@ -732,7 +731,6 @@ namespace Wq_Surveillance.Controllers
             var hhData = _wqsContext.Form2s
                             .Where(s => (s.FormId == FormId))
                             .FirstOrDefault();
-            //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhDataList.AddBy).Select(s => s.Name).SingleOrDefault();
             var formData = _mapper.Map<Form2Dto>(hhData);
 
             var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
@@ -887,96 +885,71 @@ namespace Wq_Surveillance.Controllers
 
             return View("Tap_Sanitary/TapEdit", formData);
         }
-        public IActionResult SanEdit(string encode)
+
+        public PartialViewResult SanEdit(string encode)
         {
             // Decode the base64 encoded FormId
             var base64EncodedBytes = Convert.FromBase64String(encode);
             var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
+            ViewData["uuid"] = uuid;
+
+            // Initialize the combined data model
+            var combinedData = new FormCombinedDto
+            {
+                ReservoirSanitationData = null,
+                SourceSanitationData = null,
+                StructureSanitationData = null,
+                TapSanitationData = null
+            };
+
+            // Retrieve Main Data (common for all forms)
+            var resMainData = _wqsContext.WqSurvellianceMains
+                              .FirstOrDefault(p => p.Uuid.Equals(uuid));
+
+            if (resMainData == null)
+            {
+                // Handle the case where main data is not found
+                return PartialView("~/Views/Wqs/Sanitary_Inspection/SanEdit.cshtml", combinedData);
+            }
 
             // Retrieve Reservoir Sanitation Data
             var hhData = _wqsContext.ReservoirSanitaries
-                           .Where(s => (s.FormId == uuid))
-                           .FirstOrDefault();
-            if (hhData == null)
+                         .Where(s => s.FormId == uuid)
+                         .FirstOrDefault();
+            if (hhData != null)
             {
-                return NotFound();
+                combinedData.ReservoirSanitationData = _mapper.Map<FormResDto>(hhData);
             }
-
-            var resData = _mapper.Map<FormResDto>(hhData);
-            var resMainData = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
-            resData.ProCode = resMainData.ProjectName;
-            resData.Address = resMainData.Address;
-            resData.TotalPop = resMainData.TotalBenificiaryPopulation;
-            resData.TotalHhServed = resMainData.TotalHhServed;
 
             // Retrieve Source Sanitation Data
             var sourceData = _wqsContext.SourceSanitaries
                              .Where(s => s.FormId == uuid)
                              .FirstOrDefault();
-            var souData = _mapper.Map<FormSouDto>(sourceData);
-            var StructureData = _wqsContext.StructureSanitaries
-                            .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
-            var StrData = _mapper.Map<FormStrDto>(StructureData);
-            var TapData = _wqsContext.TapSanitaries
-                            .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
-            var TapDatas = _mapper.Map<FormTapDto>(TapData);
-
-            // Combine both data models
-            var combinedData = new FormCombinedDto
+            if (sourceData != null)
             {
-                ReservoirSanitationData = resData,
-                SourceSanitationData = souData,
-                StructureSanitationData = StrData,
-                TapSanitationData = TapDatas
-            };
+                combinedData.SourceSanitationData = _mapper.Map<FormSouDto>(sourceData);
+            }
 
-            return View("~/Views/Wqs/Sanitary_Inspection/SanitaryEdit.cshtml", combinedData);
-        }
-        public PartialViewResult ShowEdit(string encode)
-        {
-            var base64EncodedBytes = Convert.FromBase64String(encode);
-            var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
-            ViewData["uuid"] = uuid;
-
-            var hhData = _wqsContext.ReservoirSanitaries
-                           .Where(s => (s.FormId == uuid))
-                           .FirstOrDefault();
-           
-
-            var resData = _mapper.Map<FormResDto>(hhData);
-            var resMainData = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
-            resData.ProCode = resMainData.ProjectName;
-            resData.Address = resMainData.Address;
-            resData.TotalPop = resMainData.TotalBenificiaryPopulation;
-            resData.TotalHhServed = resMainData.TotalHhServed;
-
-            var sourceData = _wqsContext.SourceSanitaries
-                             .Where(s => s.FormId == uuid)
-                             .FirstOrDefault();
-            var souData = _mapper.Map<FormSouDto>(sourceData);
+            // Retrieve Structure Sanitation Data
             var StructureData = _wqsContext.StructureSanitaries
-                            .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
-            var StrData = _mapper.Map<FormStrDto>(StructureData);
-            var TapData = _wqsContext.TapSanitaries
-                            .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
-            var TapDatas = _mapper.Map<FormTapDto>(TapData);
-
-            // Combine both data models
-            var combinedData = new FormCombinedDto
+                                .Where(s => s.FormId == uuid)
+                                .FirstOrDefault();
+            if (StructureData != null)
             {
-                ReservoirSanitationData = resData,
-                SourceSanitationData = souData,
-                StructureSanitationData = StrData,
-                TapSanitationData = TapDatas
+                combinedData.StructureSanitationData = _mapper.Map<FormStrDto>(StructureData);
+            }
 
-            };
-             return PartialView("~/Views/Wqs/Sanitary_Inspection/show.cshtml", combinedData);
+            // Retrieve Tap Sanitation Data
+            var TapData = _wqsContext.TapSanitaries
+                          .Where(s => s.FormId == uuid)
+                          .FirstOrDefault();
+            if (TapData != null)
+            {
+                combinedData.TapSanitationData = _mapper.Map<FormTapDto>(TapData);
+            }
+
+            return PartialView("~/Views/Wqs/Sanitary_Inspection/SanEdit.cshtml", combinedData);
         }
-
         public PartialViewResult ShowData(string valueis, string uuid)
         {
             ViewData["uuid"] = uuid;
@@ -988,15 +961,21 @@ namespace Wq_Surveillance.Controllers
                             .FirstOrDefault();
                 if (Tap == null)
                 {
-                    return PartialView("~/Views/Shared/NotFound.cshtml"); 
+                    // Return a partial view with a message for empty Tap form
+                    return PartialView("~/Views/Wqs/Sanitary_Inspection/_EmptyForm.cshtml", "Tap form data is not available.");
                 }
-                return PartialView("~/Views/Wqs/Sanitary_Inspection/_tapedit.cshtml", Tap); 
+                return PartialView("~/Views/Wqs/Sanitary_Inspection/_tapedit.cshtml", Tap);
             }
             else if (valueis == "reservoir")
             {
                 var Reservoir = _wqsContext.ReservoirSanitaries
                             .Where(s => s.FormId == uuid)
                             .FirstOrDefault();
+                if (Reservoir == null)
+                {
+                    // Return a partial view with a message for empty Reservoir form
+                    return PartialView("~/Views/Wqs/Sanitary_Inspection/_EmptyForm.cshtml", "Reservoir form data is not available.");
+                }
                 return PartialView("~/Views/Wqs/Sanitary_Inspection/_resedit.cshtml", Reservoir);
             }
             else if (valueis == "source")
@@ -1004,6 +983,11 @@ namespace Wq_Surveillance.Controllers
                 var Source = _wqsContext.SourceSanitaries
                             .Where(s => s.FormId == uuid)
                             .FirstOrDefault();
+                if (Source == null)
+                {
+                    // Return a partial view with a message for empty Source form
+                    return PartialView("~/Views/Wqs/Sanitary_Inspection/_EmptyForm.cshtml", "Source form data is not available.");
+                }
                 return PartialView("~/Views/Wqs/Sanitary_Inspection/_souedit.cshtml", Source);
             }
             else if (valueis == "structure")
@@ -1011,10 +995,16 @@ namespace Wq_Surveillance.Controllers
                 var Structure = _wqsContext.StructureSanitaries
                             .Where(s => s.FormId == uuid)
                             .FirstOrDefault();
+                if (Structure == null)
+                {
+                    // Return a partial view with a message for empty Structure form
+                    return PartialView("~/Views/Wqs/Sanitary_Inspection/_EmptyForm.cshtml", "Structure form data is not available.");
+                }
                 return PartialView("~/Views/Wqs/Sanitary_Inspection/_stredit.cshtml", Structure);
             }
             else
             {
+                // Default view if valueis is invalid
                 return PartialView("~/Views/Wqs/show.cshtml");
             }
         }
@@ -1023,8 +1013,9 @@ namespace Wq_Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult FormAEditPost(Form1a WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataFA(WData);
+            var username = User.Identity.Name;
 
+            var updateData = _wqsservices.UpdateWQSDataFA(WData,  username);
             string formid = WData.FormId;
 
             var plainTextBytes = Encoding.UTF8.GetBytes(formid);
@@ -1045,8 +1036,8 @@ namespace Wq_Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult FormBEditPost(Form1b WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataFB(WData);
-
+            var username = User.Identity.Name;
+            var updateData = _wqsservices.UpdateWQSDataFB(WData, username);
             string formid = WData.FormId;
 
             var plainTextBytes = Encoding.UTF8.GetBytes(formid);
@@ -1067,7 +1058,9 @@ namespace Wq_Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Form2EditPost(Form2 WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataF2(WData);
+            var username = User.Identity.Name;
+
+            var updateData = _wqsservices.UpdateWQSDataF2(WData, username);
 
             string formid = WData.FormId;
 
@@ -1090,7 +1083,9 @@ namespace Wq_Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Form3EditPost(Form3EditDto WData)
         {
-            var fId = _wqsservices.UpdateWQSDataF3(WData.UpdateData);
+            var username = User.Identity.Name;
+
+            var fId = _wqsservices.UpdateWQSDataF3(WData.UpdateData, username);
 
             string formid = fId;
 
@@ -1110,85 +1105,67 @@ namespace Wq_Surveillance.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FormSanResEditPost(FormCombinedDto WData)
+        public ActionResult FormSanResEditPost(ReservoirSanitary WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataRes(WData.ReservoirSanitationData);
-
-            string formid = WData.ReservoirSanitationData.FormId;
-            var plainTextBytes = Encoding.UTF8.GetBytes(formid);
-            string encodedUUID = Convert.ToBase64String(plainTextBytes);
-
-            // Check if it's an AJAX request by checking the X-Requested-With header
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            if (WData == null)
             {
-                if (updateData != null)
-                {
-                    // Return a success JSON response
-                    return Json(new { success = true, message = "Data Updated Successfully", redirectUrl = Url.Action("SanEdit", "Wqs", new { encode = encodedUUID }) });
-                }
-                else
-                {
-                    // Return an error JSON response
-                    return Json(new { success = false, message = "Something Went Wrong. Please try again later." });
-                }
+                return Json(new { success = false, message = "Invalid data submitted." });
             }
 
-            // If it's not an AJAX request, fall back to the original logic
+            var username = User.Identity.Name;
+            var updateData = _wqsservices.UpdateWQSDataRes(WData, username);
+
             if (updateData != null)
             {
-                TempData["SuccessMessage"] = "Data Updated Successfully";
-                return RedirectToAction("SanEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = true, message = "Data Updated Successfully" });
             }
             else
             {
-                TempData["ErrorMessage"] = "Something Went Wrong. Please try again later.";
-                return RedirectToAction("FormSanResEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = false, message = "Something Went Wrong. Please try again later." });
             }
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FormSanSouEditPost(FormCombinedDto WData)
+        public ActionResult FormSanSouEditPost(SourceSanitary WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataSou(WData.SourceSanitationData);
+            if (WData == null)
+            {
+                return Json(new { success = false, message = "Invalid data submitted." });
+            }
 
-            string formid = WData.SourceSanitationData.FormId;
-
-            var plainTextBytes = Encoding.UTF8.GetBytes(formid);
-            string encodedUUID = Convert.ToBase64String(plainTextBytes);
+            var username = User.Identity.Name;
+            var updateData = _wqsservices.UpdateWQSDataSou(WData, username);
 
             if (updateData != null)
             {
-                TempData["SuccessMessage"] = "Data Updated Successfully";
-                return RedirectToAction("SanEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = true, message = "Data Updated Successfully" });
             }
             else
             {
-                TempData["ErrorMessage"] = "Something Went Wrong. Please try again later.";
-                return RedirectToAction("FormSanResEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = false, message = "Something Went Wrong. Please try again later." });
             }
         }
           [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FormSanStrEditPost(FormCombinedDto WData)
+        public ActionResult FormSanStrEditPost(StructureSanitary WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataStr(WData.StructureSanitationData);
+            if (WData == null)
+            {
+                return Json(new { success = false, message = "Invalid data submitted." });
+            }
 
-            string formid = WData.StructureSanitationData.FormId;
-
-            var plainTextBytes = Encoding.UTF8.GetBytes(formid);
-            string encodedUUID = Convert.ToBase64String(plainTextBytes);
+            var username = User.Identity.Name;
+            var updateData = _wqsservices.UpdateWQSDataStr(WData, username);
 
             if (updateData != null)
             {
-                TempData["SuccessMessage"] = "Data Updated Successfully";
-                return RedirectToAction("SanEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = true, message = "Data Updated Successfully" });
             }
             else
             {
-                TempData["ErrorMessage"] = "Something Went Wrong. Please try again later.";
-                return RedirectToAction("FormSanResEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = false, message = "Something Went Wrong. Please try again later." });
             }
         }
         [HttpPost]
@@ -1197,32 +1174,28 @@ namespace Wq_Surveillance.Controllers
         {
             if (WData == null)
             {
-                TempData["ErrorMessage"] = "Invalid data submitted.";
-                return RedirectToAction("FormSanResEdit", "Wqs");
+                return Json(new { success = false, message = "Invalid data submitted." });
             }
 
-            var updateData = _wqsservices.UpdateWQSDataTap(WData);
-
-            string formid = WData.FormId;
-            var plainTextBytes = Encoding.UTF8.GetBytes(formid);
-            string encodedUUID = Convert.ToBase64String(plainTextBytes);
+            var username = User.Identity.Name;
+            var updateData = _wqsservices.UpdateWQSDataTap(WData, username);
 
             if (updateData != null)
             {
-                TempData["SuccessMessage"] = "Data Updated Successfully";
-                return RedirectToAction("FormSanTapEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = true, message = "Data Updated Successfully" });
             }
             else
             {
-                TempData["ErrorMessage"] = "Something Went Wrong. Please try again later.";
-                return RedirectToAction("FormSanResEdit", "Wqs", new { encode = encodedUUID });
+                return Json(new { success = false, message = "Something Went Wrong. Please try again later." });
             }
-        }
+        } 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult FormResEditPost(ReservoirSanitary WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataRes(WData);
+            var username = User.Identity.Name;
+
+            var updateData = _wqsservices.UpdateWQSDataRes(WData, username);
 
             string formid = WData.FormId;
 
@@ -1244,7 +1217,9 @@ namespace Wq_Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult FormSouEditPost(SourceSanitary WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataSou(WData);
+            var username = User.Identity.Name;
+
+            var updateData = _wqsservices.UpdateWQSDataSou(WData, username);
 
             string formid = WData.FormId;
 
@@ -1266,7 +1241,9 @@ namespace Wq_Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult FormStrEditPost(StructureSanitary WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataStr(WData);
+            var username = User.Identity.Name;
+
+            var updateData = _wqsservices.UpdateWQSDataStr(WData, username);
 
             string formid = WData.FormId;
 
@@ -1288,7 +1265,9 @@ namespace Wq_Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult FormTapEditPost(TapSanitary WData)
         {
-            var updateData = _wqsservices.UpdateWQSDataTap(WData);
+            var username = User.Identity.Name;
+
+            var updateData = _wqsservices.UpdateWQSDataTap(WData,  username);
 
             string formid = WData.FormId;
 
@@ -1387,44 +1366,60 @@ namespace Wq_Surveillance.Controllers
             var base64EncodedBytes = Convert.FromBase64String(encode);
             var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
 
-            // Retrieve Reservoir Sanitation Data
-            var hhData = _wqsContext.ReservoirSanitaries
-                           .Where(s => (s.FormId == uuid))
-                           .FirstOrDefault();
-            if (hhData == null)
+            // Retrieve Main Data (common for all forms)
+            var resMainData = _wqsContext.WqSurvellianceMains
+                              .FirstOrDefault(p => p.Uuid.Equals(uuid));
+
+            if (resMainData == null)
             {
-                return NotFound();
+                return NotFound(); // Return 404 if the main data is not found
             }
 
-            var resData = _mapper.Map<FormResDto>(hhData);
-            var resMainData = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
-            resData.ProCode = resMainData.ProjectName;
-            resData.Address = resMainData.Address;
-            resData.TotalPop = resMainData.TotalBenificiaryPopulation;
-            resData.TotalHhServed = resMainData.TotalHhServed;
+            // Initialize the combined data model
+            var combinedData = new FormCombinedDto
+            {
+                WqData = resMainData, // Populate the common data
+                ReservoirSanitationData = null,
+                SourceSanitationData = null,
+                StructureSanitationData = null,
+                TapSanitationData = null
+            };
+
+            // Retrieve Reservoir Sanitation Data
+            var hhData = _wqsContext.ReservoirSanitaries
+                         .Where(s => s.FormId == uuid)
+                         .FirstOrDefault();
+            if (hhData != null)
+            {
+                combinedData.ReservoirSanitationData = _mapper.Map<FormResDto>(hhData);
+            }
 
             // Retrieve Source Sanitation Data
             var sourceData = _wqsContext.SourceSanitaries
                              .Where(s => s.FormId == uuid)
                              .FirstOrDefault();
-            var souData = _mapper.Map<FormSouDto>(sourceData);
-             var StructureData = _wqsContext.StructureSanitaries
-                             .Where(s => s.FormId == uuid)
-                             .FirstOrDefault();
-            var StrData = _mapper.Map<FormStrDto>(StructureData);
-             var TapData = _wqsContext.TapSanitaries
-                             .Where(s => s.FormId == uuid)
-                             .FirstOrDefault();
-            var TapDatas = _mapper.Map<FormTapDto>(TapData);
-
-            // Combine both data models
-            var combinedData = new FormCombinedDto
+            if (sourceData != null)
             {
-                ReservoirSanitationData = resData,
-                SourceSanitationData = souData,
-                StructureSanitationData = StrData,
-                TapSanitationData = TapDatas
-            };
+                combinedData.SourceSanitationData = _mapper.Map<FormSouDto>(sourceData);
+            }
+
+            // Retrieve Structure Sanitation Data
+            var StructureData = _wqsContext.StructureSanitaries
+                                .Where(s => s.FormId == uuid)
+                                .FirstOrDefault();
+            if (StructureData != null)
+            {
+                combinedData.StructureSanitationData = _mapper.Map<FormStrDto>(StructureData);
+            }
+
+            // Retrieve Tap Sanitation Data
+            var TapData = _wqsContext.TapSanitaries
+                          .Where(s => s.FormId == uuid)
+                          .FirstOrDefault();
+            if (TapData != null)
+            {
+                combinedData.TapSanitationData = _mapper.Map<FormTapDto>(TapData);
+            }
 
             return View("~/Views/Wqs/Sanitary_Inspection/SanitaryView.cshtml", combinedData);
         }

@@ -7,6 +7,10 @@
     var sn = 1;
 }
 <div class="table-responsive" style="width:85%; margin: 0 auto;">
+   @*  <button class="btn btn-success btn-sm" style="background-color: rgb(33,115,70); box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; float: left; margin-left:5px"
+            onclick="window.location = '@Url.Action("ExportSanToExcel", "Wqs", new { MunCode=munCode })'">
+        Export Data
+    </button> *@
     <table id="SanitaryInd" class="table table-bordered table-striped" border="1">
         <thead>
             <tr style="background: #e8ecfd;">
@@ -90,7 +94,6 @@
                             <!-- Show actions if at least one data type exists -->
                             <a asp-action="SanView" asp-route-encode="@encodedUUID" class="btn btn-sm btn-outline-info" target="_blank">View</a>
                             <a asp-action="SanEdit" asp-route-encode="@encodedUUID" class="btn btn-sm btn-outline-info" target="_blank">Edit</a>
-                            <a asp-action="ShowEdit" asp-route-encode="@encodedUUID" class="btn btn-sm btn-outline-info" target="_blank">Show</a>
                         }
                         else
                         {

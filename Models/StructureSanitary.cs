@@ -13,6 +13,9 @@ public partial class StructureSanitary
     public string? FormId { get; set; }
     public string? AddedBy { get; set; }
     public DateTime? AddedOn { get; set; }
+    public string? EditedBy { get; set; }
+
+    public DateTime? EditedOn { get; set; }
 
 
     public string? StructureSanitationCondition1 { get; set; }

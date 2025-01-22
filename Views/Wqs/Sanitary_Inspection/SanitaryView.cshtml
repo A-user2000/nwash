@@ -16,14 +16,11 @@
     <link rel="shortcut icon" href="~/images/logos/NWASH.svg" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
-    @*  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">*@
     <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-@*     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
- *@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
@@ -58,20 +55,12 @@
         <div class="dropdown-divider" style="border-top: 1px solid #002f84;"></div>
 
         <div style="clear: both;"></div>
-        @if (contextHost.Host.Contains("training"))
-        {
-            <div class="container-fluid" style="background:#0330467a; padding:5px; float:left;">
-                <h5 style="margin-bottom:0px;">खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)</h5>
-            </div>
-        }
-        else
-        {
+      
             <div class="container-fluid" style="background:#e9ebf4; padding:5px; float:left;">
                 <h5 style="margin-bottom:0px;">
                     खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)
                 </h5>
             </div>
-        }
 
     </div>
     <div class="bsv" style="margin-top:165px;">
@@ -79,13 +68,13 @@
 
         <div class="table-responsive">
             <table class="table table-borderless" style="width:90%;">
-                <tr><td>Name of schema</td><td>@Model.ReservoirSanitationData.FormId</td></tr>
-                <tr><td>Project code</td><td>@Model.ReservoirSanitationData.ProCode</td></tr>
-                <tr><td>Address</td><td>@Model.ReservoirSanitationData.Address</td></tr>
-                <tr><td>Total HH served</td><td>@Model.ReservoirSanitationData.TotalHhServed</td> </tr>
+                <tr><td>Name of schema</td><td>@Model.WqData.SourceName</td></tr>
+                <tr><td>Project code</td><td>@Model.WqData.ProjectName</td></tr>
+                <tr><td>Address</td><td>@Model.WqData.Address</td></tr>
+                <tr><td>Total HH served</td><td>@Model.WqData.TotalHhServed</td> </tr>
                 <tr>
                     <td>Population served</td>
-                    <td>@Model.ReservoirSanitationData.TotalPop</td>
+                    <td>@Model.WqData.TotalBenificiaryPopulation</td>
                 </tr>
 
             </table>
@@ -93,6 +82,9 @@
                 <h4 style="text-align: center;">Sanitary Inspection</h4>
             </div>
             <br />
+
+            @if (Model.ReservoirSanitationData != null)
+            {
             <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
                 <h5 style="float: left;">&nbsp;Reservoir</h5>
                 <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#reservoirInfo">▼</button>
@@ -134,8 +126,21 @@
                         </tr>
                     </table>
                 </div>
-
+            }
+            else
+            {
+                <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Reservoir</h5>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    Reservoir form data is not available.
+                </div>
+            }
                 <!-- Source Sanitation Conditions Section -->
+            @if (Model.SourceSanitationData != null)
+            {
+
             <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
                 <h5 style="float: left;">&nbsp;Source</h5>
                 <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#sourceInfo">▼</button>
@@ -242,6 +247,19 @@
 
                 </table>
              </div>
+            }
+            else
+            {
+                <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Source</h5>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    Source form data is not available.
+                </div>
+            }
+            @if (Model.StructureSanitationData != null)
+{
             <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
                 <h5 style="float: left;">&nbsp;Structure</h5>
                 <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#structureInfo">▼</button>
@@ -318,7 +336,19 @@
                 </table>
             
             </div>
-
+            }
+            else
+            {
+                <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Structure</h5>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    Structure form data is not available.
+                </div>
+            }
+            @if (Model.TapSanitationData != null)
+{
               <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
                 <h5 style="float: left;">&nbsp;Tap</h5>
                 <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#tapInfo">▼</button>
@@ -376,7 +406,17 @@
                 </table>
             
             </div>
-
+            }
+else
+{
+    <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
+        <h5 style="float: left;">&nbsp;Tap</h5>
+        <div style="clear: both"></div>
+    </div>
+    <div class="alert alert-info" role="alert">
+        Tap form data is not available.
+    </div>
+}
 
         </div>
     </div>

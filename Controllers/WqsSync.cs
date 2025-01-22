@@ -279,7 +279,6 @@ public class WqsSync
                             ? new Point(longitude.Value, latitude.Value) { SRID = 4326 }
                             : null;
                         existingWqSurveillance.EditedBy = username;
-                        //existingWqSurveillance.EditedOn = values.ContainsKey("editedOn") ? (DateTime?)Convert.ToDateTime(values["editedOn"]) : null;
                         existingWqSurveillance.EditedOn = DateTime.UtcNow;
                         existingWqSurveillance.SopPhoto = MapImage((byte[])(values["sopPhoto"]));
                         existingWqSurveillance.WspPhoto = MapImage((byte[])(values["wspPhoto"]));
@@ -358,6 +357,8 @@ public class WqsSync
                         existingRecord.WspInitiativeNoticeSource = GetValueOrDefault(values, "wspInitiativeNoticeSource");
                         existingRecord.WspInitiativeWrittenResult = GetValueOrDefault(values, "wspInitiativeWrittenResult");
                         existingRecord.WspInitiativeSuggestion = GetValueOrDefault(values, "wspInitiativeSuggestion");
+                        existingRecord.EditedBy = username;
+                        existingRecord.EditedOn = DateTime.UtcNow;
                     }
 
                     await _WqsContext.SaveChangesAsync();
@@ -424,6 +425,8 @@ public class WqsSync
                         existingRecord.ReviewScore = GetValueOrDefault(values, "reviewScore");
                         existingRecord.ReviewPhoto = MapImage((byte[])(values["reviewPhoto"]));
                         existingRecord.TotalScore = int.Parse(GetValueOrDefault(values, "totalScore"));
+                        existingRecord.EditedBy = username;
+                        existingRecord.EditedOn = DateTime.UtcNow;
                     }
 
                     await _WqsContext.SaveChangesAsync();
@@ -466,6 +469,8 @@ public class WqsSync
                         existingForm.DefNoticeSource = values["defNoticeSource"]?.ToString();
                         existingForm.DefWrittenResult = values["defWrittenResult"]?.ToString();
                         existingForm.DefSuggestion = values["defSuggestion"]?.ToString();
+                        existingForm.EditedBy = username;
+                        existingForm.EditedOn = DateTime.UtcNow;
                     }
                     else
                     {
@@ -537,6 +542,8 @@ public class WqsSync
                         existingForm3.DysenteryCount = values["dysenteryCount"]?.ToString();
                         existingForm3.TyphoidCount = values["typhoidCount"]?.ToString();
                         existingForm3.HepatitisCount = values["hepatitisACount"]?.ToString();
+                        existingForm3.EditedBy = username;
+                        existingForm3.EditedOn = DateTime.UtcNow;
                     }
 
                     await _WqsContext.SaveChangesAsync();
@@ -593,6 +600,8 @@ public class WqsSync
                         existingReservoirSanitary.TheGeom = latitude.HasValue && longitude.HasValue
                             ? new Point(longitude.Value, latitude.Value) { SRID = 4326 }
                             : null;
+                        existingReservoirSanitary.EditedBy = username;
+                        existingReservoirSanitary.EditedOn = DateTime.UtcNow;
                     }
 
                     await _WqsContext.SaveChangesAsync();
@@ -639,6 +648,8 @@ public class WqsSync
                         existingSourceSanitary.TheGeom = latitude.HasValue && longitude.HasValue
                             ? new Point(longitude.Value, latitude.Value) { SRID = 4326 }
                             : null;
+                        existingSourceSanitary.EditedBy = username;
+                        existingSourceSanitary.EditedOn = DateTime.UtcNow;
                     }
                     else
                     {
@@ -670,6 +681,7 @@ public class WqsSync
                             TheGeom = latitude.HasValue && longitude.HasValue
                                 ? new Point(longitude.Value, latitude.Value) { SRID = 4326 }
                                 : null
+
                         });
                     }
 
@@ -711,6 +723,8 @@ public class WqsSync
                         existingStructureSanitary.TheGeom = latitude.HasValue && longitude.HasValue
                             ? new Point(longitude.Value, latitude.Value) { SRID = 4326 }
                             : null;
+                        existingStructureSanitary.EditedBy = username;
+                        existingStructureSanitary.EditedOn = DateTime.UtcNow;
                     }
                     else
                     {
@@ -799,6 +813,8 @@ public class WqsSync
                         existingTapSanitary.TheGeom = latitude.HasValue && longitude.HasValue
                             ? new Point(longitude.Value, latitude.Value) { SRID = 4326 }
                             : null;
+                        existingTapSanitary.EditedBy = username;
+                        existingTapSanitary.EditedOn = DateTime.UtcNow;
                     }
 
                     await _WqsContext.SaveChangesAsync();

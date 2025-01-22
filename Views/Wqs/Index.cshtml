@@ -73,14 +73,8 @@
                 <option value="Fomr1B">Form 1 B</option>
                 <option value="Fomr2">Form 2</option>
                 <option value="Fomr3">Form 3</option>
-                <optgroup label="Sanitary Inspection">
-                    <option value="Sanitary_Inspection">Sanitary Inspection</option>
-                    <option value="Resevoir_Sanitary">Reservoir Sanitary</option>
-                    <option value="Source_Sanitary">Source Sanitary</option>
-                    <option value="Structure_Sanitary">Structure Sanitary</option>
-                    <option value="Tap_Sanitary">Tap Sanitary</option>
-                </optgroup>
-                <option value="WQ_Survelliance">WQ Surveillance</option>
+                <option value="Sanitary_Inspection">Sanitary Inspection</option>
+
             </select>
         </div>
     </div>
@@ -100,11 +94,7 @@
     <a id="Fomr2" onclick="Fomr2();"></a>
     <a id="Fomr3" onclick="Fomr3();"></a>
     <a id="Sanitary_Inspection" onclick="San_Ind();"></a>
-    <a id="Resevoir_Sanitary" onclick="Resevoir_Sanitary();"></a>
-    <a id="Source_Sanitary" onclick="Source_Sanitary();"></a>
-    <a id="Structure_Sanitary" onclick="Structure_Sanitary();"></a>
-    <a id="Tap_Sanitary" onclick="Tap_Sanitary();"></a>
-    <a id="WQ_Survelliance" onclick="WQ_Survelliance();"></a>
+ 
   </div>
 
 <!-- Embedded CSS -->
@@ -168,6 +158,97 @@
 
 @section Scripts {
     <script>
+               function getDistrict() {
+            var provinceCode = $("#province").val();
+            $('#district').html('<option value="0">Select District</option>'); // Clear district dropdown
+            $('#municipality').html('<option value="0">Select Municipality</option>'); // Clear municipality dropdown
+            $('#formSelector').val(''); // Clear form dropdown
+            $('#ProjectData').html(''); // Clear table
+
+            if (provinceCode) {
+                $.ajax({
+                    type: "POST",
+                    url: '/System/GetDistrict',
+                    data: { 'ProvinceCode': provinceCode },
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
+                    },
+                    complete: function () {
+                        $("#load_text").text("");
+                    },
+                    success: function (data) {
+                        // Populate district dropdown
+                        $.each(data, function (index, item) {
+                            $('#district').append('<option value="' + item.districtCode + '">' + item.districtCode + ' - ' + item.districtName + '</option>');
+                        });
+                    },
+                    error: function () {
+                        alert("Failed to load districts. Please refresh and try again.");
+                    }
+                });
+            }
+        }
+
+        function getMunicipality() {
+            var districtCode = $("#district").val();
+            $('#municipality').html('<option value="0">Select Municipality</option>'); // Clear municipality dropdown
+            $('#formSelector').val(''); // Clear form dropdown
+            $('#ProjectData').html(''); // Clear table
+
+            if (districtCode) {
+                $.ajax({
+                    type: "POST",
+                    url: '/System/GetMunicipality',
+                    data: { 'dCode': districtCode },
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
+                    },
+                    complete: function () {
+                        $("#load_text").text("");
+                    },
+                    success: function (data) {
+                        // Populate municipality dropdown
+                        $.each(data, function (index, item) {
+                            $('#municipality').append('<option value="' + item.munCode + '">' + item.munCode + ' - ' + item.munName + '</option>');
+                        });
+                    },
+                    error: function () {
+                        alert("Failed to load municipalities. Please refresh and try again.");
+                    }
+                });
+            }
+        }
+
+        function ProjectDataLoad() {
+            var munCode = $("#municipality").val();
+            $('#formSelector').val(''); // Clear form dropdown
+            $('#ProjectData').html(''); // Clear table
+
+            if (munCode !== "0") {
+                $.ajax({
+                    type: 'POST',
+                    url: '/System/GetProjectList',
+                    data: { 'munCode': munCode },
+                    beforeSend: function () {
+                        $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
+                    },
+                    complete: function () {
+                        $("#load_text").text("");
+                    },
+                    success: function (data) {
+                        $('#ProjectData').html(data); // Load the project data
+                    },
+                    error: function () {
+                        alert("Failed to load project data. Please try again.");
+                    }
+                });
+            } else {
+                alert("Please select a municipality first.");
+            }
+        }
+
         function triggerFormClick(selectedValue) {
             if (selectedValue) {
                 // Find the corresponding hidden anchor tag and trigger its click event
@@ -175,87 +256,11 @@
                 if (anchor) {
                     anchor.click();
                 }
+            } else {
+                $('#ProjectData').html(''); // Clear table if no form is selected
             }
         }
 
-   function getDistrict() {
-    var provinceCode = $("#province").val();
-    $('#tdata').html(''); // Clear previous data
-    $.ajax({
-        type: "POST",
-        url: '/System/GetDistrict',
-        data: { 'ProvinceCode': provinceCode },
-        dataType: "json",
-        beforeSend: function () {
-            $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
-        },
-        complete: function () {
-            $("#load_text").text("");
-        },
-        success: function (data) {
-            // Populate district dropdown
-            $('#district').html('<option value="0">Select District</option>');
-            $('#municipality').html('<option value="0">Select Municipality</option>'); // Reset municipality dropdown
-            $.each(data, function (index, item) {
-                $('#district').append('<option value="' + item.districtCode + '">' + item.districtCode + ' - ' + item.districtName + '</option>');
-            });
-        },
-        error: function () {
-            alert("Failed to load districts. Please refresh and try again.");
-        }
-    });
-}
-
-function getMunicipality() {
-    var districtCode = $("#district").val();
-    $.ajax({
-        type: "POST",
-        url: '/System/GetMunicipality',
-        data: { 'dCode': districtCode },
-        dataType: "json",
-        beforeSend: function () {
-            $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
-        },
-        complete: function () {
-            $("#load_text").text("");
-        },
-        success: function (data) {
-            // Populate municipality dropdown
-            $('#municipality').html('<option value="0">Select Municipality</option>');
-            $.each(data, function (index, item) {
-                $('#municipality').append('<option value="' + item.munCode + '">' + item.munCode + ' - ' + item.munName + '</option>');
-            });
-        },
-        error: function () {
-            alert("Failed to load municipalities. Please refresh and try again.");
-        }
-    });
-}
-// function ProjectDataLoad() {
-//     $('#ProjectData').html(''); // Clear project data
-//     var munCode = $("#municipality").val();
-//     if (munCode !== "0") {
-//         $.ajax({
-//             type: 'POST',
-//             url: '/System/GetProjectList',
-//             data: { 'munCode': munCode },
-//             beforeSend: function () {
-//                 $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
-//             },
-//             complete: function () {
-//                 $("#load_text").text("");
-//             },
-//             success: function (data) {
-//                 $('#ProjectData').html(data); // Load the project data
-//             },
-//             error: function () {
-//                 alert("Failed to load project data. Please try again.");
-//             }
-//         });
-//     } else {
-//         alert("Please select a municipality first.");
-//     }
-// }
          function San_Ind() {
                             $("#Fomr1A").removeClass("active");
                             $("#Fomr1B").removeClass("active");
@@ -635,9 +640,3 @@ function WQ_Survelliance() {
 
     </script>
 }
-
-
-
-
-
- 

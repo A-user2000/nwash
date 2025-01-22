@@ -296,7 +296,7 @@
     </div>
 
     <br />
-    <div id="projectDet">
+@*     <div id="projectDet">
         <div class="container">
             <div class="card">
                 <div class="card-body">
@@ -311,7 +311,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+ *@    <div class="row">
         <div class="col-md-12" style="padding:0px">
             <center><div id="load_text"></div></center>
             <div id="partialDiv" style="display: block;"></div>
@@ -325,38 +325,36 @@
 </html>
 
 <script>
-    $('[name=buttontop]').click(function () {
-         $("#projectDet").css('display', 'none');
-         $('#partialDiv').html('');
-         $("#projectdetail").css('color', 'grey');
-         var valueis = $(this).val();
-         var uuid = '@uuid';
-             $.ajax({
-                 type: "POST",
-                 url: '/Wqs/ShowData',
-                 data: { "valueis": valueis, "uuid": uuid },
-                 beforeSend: function () {
-                     $("#load_text").html("<br/>Loading Data...<br/><br/><img src='/images/file_loading.gif'/>");
-                 },
-                 complete: function () {
-                     $("#load_text").text("");
-                 },
-                 success: function (data) {
-                     debugger;
-                      console.log(data); // Log the response to the console
-                    $('button').css('color', 'grey'); // Reset all buttons
-                    document.getElementById(valueis).style.color = '#00bfff'; // Highlight the clicked button
-                    $('#partialDiv').html(data); // Load the p
-                                 },
-                                   error: function (xhr, status, error) {
-                        console.error("AJAX Error:", error); // Log the error to the console
-                        console.error("Status:", status); // Log the status code
-                        console.error("Response:", xhr.responseText); // Log the server's response
-                        alert("An error occurred. Please try again or contact support.");
-    }
-             });
-              console.log("Partial View Loaded"); //
-     });
+       $('[name=buttontop]').click(function () {
+        $("#projectDet").css('display', 'none');
+        $('#partialDiv').html('');
+        $("#projectdetail").css('color', 'grey');
+        var valueis = $(this).val();
+        var uuid = '@uuid';
+
+        $.ajax({
+            type: "POST",
+            url: '/Wqs/ShowData',
+            data: { "valueis": valueis, "uuid": uuid },
+            beforeSend: function () {
+                $("#load_text").html("<br/>Loading Data...<br/><br/><img src='/images/file_loading.gif'/>");
+            },
+            complete: function () {
+                $("#load_text").text("");
+            },
+            success: function (data) {
+                $('button').css('color', 'grey'); // Reset all buttons
+                document.getElementById(valueis).style.color = '#00bfff'; // Highlight the clicked button
+                $('#partialDiv').html(data); // Load the partial view or empty form message
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", error); // Log the error to the console
+                console.error("Status:", status); // Log the status code
+                console.error("Response:", xhr.responseText); // Log the server's response
+                alert("An error occurred. Please try again or contact support.");
+            }
+        });
+    });
 
      function btnNextPrev(valueis) {
         $('#partialDiv').html('');
@@ -386,6 +384,10 @@
 
 
     jQuery(document).ready(function () {
+        // Load the Reservoir section by default
+        loadReservoirSection();
+
+        // Scroll-to-top functionality
         var offset = 220;
         var duration = 500;
         jQuery(window).scroll(function () {
@@ -403,7 +405,40 @@
             }, duration);
             return false;
         });
+
+        // Auto-close alerts after 6 seconds
+        $(".alert").delay(6000).slideUp(100, function () {
+            $(this).alert('close');
+        });
     });
+
+    function loadReservoirSection() {
+        var valueis = "reservoir"; // Value for the Reservoir section
+        var uuid = '@uuid'; // UUID from the ViewData
+
+        $.ajax({
+            type: "POST",
+            url: '/Wqs/ShowData',
+            data: { "valueis": valueis, "uuid": uuid },
+            beforeSend: function () {
+                $("#load_text").html("<br/>Loading Data...<br/><br/><img src='/images/file_loading.gif'/>");
+            },
+            complete: function () {
+                $("#load_text").text("");
+            },
+            success: function (data) {
+                $('button').css('color', 'grey'); // Reset all buttons
+                document.getElementById(valueis).style.color = '#00bfff'; // Highlight the Reservoir button
+                $('#partialDiv').html(data); // Load the Reservoir section
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", error); // Log the error to the console
+                console.error("Status:", status); // Log the status code
+                console.error("Response:", xhr.responseText); // Log the server's response
+                alert("An error occurred. Please try again or contact support.");
+            }
+        });
+    }
 
     $(".alert").delay(6000).slideUp(100, function () {
         $(this).alert('close');

@@ -157,7 +157,7 @@ namespace Wq_Surveillance.Service
 
 
 
-        public Form1a UpdateWQSDataFA (Form1a WData)
+        public Form1a UpdateWQSDataFA (Form1a WData, string username)
         {
             var getData = _wqsContext.Form1as
                             .Where(s => s.FormId == WData.FormId)
@@ -187,9 +187,10 @@ namespace Wq_Surveillance.Service
                 getData.WspInitiativeNoticeSource = WData.WspInitiativeNoticeSource;
                 getData.WspInitiativeWrittenResult = WData.WspInitiativeWrittenResult;
                 getData.WspInitiativeSuggestion = WData.WspInitiativeSuggestion;
+                getData.EditedBy = username; 
+                getData.EditedOn = DateTime.UtcNow;
 
 
-             
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
                 return getData;
@@ -199,7 +200,7 @@ namespace Wq_Surveillance.Service
                 return new Form1a();
             }
         }
-        public Form1b UpdateWQSDataFB(Form1b WData)
+        public Form1b UpdateWQSDataFB(Form1b WData, string username)
         {
             var getData = _wqsContext.Form1bs
                             .Where(s => s.FormId == WData.FormId)
@@ -217,7 +218,8 @@ namespace Wq_Surveillance.Service
                 getData.CollaborativeActivitiesScore = WData.CollaborativeActivitiesScore;
                 getData.ReviewScore = WData.ReviewScore;
                 getData.TotalScore = WData.TotalScore;
-
+                getData.EditedBy = username;
+                getData.EditedOn = DateTime.UtcNow;
                 // Save changes
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
@@ -230,7 +232,7 @@ namespace Wq_Surveillance.Service
                 return new Form1b();
             }
         }
-        public Form2 UpdateWQSDataF2(Form2 WData)
+        public Form2 UpdateWQSDataF2(Form2 WData, string username)
         {
             var getData = _wqsContext.Form2s
                             .Where(s => s.FormId == WData.FormId)
@@ -258,7 +260,8 @@ namespace Wq_Surveillance.Service
                 getData.DefNoticeSource = WData.DefNoticeSource;
                 getData.DefWrittenResult = WData.DefWrittenResult;
                 getData.DefSuggestion = WData.DefSuggestion;
-
+                getData.EditedBy = username;
+                getData.EditedOn = DateTime.UtcNow;
                 // Save changes
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
@@ -271,7 +274,7 @@ namespace Wq_Surveillance.Service
                 return new Form2();
             }
         }
-        public string UpdateWQSDataF3(Form3 WData)
+        public string UpdateWQSDataF3(Form3 WData, string username)
         {
             var getData = _wqsContext.Form3s
                             .Where(s => s.Id == WData.Id)
@@ -285,7 +288,8 @@ namespace Wq_Surveillance.Service
                 getData.TyphoidCount = WData.TyphoidCount;
                 getData.DysenteryCount = WData.DysenteryCount;
                 getData.HepatitisCount = WData.HepatitisCount;
-
+                getData.EditedBy = username;
+                getData.EditedOn = DateTime.UtcNow;
                 // Save changes
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
@@ -298,7 +302,7 @@ namespace Wq_Surveillance.Service
                 return string.Empty;
             }
         }
-        public ReservoirSanitary UpdateWQSDataRes(ReservoirSanitary WData)
+        public ReservoirSanitary UpdateWQSDataRes(ReservoirSanitary WData, string username)
         {
             var getData = _wqsContext.ReservoirSanitaries
                             .Where(s => s.FormId == WData.FormId)
@@ -311,7 +315,8 @@ namespace Wq_Surveillance.Service
                 getData.ResorvoirSanitationCondition3 = WData.ResorvoirSanitationCondition3;
                 getData.ResorvoirSanitationCondition4 = WData.ResorvoirSanitationCondition4;
                 getData.ResorvoirSanitationCondition5 = WData.ResorvoirSanitationCondition5;
-
+                getData.EditedBy = username;
+                getData.EditedOn = DateTime.UtcNow;
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
                 return getData;
@@ -322,7 +327,7 @@ namespace Wq_Surveillance.Service
             }
         }
 
-        public SourceSanitary UpdateWQSDataSou(SourceSanitary WData)
+        public SourceSanitary UpdateWQSDataSou(SourceSanitary WData, string username)
         {
             var getData = _wqsContext.SourceSanitaries
                             .Where(s => s.FormId == WData.FormId)
@@ -345,7 +350,8 @@ namespace Wq_Surveillance.Service
                 getData.SourceSanitationCondition13 = WData.SourceSanitationCondition13;
                 getData.SourceSanitationCondition14 = WData.SourceSanitationCondition14;
                 getData.SourceSanitationCondition15 = WData.SourceSanitationCondition15;
-
+                getData.EditedBy = username;
+                getData.EditedOn = DateTime.UtcNow;
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
                 return getData;
@@ -356,7 +362,7 @@ namespace Wq_Surveillance.Service
             }
         }
 
-        public StructureSanitary UpdateWQSDataStr(StructureSanitary WData)
+        public StructureSanitary UpdateWQSDataStr(StructureSanitary WData, string username)
         {
             var getData = _wqsContext.StructureSanitaries
                             .Where(s => s.FormId == WData.FormId)
@@ -374,7 +380,8 @@ namespace Wq_Surveillance.Service
                 getData.StructureSanitationCondition8 = WData.StructureSanitationCondition8;
                 getData.StructureSanitationCondition9 = WData.StructureSanitationCondition9;
                 getData.StructureSanitationCondition10 = WData.StructureSanitationCondition10;
-
+                getData.EditedBy = username;
+                getData.EditedOn = DateTime.UtcNow;
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
                 return getData;
@@ -384,7 +391,7 @@ namespace Wq_Surveillance.Service
                 return new StructureSanitary();
             }
         }
-        public TapSanitary UpdateWQSDataTap(TapSanitary WData)
+        public TapSanitary UpdateWQSDataTap(TapSanitary WData, string username)
         {
             var getData = _wqsContext.TapSanitaries
                             .Where(s => s.FormId == WData.FormId)
@@ -399,7 +406,8 @@ namespace Wq_Surveillance.Service
                 getData.TapSanitationCondition5 = WData.TapSanitationCondition5;
                 getData.TapSanitationCondition6 = WData.TapSanitationCondition6;
                 getData.TapSanitationCondition7 = WData.TapSanitationCondition7;
-
+                getData.EditedBy = username;
+                getData.EditedOn = DateTime.UtcNow;
                 _wqsContext.Update(getData);
                 _wqsContext.SaveChanges();
                 return getData;

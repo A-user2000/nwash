@@ -10,14 +10,14 @@ namespace Wq_Surveillance.Service
         public Dictionary<string, int> GetHH(string munCode);
         public Dictionary<string, int> GetPop(string munCode);
 
-        public Form1a UpdateWQSDataFA(Form1a WData);
-        public Form1b UpdateWQSDataFB(Form1b WData);
-        public Form2 UpdateWQSDataF2(Form2 WData);
-        public string UpdateWQSDataF3(Form3 WData);
-        public ReservoirSanitary UpdateWQSDataRes(ReservoirSanitary WData);
-        public SourceSanitary UpdateWQSDataSou(SourceSanitary WData);
-        public StructureSanitary UpdateWQSDataStr(StructureSanitary WData);
-        public TapSanitary UpdateWQSDataTap(TapSanitary WData);
+        public Form1a UpdateWQSDataFA(Form1a WData, string username);
+        public Form1b UpdateWQSDataFB(Form1b WData, string username);
+        public Form2 UpdateWQSDataF2(Form2 WData, string username);
+        public string UpdateWQSDataF3(Form3 WData, string username);
+        public ReservoirSanitary UpdateWQSDataRes(ReservoirSanitary WData, string username);
+        public SourceSanitary UpdateWQSDataSou(SourceSanitary WData, string username);
+        public StructureSanitary UpdateWQSDataStr(StructureSanitary WData, string username);
+        public TapSanitary UpdateWQSDataTap(TapSanitary WData, string username);
         public (int?, decimal?) GetPopandHH(string ProCode);
         public Dictionary<string, string> GetFormId(string munCode);
         public Dictionary<string, string> GetAddress(string munCode);

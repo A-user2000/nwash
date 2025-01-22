@@ -1,5 +1,7 @@
 ﻿@model Wq_Surveillance.Models.SourceSanitary
-
+@{
+    var uuid = ViewData["uuid"] as string;
+}
 <!-- Add the multisteps-form styling and structure -->
 <div class="row">
     <div class="col-12 col-lg-8 m-auto">
@@ -19,7 +21,8 @@
                     </div>
 
                     <!-- Your form starts here -->
-                    <form method="post" asp-action="FormSouEditPost" asp-controller="Wqs">
+                    <form id="sanitaryForm" method="post" onsubmit="updateSourceData(event)">
+                        @Html.AntiForgeryToken() <!-- Add Anti-Forgery Token -->
                         <input type="hidden" asp-for="FormId" />
 
                         <!-- Sanitary Inspection Section -->
@@ -213,7 +216,7 @@
                         <!-- Save and Cancel Buttons -->
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary">Save</button>
-                            <a class="btn btn-secondary" asp-action="Index" asp-controller="Dashboard">Cancel</a>
+                            <button type="button" class="btn btn-danger" onclick="deleteSanitaryData()">Delete</button>
                         </div>
                     </form>
                 </div>
@@ -221,3 +224,58 @@
         </div>
     </div>
 </div>
+<script>
+
+    function updateSourceData(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData(document.getElementById("sanitaryForm"));
+
+        $.ajax({
+            type: "POST",
+            url: '/Wqs/FormSanSouEditPost',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // Anti-Forgery Token
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message); // Show success message
+                    // Optionally, you can refresh part of the page or reset the form here
+                } else {
+                    alert(response.message); // Show error message
+                }
+            },
+            error: function () {
+                alert("An error occurred while updating data.");
+            }
+        });
+    }
+       function deleteSanitaryData() {
+        if (confirm("Are you sure you want to delete this record? This action cannot be undone.")) {
+            var formid = '@uuid'; // Use the UUID from the main form
+
+            $.ajax({
+                type: "POST",
+                url: '/Wqs/DeleteDataSou', // Replace with your actual delete endpoint
+                data: { "id": btoa(formid) }, // Encode the UUID to base64
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // Anti-Forgery Token
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message); // Show success message
+                        window.location.href = '/Dashboard/Index'; // Redirect to the dashboard or another page after deletion
+                    } else {
+                        alert(response.message); // Show error message
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while deleting the record.");
+                }
+            });
+        }
+    }
+            </script>

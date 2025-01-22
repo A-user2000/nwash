@@ -13,6 +13,9 @@ public partial class TapSanitary
     public string? AddedBy { get; set; }
 
     public DateTime? AddedOn { get; set; }
+    public string? EditedBy { get; set; }
+
+    public DateTime? EditedOn { get; set; }
 
     public string? TapSanitationCondition1 { get; set; }
 

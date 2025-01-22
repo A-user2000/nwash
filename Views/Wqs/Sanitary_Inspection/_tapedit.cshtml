@@ -21,7 +21,7 @@
                     </div>
 
                     <!-- Your form starts here -->
-                    <form id="sanitaryForm" method="post">
+                    <form id="sanitaryForm" method="post" onsubmit="updateSanitaryData(event)">
                         @Html.AntiForgeryToken() <!-- Add Anti-Forgery Token -->
                         <input type="hidden" asp-for="FormId" />
 
@@ -95,8 +95,8 @@
 
                         <!-- Update and Cancel Buttons -->
                         <div class="text-center mt-4">
-                            <button type="button" class="btn btn-primary" onclick="updateSanitaryData()">Update</button>
-                            <a class="btn btn-secondary" asp-action="Index" asp-controller="Dashboard">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-danger" onclick="deleteSanitaryData()">Delete</button>
                         </div>
                     </form>
                 </div>
@@ -133,7 +133,9 @@
         });
     }
 
-    function updateSanitaryData() {
+    function updateSanitaryData(event) {
+        event.preventDefault(); // Prevent the default form submission
+
         var formData = new FormData(document.getElementById("sanitaryForm"));
 
         $.ajax({
@@ -147,10 +149,10 @@
             },
             success: function (response) {
                 if (response.success) {
-                    alert("Data Updated Successfully");
-                    window.location.href = response.redirectUrl; // Redirect to the specified URL
+                    alert(response.message); // Show success message
+                    // Optionally, you can refresh part of the page or reset the form here
                 } else {
-                    alert("Something Went Wrong. Please try again later.");
+                    alert(response.message); // Show error message
                 }
             },
             error: function () {
@@ -158,4 +160,31 @@
             }
         });
     }
-</script>
+
+             function deleteSanitaryData() {
+        if (confirm("Are you sure you want to delete this record? This action cannot be undone.")) {
+            var formid = '@uuid'; // Use the UUID from the main form
+
+            $.ajax({
+                type: "POST",
+                url: '/Wqs/DeleteDataTap', // Replace with your actual delete endpoint
+                data: { "id": btoa(formid) }, // Encode the UUID to base64
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // Anti-Forgery Token
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message); // Show success message
+                        window.location.href = '/Dashboard/Index'; // Redirect to the dashboard or another page after deletion
+                    } else {
+                        alert(response.message); // Show error message
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while deleting the record.");
+                }
+            });
+        }
+    }
+            
+            </script>
