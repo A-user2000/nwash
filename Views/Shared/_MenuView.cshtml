@@ -21,7 +21,7 @@
 <nav id="sidebar" class="sidebar-wrapper navcolor" style=" color: #fff !important;z-index:1100;">
     <div class="sidebar-content">
         <div class="sidebar-brand">
-            @{
+          @*   @{
                 var typ = "";
                 if (usertyp == null)
                 {
@@ -39,9 +39,9 @@
                 {
                     typ = "Index";
                 }
-            }
+            } *@
            
-                <a asp-area="" asp-controller="Dashboard" asp-action="@typ" style="color: #fff !important;">Wq Surveillance</a>
+                <a asp-area="" asp-controller="WqsDashboard" asp-action="Index" style="color: #fff !important;">WQ Surveillance</a>
           
             <div id="close-sidebar">
                 <i class="fas fa-arrow-left"></i>
@@ -134,6 +134,18 @@
                             <a class="item" asp-area="" asp-controller="Wqs" asp-action="Index">
                                 <i class="fas fa-flask"></i>
                                 <span>Surveillance Data</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="item" asp-area="" asp-controller="WqsCharts" asp-action="Index">
+                                <i class="fas fa-flask"></i>
+                                <span>WQS Chart Data</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="item" asp-area="" asp-controller="Apk" asp-action="Index">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>App store</span>
                             </a>
                         </li>
                         @*  ///User Management *@

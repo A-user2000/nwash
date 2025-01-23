@@ -84,3 +84,4 @@ yarn-error.log
 # Visual Studio Code
 .vscode/
 /appsettings.json
+/wqs_images/wqs

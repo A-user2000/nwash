@@ -1,0 +1,46 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Download APK";
+    // var UId = HttpContextAccessor.HttpContext.Session.GetString("SUserID");
+    // var UEmail = HttpContextAccessor.HttpContext.Session.GetString("SEmail");
+}
+<style>
+    .borderdiv22 {
+        flex: 1;
+        border: 1px solid #ddd;
+        background: #fff;
+        padding: 20px !important;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+    }
+</style>
+
+
+    <div class="container">
+        <div class="images_margin display borderdiv22">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-3 nospace thumbs">
+                    <img src="~/Images/logos/WqSurveillance.jpeg" style="width:192px; height:192px" />
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-6 nospace thumbs wrapper">
+                    <h2 class="title">WQ Surveillance</h2>
+                    <div class="description">Water Quality Module data collection app for NWASH - WQ Surveillance</div>
+                    <div class="version">App Version : 1.0.0</div>
+                    <div class="version">Requirements : 4.0.3 and up</div>
+                    <div class="version">Size : mb</div>
+                    <div class="version">Updated Date : 25/1/2025</div>
+                    <div class="downloadCount">Download Count : 1</div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-3 nospace thumbs">
+                    @using (Html.BeginForm("Apk", "ApkDownload", FormMethod.Get))
+                    {
+                        <input type="text" hidden name="fileName" value="" />
+                        <button class="btn btn-success" type="submit">Download APK</button>
+                    }
+                    <br />                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+
