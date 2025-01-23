@@ -69,7 +69,7 @@ namespace Wq_Surveillance.Controllers
 
         //    ViewData["munCode"] = munCode;
 
-        //    var data = _wqsContext.WqSurvellianceMains
+        //    var data = _wqsContext.WqSurveillanceMains
         //        .AsEnumerable() // Converts to in-memory collection
         //        .Where(s => s.Municipality != null && _wqsservices.ExtractNumber(s.Municipality) == munCode)
         //        .OrderByDescending(item => item.Id)
@@ -118,7 +118,7 @@ namespace Wq_Surveillance.Controllers
 
             ViewData["munCode"] = munCode;
 
-            var data = _wqsContext.WqSurvellianceMains
+            var data = _wqsContext.WqSurveillanceMains
                 .AsEnumerable() // Converts to in-memory collection
                 .Where(s => s.Municipality != null && _wqsservices.ExtractNumber(s.Municipality) == munCode)
                 .OrderByDescending(item => item.Id)
@@ -168,14 +168,14 @@ namespace Wq_Surveillance.Controllers
             var hhData = data;
 
 
-            return PartialView("~/Views/Wqs/Wq_Survelliance/Wq_Main.cshtml", dto);
+            return PartialView("~/Views/Wqs/Wq_Surveillance/Wq_Main.cshtml", dto);
         }
         public PartialViewResult SanData(string munCode)
         {
             ViewData["munCode"] = munCode;
 
             // Query the data and project into the ViewModel
-            var data = _wqsContext.WqSurvellianceMains
+            var data = _wqsContext.WqSurveillanceMains
                 .AsEnumerable()
                 .Where(s => s.Municipality != null && _wqsservices.ExtractNumber(s.Municipality) == munCode)
                 .OrderByDescending(item => item.Id)
@@ -202,9 +202,9 @@ namespace Wq_Surveillance.Controllers
 
 
 
-        public WqSurvellianceMain GetAddressFromId(string Id)
+        public WqSurveillanceMain GetAddressFromId(string Id)
         {
-            return _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Id.Equals(Id));
+            return _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Id.Equals(Id));
 
         }
  
@@ -441,7 +441,7 @@ namespace Wq_Surveillance.Controllers
             }
 
             // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<Form1ADto>(hhData);
 
@@ -467,7 +467,7 @@ namespace Wq_Surveillance.Controllers
                             .FirstOrDefault();
 
             //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhData.AddBy).Select(s => s.Name).SingleOrDefault();
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             var formData = _mapper.Map<Form1BDto>(hhData);
 
 
@@ -491,7 +491,7 @@ namespace Wq_Surveillance.Controllers
                             .FirstOrDefault();
 
             //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhData.AddBy).Select(s => s.Name).SingleOrDefault();
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<Form2Dto>(hhData);
 
@@ -520,7 +520,7 @@ namespace Wq_Surveillance.Controllers
             // Map each Form3 entity to Form3Dto and enrich with additional data
             var formDataList = hhDataList.Select(hhData =>
             {
-                var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
+                var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
                 var formData = _mapper.Map<Form3Dto>(hhData);
                 formData.ProName = _wqsservices.GetName(data.ProjectName);
                 formData.ProCode = data != null ? (data.ProjectName) : string.Empty;
@@ -556,7 +556,7 @@ namespace Wq_Surveillance.Controllers
             }
 
             // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<FormResDto>(hhData);
 
@@ -590,7 +590,7 @@ namespace Wq_Surveillance.Controllers
             }
 
             // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<FormSouDto>(hhData);
 
@@ -625,7 +625,7 @@ namespace Wq_Surveillance.Controllers
             }
 
             // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<FormStrDto>(hhData);
 
@@ -660,7 +660,7 @@ namespace Wq_Surveillance.Controllers
             }
 
             // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<FormTapDto>(hhData);
 
@@ -685,7 +685,7 @@ namespace Wq_Surveillance.Controllers
             var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
 
             // Retrieve Main Data (common for all forms)
-            var resMainData = _wqsContext.WqSurvellianceMains
+            var resMainData = _wqsContext.WqSurveillanceMains
                               .FirstOrDefault(p => p.Uuid.Equals(uuid));
 
             if (resMainData == null)
@@ -750,7 +750,7 @@ namespace Wq_Surveillance.Controllers
                             .Where(s => (s.FormId == FormId))
                             .FirstOrDefault();
             //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhDataList.AddBy).Select(s => s.Name).SingleOrDefault();
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<Form1ADto>(hhData);
 
@@ -775,7 +775,7 @@ namespace Wq_Surveillance.Controllers
             var hhData = _wqsContext.Form1bs
                             .Where(s => (s.FormId == FormId))
                             .FirstOrDefault();
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
             //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
             var formData = _mapper.Map<Form1BDto>(hhData);
 
@@ -801,7 +801,7 @@ namespace Wq_Surveillance.Controllers
                             .FirstOrDefault();
             var formData = _mapper.Map<Form2Dto>(hhData);
 
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
 
 
             formData.ProCode = (data.ProjectName);
@@ -835,7 +835,7 @@ namespace Wq_Surveillance.Controllers
 
             var formDataList = hhDataList.Select(hhData =>
             {
-                var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
+                var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
                 
                 
                 var dt = _mapper.Map<Form3Dto>(hhData);
@@ -865,7 +865,7 @@ namespace Wq_Surveillance.Controllers
             //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhDataList.AddBy).Select(s => s.Name).SingleOrDefault();
             var formData = _mapper.Map<FormResDto>(hhData);
 
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
 
 
             formData.ProCode = (data.ProjectName);
@@ -890,7 +890,7 @@ namespace Wq_Surveillance.Controllers
             //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhDataList.AddBy).Select(s => s.Name).SingleOrDefault();
             var formData = _mapper.Map<FormSouDto>(hhData);
 
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
 
 
             formData.ProCode = (data.ProjectName);
@@ -915,7 +915,7 @@ namespace Wq_Surveillance.Controllers
             //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhDataList.AddBy).Select(s => s.Name).SingleOrDefault();
             var formData = _mapper.Map<FormStrDto>(hhData);
 
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
 
 
             formData.ProCode =(data.ProjectName);
@@ -939,7 +939,7 @@ namespace Wq_Surveillance.Controllers
             //ViewData["AddedBy"] = _wqsContext.Users.Where(s => s.Email == hhDataList.AddBy).Select(s => s.Name).SingleOrDefault();
             var formData = _mapper.Map<FormTapDto>(hhData);
 
-            var data = _wqsContext.WqSurvellianceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
+            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
 
 
             formData.ProCode =(data.ProjectName);
@@ -971,7 +971,7 @@ namespace Wq_Surveillance.Controllers
             };
 
             // Retrieve Main Data (common for all forms)
-            var resMainData = _wqsContext.WqSurvellianceMains
+            var resMainData = _wqsContext.WqSurveillanceMains
                               .FirstOrDefault(p => p.Uuid.Equals(uuid));
 
             if (resMainData == null)
@@ -1482,7 +1482,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.form_1a f
     LEFT JOIN 
-        wqs.wq_survelliance_main wm 
+        wqs.wq_Surveillance_main wm 
     ON 
         f.form_id = wm.uuid
     WHERE 
@@ -1639,7 +1639,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.""form_1b"" f
     LEFT JOIN 
-        wqs.""wq_survelliance_main"" wm 
+        wqs.""wq_Surveillance_main"" wm 
     ON 
         f.""form_id"" = wm.""uuid""
     WHERE 
@@ -1796,7 +1796,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.""form_2"" f
     LEFT JOIN 
-        wqs.""wq_survelliance_main"" wm 
+        wqs.""wq_Surveillance_main"" wm 
     ON 
         f.""form_id"" = wm.""uuid""
     WHERE 
@@ -1941,7 +1941,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.""form_3"" f
     LEFT JOIN 
-        wqs.""wq_survelliance_main"" wm 
+        wqs.""wq_Surveillance_main"" wm 
     ON 
         f.""form_id"" = wm.""uuid""
     WHERE 
@@ -2086,7 +2086,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.""reservoir_sanitary"" r
     LEFT JOIN 
-        wqs.""wq_survelliance_main"" wm 
+        wqs.""wq_Surveillance_main"" wm 
     ON 
         r.""form_id"" = wm.""uuid""
     WHERE 
@@ -2127,7 +2127,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.""source_sanitary"" s
     LEFT JOIN 
-        wqs.""wq_survelliance_main"" wm 
+        wqs.""wq_Surveillance_main"" wm 
     ON 
         s.""form_id"" = wm.""uuid""
     WHERE 
@@ -2167,7 +2167,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.""source_sanitary"" s
     LEFT JOIN 
-        wqs.""wq_survelliance_main"" wm 
+        wqs.""wq_Surveillance_main"" wm 
     ON 
         s.""form_id"" = wm.""uuid""
     WHERE 
@@ -2198,7 +2198,7 @@ namespace Wq_Surveillance.Controllers
     FROM 
         wqs.""tap_sanitary"" t
     LEFT JOIN 
-        wqs.""wq_survelliance_main"" wm 
+        wqs.""wq_Surveillance_main"" wm 
     ON 
         t.""form_id"" = wm.""uuid""
     WHERE 

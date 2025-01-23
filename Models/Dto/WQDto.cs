@@ -1,6 +1,6 @@
 ﻿namespace Wq_Surveillance.Models.Dto
 {
-    public class WQDto : WqSurvellianceMain
+    public class WQDto : WqSurveillanceMain
     {
         public string? ProUuid { get; set; }
         public string ProName { get; set; }

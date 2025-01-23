@@ -4,7 +4,7 @@ using NetTopologySuite.Geometries;
 
 namespace Wq_Surveillance.Models;
 
-public partial class WqSurvellianceMain
+public partial class WqSurveillanceMain
 {
     public int Id { get; set; }
 

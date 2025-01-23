@@ -39,12 +39,12 @@ namespace Wq_Surveillance
 
             //card value
             var WspImlpementedPop = (from form1b in _context.Form1bs
-                                     join wq in _context.WqSurvellianceMains
+                                     join wq in _context.WqSurveillanceMains
                                      on form1b.FormId equals wq.Uuid
                                      select wq.TotalBenificiaryPopulation)
                                  .Sum();
             var WspNotImlpementedPop = (from form1a in _context.Form1as
-                                        join wq in _context.WqSurvellianceMains
+                                        join wq in _context.WqSurveillanceMains
                                         on form1a.FormId equals wq.Uuid
                                         select wq.TotalBenificiaryPopulation)
                                  .Sum();

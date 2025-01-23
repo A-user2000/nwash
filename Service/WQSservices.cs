@@ -121,7 +121,7 @@ namespace Wq_Surveillance.Service
 
         public Dictionary<string, string> GetFormId(string munCode)
         {
-            return _wqsContext.WqSurvellianceMains
+            return _wqsContext.WqSurveillanceMains
                 .AsEnumerable()
                 .Where(s => s.Municipality != null && ExtractNumber(s.Municipality) == munCode)
                 .OrderByDescending(item => item.Id)
@@ -129,7 +129,7 @@ namespace Wq_Surveillance.Service
         }
         public Dictionary<string, string> GetAddress(string munCode)
         {
-            return _wqsContext.WqSurvellianceMains
+            return _wqsContext.WqSurveillanceMains
                 .AsEnumerable() // Converts to in-memory collection
                 .Where(s => s.Municipality != null && ExtractNumber(s.Municipality) == munCode)
                 .OrderByDescending(item => item.Id)
@@ -137,7 +137,7 @@ namespace Wq_Surveillance.Service
         }
         public Dictionary<string, int> GetHH(string munCode)
         {
-            return _wqsContext.WqSurvellianceMains
+            return _wqsContext.WqSurveillanceMains
                                 .AsEnumerable() 
 
                 .Where(s => s.Municipality != null && ExtractNumber(s.Municipality) == munCode)
@@ -146,7 +146,7 @@ namespace Wq_Surveillance.Service
         }
         public Dictionary<string, int> GetPop(string munCode)
         {
-            return _wqsContext.WqSurvellianceMains
+            return _wqsContext.WqSurveillanceMains
                                 .AsEnumerable() // Converts to in-memory collection
 
                 .Where(s => s.Municipality != null && ExtractNumber(s.Municipality) == munCode)

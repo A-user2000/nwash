@@ -210,7 +210,7 @@ public class WqsSync
             case "wqSurveillanceData":
                 try
                 {
-                    var existingWqSurveillance = _WqsContext.WqSurvellianceMains
+                    var existingWqSurveillance = _WqsContext.WqSurveillanceMains
                         .FirstOrDefault(f => f.Uuid == GetValueOrDefault(values, "uuid"));
                     var latitude = values.ContainsKey("latitude") ? Convert.ToDouble(values["latitude"]) : (double?)null;
                     var longitude = values.ContainsKey("longitude") ? Convert.ToDouble(values["longitude"]) : (double?)null;
@@ -219,7 +219,7 @@ public class WqsSync
 
 
                         // Add new record if not found
-                        _WqsContext.WqSurvellianceMains.Add(new WqSurvellianceMain
+                        _WqsContext.WqSurveillanceMains.Add(new WqSurveillanceMain
                         {
                             Uuid = values["uuid"]?.ToString(),
                             DbName = values["dbName"]?.ToString(),

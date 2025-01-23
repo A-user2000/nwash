@@ -14,7 +14,7 @@ namespace Wq_Surveillance.Models.Mapping
             CreateMap<SourceSanitary, FormSouDto>();
             CreateMap<StructureSanitary, FormStrDto>();
             CreateMap<TapSanitary, FormTapDto>();
-            CreateMap<WqSurvellianceMain, WQDto>();
+            CreateMap<WqSurveillanceMain, WQDto>();
 
 
         }

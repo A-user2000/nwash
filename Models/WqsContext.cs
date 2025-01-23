@@ -179,7 +179,7 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<WqSampleDetail> WqSampleDetails { get; set; }
 
-    public virtual DbSet<WqSurvellianceMain> WqSurvellianceMains { get; set; }
+    public virtual DbSet<WqSurveillanceMain> WqSurveillanceMains { get; set; }
 
     public virtual DbSet<WqTempMethodUsed> WqTempMethodUseds { get; set; }
 
@@ -2301,11 +2301,11 @@ public partial class WqsContext : DbContext
             entity.Property(e => e.Status).HasColumnName("status");
         });
 
-        modelBuilder.Entity<WqSurvellianceMain>(entity =>
+        modelBuilder.Entity<WqSurveillanceMain>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("Wq_Surveillanceurelliance_pkey");
 
-            entity.ToTable("wq_survelliance_main", "wqs");
+            entity.ToTable("wq_surveillance_main", "wqs");
 
             entity.Property(e => e.Id)
                  .ValueGeneratedOnAdd()
