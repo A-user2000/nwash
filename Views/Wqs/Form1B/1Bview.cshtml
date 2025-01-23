@@ -123,39 +123,70 @@
                     @if (!String.IsNullOrEmpty(Model.TeamFormationPhoto))
                     {
                         <td>
-                            <img src="/wqs_images/wqs/@Model.TeamFormationPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <img src="/wqs_images/wqs/@Model.TeamFormationPhoto[0]/@Model.TeamFormationPhoto[1]/@Model.TeamFormationPhoto[2]/@Model.TeamFormationPhoto"
+                                 width="150"
+                                 class="clickable-image"
+                                 data-toggle="modal"
+                                 data-target="#imgModal" />
+                            <div>Team Formation </div>
+
                         </td>
                     }
                     @if (!String.IsNullOrEmpty(Model.SystemAnalysisPhoto))
                     {
                         <td>
-                            <img src="/wqs_images/wqs/@Model.SystemAnalysisPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <img src="/wqs_images/wqs/@Model.SystemAnalysisPhoto[0]/@Model.SystemAnalysisPhoto[1]/@Model.SystemAnalysisPhoto[2]/@Model.SystemAnalysisPhoto"
+                                 width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <div>System Analysis </div>
+
                         </td>
                     }
+                    </tr>
+                <tr>
                     @if (!String.IsNullOrEmpty(Model.PollutionRiskControlPhoto))
                     {
                         <td>
-                            <img src="/wqs_images/wqs/@Model.PollutionRiskControlPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <img src="/wqs_images/wqs/@Model.PollutionRiskControlPhoto[0]/@Model.PollutionRiskControlPhoto[1]/@Model.PollutionRiskControlPhoto[2]/@Model.PollutionRiskControlPhoto"
+                                 width="150"
+                                 class="clickable-image"
+                                 data-toggle="modal"
+                                 data-target="#imgModal" />
+                            <div>Pollution Risk Control </div>
+                        </td>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.ImprovementPlanPhoto))
+                    {
+                        <td>
+                            <img src="/wqs_images/wqs/@Model.ImprovementPlanPhoto[0]/@Model.ImprovementPlanPhoto[1]/@Model.ImprovementPlanPhoto[2]/@Model.ImprovementPlanPhoto"
+                                 width="150"
+                                 class="clickable-image"
+                                 data-toggle="modal"
+                                 data-target="#imgModal" />
+                            <div>Improvement Plan </div>
                         </td>
                     }
                 </tr>
                 <tr>
-                    @if (!String.IsNullOrEmpty(Model.ImprovementPlanPhoto))
-                    {
-                        <td>
-                            <img src="/wqs_images/wqs/@Model.ImprovementPlanPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
-                        </td>
-                    }
                     @if (!String.IsNullOrEmpty(Model.MonitoringPhoto))
                     {
                         <td>
-                            <img src="/wqs_images/wqs/@Model.MonitoringPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <img src="/wqs_images/wqs/@Model.MonitoringPhoto[0]/@Model.MonitoringPhoto[1]/@Model.MonitoringPhoto[2]/@Model.MonitoringPhoto"
+                                 width="150"
+                                 class="clickable-image"
+                                 data-toggle="modal"
+                                 data-target="#imgModal" />
+                            <div>Monitoring </div>
                         </td>
                     }
                     @if (!String.IsNullOrEmpty(Model.CertificationPhoto))
                     {
                         <td>
-                            <img src="/wqs_images/wqs/@Model.CertificationPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <img src="/wqs_images/wqs/@Model.CertificationPhoto[0]/@Model.CertificationPhoto[1]/@Model.CertificationPhoto[2]/@Model.CertificationPhoto"
+                                 width="150"
+                                 class="clickable-image"
+                                 data-toggle="modal"
+                                 data-target="#imgModal" />
+                            <div>Certification </div>
                         </td>
                     }
                 </tr>
@@ -163,13 +194,23 @@
                     @if (!String.IsNullOrEmpty(Model.CollaborativeActivitiesPhoto))
                     {
                         <td>
-                            <img src="/wqs_images/wqs/@Model.CollaborativeActivitiesPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <img src="/wqs_images/wqs/@Model.CollaborativeActivitiesPhoto[0]/@Model.CollaborativeActivitiesPhoto[1]/@Model.CollaborativeActivitiesPhoto[2]/@Model.CollaborativeActivitiesPhoto"
+                                 width="150"
+                                 class="clickable-image"
+                                 data-toggle="modal"
+                                 data-target="#imgModal" />
+                            <div>Collaborative Activities </div>
                         </td>
                     }
                     @if (!String.IsNullOrEmpty(Model.ReviewPhoto))
                     {
                         <td>
-                            <img src="/wqs_images/wqs/@Model.ReviewPhoto" width="150" class="clickable-image" data-toggle="modal" data-target="#imgModal" />
+                            <img src="/wqs_images/wqs/@Model.ReviewPhoto[0]/@Model.ReviewPhoto[1]/@Model.ReviewPhoto[2]/@Model.ReviewPhoto"
+                                 width="150"
+                                 class="clickable-image"
+                                 data-toggle="modal"
+                                 data-target="#imgModal" />
+                            <div>Review Photo</div>
                         </td>
                     }
                 </tr>
