@@ -11,6 +11,11 @@
     <meta name="viewport" content="width=device-width" />
     <title>Form - NWASH</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <style>
         .bsv {
             width: 275mm;
@@ -230,20 +235,26 @@
             </div>
         </div>
     </div>
+
+  
+
+
     <script>
-        $(document).ready(function () {
-            // Bind the modal event once
+               $(document).ready(function () {
+            // Bind the modal event
             $('#imgModal').on('show.bs.modal', function (event) {
                 var image = $(event.relatedTarget).attr('src'); // Get the clicked image
                 $(".showimage").attr("src", image);
                 $(".dlod").attr("href", image);
             });
 
-            // Bind click event to images
-            $('.clickable-image').on('click', function () {
-                console.log("Image clicked!"); // Debugging: Check if this appears in the browser console
+            // Manually close modal when clicking the close button
+            $('.close').on('click', function () {
+                $('#imgModal').modal('hide'); // Hide the modal when 'X' is clicked
             });
         });
+
     </script>
+
 </body>
 </html>
