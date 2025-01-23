@@ -6,7 +6,7 @@
     var WspNotImlpementedPop = ViewBag.WspNotImlpementedPop;
     var WqTblProvince = ViewBag.WqTblProvince;
 }
-<style>
+<style>    
     .dot {
         height: 10px;
         width: 10px;
@@ -34,24 +34,85 @@
     .count-title {
         font-size: 30px !important;
     }
+
+    .contentdiv{
+        box-shadow: 0 5px 6px #41434288;
+        border: 1px grey solid;
+        padding: 15px;
+    }
+    .subcontentdiv{
+        border: 1px #65616159 solid;
+        margin: 5px;
+        padding: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+    }
+    .chartdiv{
+        border: 1px #80808085 solid;
+        border-radius: 10px;
+        padding: 5px;
+        margin: 5px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+    }
 </style>
 <link href="~/css/styles.css" rel="stylesheet" />
-<div class="container col-12" style="display:contents;">
-    <div class="row">
-        <div class="col">
-            <div></div>
-            <div>
-                <h5>Data Collection</h5>
-                <div id="datacollection_linechart" style="height:500px"></div>
+<br />
+<div class="contentdiv">
+    <div class="row subcontentdiv">
+        <div class="col-8" data-aos="fade-down">
+            <h5 class="text-center">Water Quality - No. of Sample</h5>
+            <table class="table table-responsive table-bordered" style="display:inline-table !important; border: 2px solid;" data-aos="fade-left">
+                <thead class="text-center" style="background: #58997485; border: 2px solid;">
+                        <tr>
+                            <th>Water Quality Paramaeter</th>
+                            <th colspan="2">E-Coli</th>
+                            <th colspan="2">PH</th>
+                            <th colspan="2">Turbidity</th>
+                            <th colspan="2">Iron</th>
+                            <th colspan="2">Arsenic</th>
+                            <th colspan="2">Residual Chlorine</th>
+                        </tr>
+                        <tr>
+                            <th>Standard Value</th>
+                            <th>0</th>
+                            <th>>0</td>
+                            <th>6.5 - 8.5</th>
+                            <th>Out of Range</th>
+                            <th>0 - 5</th>
+                            <th>Out of Range</th>
+                            <th>0 - 30</th>
+                            <th>Out of Range</th>
+                            <th>0 - 0.5</th>
+                            <th>Out of Range</th>
+                            <th>0.10 - 0.50</th>
+                            <th>Out of Range</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in WqTblProvince)
+                        {
+                            <tr>
+                                <td style="background: #58997485;">@item.province_name</td>
+                                <td>@item.ecoli_0</td>
+                                <td>@item.ecoli_less0</td>
+                                <td>@item.ph_between</td>
+                                <td>@item.ph_out_of_range</td>
+                                <td>@item.turbid_between</td>
+                                <td>@item.turbid_out_of_range</td>
+                                <td>@item.iron_between</td>
+                                <td>@item.iron_out_of_range</td>
+                                <td>@item.arsenic_between</td>
+                                <td>@item.arsenic_out_of_range</td>
+                                <td>@item.residual_between</td>
+                                <td>@item.residual_out_of_range</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
-
-        </div>
-
-        <div class="col">
-            <div id="SurveillanceOverview">
-                <h5>Surveillance Overview</h5>
-                <div class="col" style=" background: linear-gradient(230deg, #003f1c, #6aab86);border-radius: 10px;padding: 20px;color: white;text-align: center;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                     width: 300px;
+        <div class="col-4" data-aos="fade-down">
+            <div id="SurveillanceOverview" data-aos="fade-right">
+                <h5 class="text-center">Surveillance Overview</h5>
+                <div class="col" style=" background: linear-gradient(230deg, #003f1c, #6aab86);border-radius: 10px;padding: 20px;color: white;text-align: center;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
                      margin: 20px auto;">
                     <p>Population Served by WSS where WSP is Not Implemented</p>
                     <h2>@WspImlpementedPop</h2>
@@ -59,61 +120,20 @@
                     <h2>@WspNotImlpementedPop</h2>
                 </div>
             </div>
-            <div id="datacolprovincewise" style="height:500px"></div>
         </div>
     </div>
-    <br />
-    <div>
-        <h5>Water Quality - No. of Sample</h5>
-        <table class="table table-responsive table-bordered" style="display:inline-table !important">
-            <thead>
-                <tr>
-                    <th>Water Quality Paramaeter</th>
-                    <th colspan="2">E-Coli</th>
-                    <th colspan="2">PH</th>
-                    <th colspan="2">Turbidity</th>
-                    <th colspan="2">Iron</th>
-                    <th colspan="2">Arsenic</th>
-                    <th colspan="2">Residual Chlorine</th>
-                </tr>
-                <tr>
-                    <td>Standard Value</td>
-                    <td>0</td>
-                    <td>>0</td>
-                    <td>6.5 - 8.5</td>
-                    <td>Out of Range</td>
-                    <td>0 - 5</td>
-                    <td>Out of Range</td>
-                    <td>0 - 30</td>
-                    <td>Out of Range</td>
-                    <td>0 - 0.5</td>
-                    <td>Out of Range</td>
-                    <td>0.10 - 0.50</td>
-                    <td>Out of Range</td>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in WqTblProvince)
-                {
-                    <tr>
-                        <td>@item.province_name</td>
-                        <td>@item.ecoli_0</td>
-                        <td>@item.ecoli_less0</td>
-                        <td>@item.ph_between</td>
-                        <td>@item.ph_out_of_range</td>
-                        <td>@item.turbid_between</td>
-                        <td>@item.turbid_out_of_range</td>
-                        <td>@item.iron_between</td>
-                        <td>@item.iron_out_of_range</td>
-                        <td>@item.arsenic_between</td>
-                        <td>@item.arsenic_out_of_range</td>
-                        <td>@item.residual_between</td>
-                        <td>@item.residual_out_of_range</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+      <br />
+    <div class="row subcontentdiv">
+        <div class="col chartdiv" data-aos="fade-left">
+            <h5 class="text-center">Data Collection</h5>
+            <div id="datacollection_linechart" style="height:500px"></div>
+        </div>       
+        <div class="col chartdiv" data-aos="fade-right">
+            <h5 class="text-center">Data Collection - Province - Wise</h5>
+            <div id="datacolprovincewise" style="height:500px"></div>
+        </div>
+      </div>
+    <br />    
 </div>
 
 <script>
@@ -134,9 +154,9 @@
                 var formattedDate = TempDate.toISOString().split('T')[0]; // This will give you 'YYYY-MM-DD'
                 guideArray.push({
                     "date": formattedDate,
-                    "form1cnt": mModel[el].form1count,
-                    "form2cnt": mModel[el].form2count,
-                    "form3cnt": mModel[el].form3count
+                    "form1acnt": mModel[el].form1acount,
+                    "form1bcnt": mModel[el].form1bcount,
+                    "form2cnt": mModel[el].form2count
                 })
             })
             return guideArray;
@@ -163,59 +183,86 @@
                 ]
             }
         ];
+    // Parse date strings into Date objects
+    chart.data.forEach(function (item) {
+        item.date = new Date(item.date);
+    });
 
-        // Create axes
-        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.dataFields.category = "date";
-        categoryAxis.title.text = "Date";
-        categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.renderer.minGridDistance = 20;
+    // Sort data by date (optional but recommended)
+    chart.data.sort((a, b) => a.date - b.date);
 
+    // Create X-axis (DateAxis)
+    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    dateAxis.title.text = "Date";
+    dateAxis.renderer.minGridDistance = 50;
 
-        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        // valueAxis.title.text = "Total";
+    // Set base interval to day (allows zooming to daily granularity)
+    dateAxis.baseInterval = {
+        timeUnit: "day", // Allow zooming down to days
+        count: 1
+    };
 
-        //rotate label
-        categoryAxis.renderer.labels.template.rotation = 270;
-        categoryAxis.renderer.labels.template.horizontalCenter = "right";
-        categoryAxis.renderer.labels.template.verticalCenter = "middle";
+    // Configure grid intervals for better zooming
+    dateAxis.gridIntervals.setAll([
+        { timeUnit: "day", count: 1 }, // Show days when zoomed in
+        { timeUnit: "month", count: 1 } // Show months when zoomed out
+    ]);
 
-        // Create series
-        var series = chart.series.push(new am4charts.LineSeries());
-        series.dataFields.valueY = "form1cnt";
-        series.dataFields.categoryX = "date";
-        series.name = "Preliminary assessment of the status  WSP";
-        series.tooltipText = "{name}: [bold]{valueY}[/]";
-        series.strokeWidth = 3;
-        series.stroke = am4core.color("#ff914d"); // orange
-        series.tooltip.getFillFromObject = false;
-        series.tooltip.background.fill = am4core.color("#ff914d");
+    // Enable zooming
+    dateAxis.renderer.grid.template.location = 0;
+    dateAxis.renderer.labels.template.rotation = 270;
+    dateAxis.renderer.labels.template.horizontalCenter = "right";
+    dateAxis.renderer.labels.template.verticalCenter = "middle";
 
-        var series2 = chart.series.push(new am4charts.LineSeries());
-        series2.dataFields.valueY = "form2cnt";
-        series2.dataFields.categoryX = "date";
-        series2.name = "Audit of the WSP";
-        series2.tooltipText = "{name}: [bold]{valueY}[/]";
-        series2.strokeWidth = 3;
-        series2.stroke = am4core.color("#2a4a3d"); // green
-        series2.tooltip.getFillFromObject = false;
-        series2.tooltip.background.fill = am4core.color("#2a4a3d");
+    // Create Y-axis (ValueAxis)
+    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.title.text = "Count";
 
-        var series3 = chart.series.push(new am4charts.LineSeries());
-        series3.dataFields.valueY = "form3cnt";
-        series3.dataFields.categoryX = "date";
-        series3.name = "Direct Assessment Form";
-        series3.tooltipText = "{name}: [bold]{valueY}[/]";
-        series3.strokeWidth = 3;
-        series3.stroke = am4core.color("#8a8a8a"); // grey
-        series3.tooltip.getFillFromObject = false;
-        series3.tooltip.background.fill = am4core.color("#8a8a8a");
+    // Create series
+    var series = chart.series.push(new am4charts.LineSeries());
+    series.dataFields.valueY = "form1acnt"; // Numeric value
+    series.dataFields.dateX = "date";       // Date value
+    series.name = "Preliminary assessment of the status WSP";
+    series.tooltipText = "{name}: [bold]{valueY}[/]";
+    series.strokeWidth = 3;
+    series.stroke = am4core.color("#ff914d"); // orange
+    series.tooltip.getFillFromObject = false;
+    series.tooltip.background.fill = am4core.color("#ff914d");
 
-        // Add cursor
-        chart.cursor = new am4charts.XYCursor();
+    var series2 = chart.series.push(new am4charts.LineSeries());
+    series2.dataFields.valueY = "form1bcnt"; // Numeric value
+    series2.dataFields.dateX = "date";       // Date value
+    series2.name = "Audit of the WSP";
+    series2.tooltipText = "{name}: [bold]{valueY}[/]";
+    series2.strokeWidth = 3;
+    series2.stroke = am4core.color("#57b18d"); // green
+    series2.tooltip.getFillFromObject = false;
+    series2.tooltip.background.fill = am4core.color("#57b18d");
 
-        // Add legend
-        chart.legend = new am4charts.Legend();
+    var series3 = chart.series.push(new am4charts.LineSeries());
+    series3.dataFields.valueY = "form2cnt"; // Numeric value
+    series3.dataFields.dateX = "date";      // Date value
+    series3.name = "Direct Assessment Form";
+    series3.tooltipText = "{name}: [bold]{valueY}[/]";
+    series3.strokeWidth = 3;
+    series3.stroke = am4core.color("#8a8a8a"); // grey
+    series3.tooltip.getFillFromObject = false;
+    series3.tooltip.background.fill = am4core.color("#8a8a8a");
+
+    // Add cursor for zooming
+    chart.cursor = new am4charts.XYCursor();
+    chart.cursor.xAxis = dateAxis;
+    chart.cursor.behavior = "zoomX"; // Enable zooming on the X-axis
+
+    // Add scrollbar for sideways scrolling
+    chart.scrollbarX = new am4charts.XYChartScrollbar();
+    chart.scrollbarX.series.push(series); // Connect scrollbar to the series
+    chart.scrollbarX.marginBottom = 20; // Adjust scrollbar position
+    chart.scrollbarX.startGrip.disabled = false; // Enable scrollbar grips
+    chart.scrollbarX.endGrip.disabled = false;
+
+    // Add legend
+    chart.legend = new am4charts.Legend();
 
 
 
@@ -252,6 +299,7 @@
             ];
 
             var piedata = @Json.Serialize(DataCollectionCountProvince);
+            console.log("pie:" + piedata);
 
             // Add and configure Series
             var pieSeries = chart.series.push(new am4charts.PieSeries());
@@ -270,11 +318,10 @@
 
             // Define an array of colors for each province
             var colors = ["#5e3967", "#895273", "#6ce5e8", "#41b8d5", "#2d8bba", "#2f5f98", "#31356e"];
-            console.log(piedata);
             // Prepare chart data with dynamic colors
             chart.data = piedata.map((item, index) => ({
                 "country": "Province" + item.province_code,
-                "litres": item.form1count + item.form2count + item.form3count,
+                "litres": item.form1acount + item.form1bcount + item.form2count,
                 "color": colors[index % colors.length] // Assign colors cyclically
             }));
 

@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Properties\.json" />
     <Content Remove="Views\SanitaryIndex.cshtml" />
   </ItemGroup>
 
