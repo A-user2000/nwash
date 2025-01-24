@@ -1,0 +1,42 @@
+﻿@model Nwash.Models.UserList
+
+@{
+    ViewData["Title"] = "User Details";
+}
+<div class="table-responsive col-sm-6" style="margin:auto;">
+    <h6>@Html.DisplayFor(model => model.name)</h6>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <td>@Html.DisplayFor(model => model.name)</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>@Html.DisplayFor(model => model.email)</td>
+        </tr>
+        <tr>
+            <th>User Type</th>
+            <td>@Html.DisplayFor(model => model.user_type)</td>
+        </tr>
+        <tr>
+            <th>District</th>
+            <td>@Html.DisplayFor(model => model.district_name)</td>
+        </tr>
+        <tr>
+            <th>Municipality</th>
+            <td>@Html.DisplayFor(model => model.mun_name)</td>
+        </tr>
+        <tr>
+            <th>Inventory Agency</th>
+            <td>@Html.DisplayFor(model => model.inv_agency)</td>
+        </tr>
+        <tr>
+            <th>Created Date</th>
+            <td>@Html.DisplayFor(model => model.created_date)</td>
+        </tr>
+        <tr>
+            <td><a asp-action="Edit" asp-route-id="@Model.user_id" class="btn btn-danger btn-sm" style="float:left;">Edit</a></td>
+            <td><a asp-action="Index" class="btn btn-primary btn-sm" style="float:right;">Back to List</a></td>
+        </tr>
+    </table>
+</div>

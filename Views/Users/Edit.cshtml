@@ -1,0 +1,360 @@
+﻿@model Nwash.Models.UserList
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var provinceData = ViewData["Province"] as List<Province>;
+
+    var sGrp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups");
+    var sDistrict = HttpContextAccessor.HttpContext.Session.GetInt32("SDistrict");
+    var sMun = HttpContextAccessor.HttpContext.Session.GetInt32("SMunicipality");
+
+    var ProvinceList = ViewData["ProvinceList"] as List<Province>;
+    var DistrictList = ViewData["DistrictList"] as List<District>;
+    var MunicipalityList = ViewData["MunicipalityList"] as List<Municipality>;
+    var AgencyList = ViewData["AgencyList"] as List<Organization>;
+
+    var EditUserProvince = ViewData["EditUserProvince"] as String;
+    var UserProvince = ViewData["UserProvince"] as String;
+    var UserDistrict = ViewData["UserDistrict"] as String;
+    var UserMunicipality = ViewData["UserMunicipality"] as String;
+    var UserAgency = ViewData["UserAgency"] as String;
+
+    var UserPCode = ViewData["UserProvinceCode"] as String;
+    var UserDCode = ViewData["UserDistrictCode"] as String;
+    var UserMunCode = ViewData["UserMunicipalityCode"] as String;
+}
+
+@*<div style="float: right; margin-top: 5px;">
+        <a asp-action="Index" class="btn btn-outline-primary">User Lists</a>
+    </div>*@
+<div class="row">
+    <div class="col-md-7" style="margin:auto;">
+        <form asp-action="Edit" id="NewUser" style="background-color: aliceblue; padding:10px;">
+            <h5>Edit Users</h5>
+            <input type="hidden" name="UserId" value="@Model.user_id" />
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Name</label>
+                        <input class="form-control" name="Name" value="@Model.name" required title="Name is required." />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <input class="form-control" name="Email" value="@Model.email" required title="Email is required." />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Province</label>
+                        @if (sGrp == 1)
+                        {
+                            <select class="form-control" name="Province" id="Province" onchange="getDistrict();" required title="Province is required">
+                                <option value="0">ALL</option>
+                                @foreach (var province in ProvinceList)
+                                {
+                                    <!option value="@province.ProvinceCode" @(EditUserProvince == province.ProvinceCode ? "selected" : "")>
+                                        @province.ProvinceName
+                                    </!option>
+                                }
+                            </select>
+                        }
+                        else if (sGrp == 2 || sGrp == 5 || sGrp == 7)
+                        {
+                            <input type="text" class="form-control" name="ProvinceName" id="ProvinceName" value="@UserProvince" readonly />
+                            <input type="hidden" name="Province" id="Province" value="@UserPCode" readonly />
+                        }
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">District</label>
+                        @if (sGrp == 1 || sGrp == 7)
+                        {
+                            <select class="form-control" name="District" id="District" onchange="getMunicipality();" required title="District is required">
+                                <option value="0">ALL</option>
+                                @foreach (var district in DistrictList)
+                                {
+                                    <!option value="@district.DistrictCode" @((Model.district).ToString() == district.DistrictCode ? "selected" : "")>
+                                        @district.DistrictName
+                                    </!option>
+                                }
+                            </select>
+                        }
+                        else if (sGrp == 2 || sGrp == 5)
+                        {
+                            <input type="text" class="form-control" name="DistrictName" id="DistrictName" value="@UserDistrict" readonly />
+                            <input type="hidden" name="District" id="District" value="@UserDCode" readonly />
+                        }
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Municipality</label>
+                        @if (sGrp == 1 || sGrp == 2 || sGrp == 7)
+                        {
+                            <select class="form-control" name="Municipality" id="Municipality" onchange="getProCode()" required title="Province is required">
+                                <option value="">Select Municipality</option>
+                                <option value="0">All</option>
+                                @foreach (var mun in MunicipalityList)
+                                {
+                                    <!option value="@mun.MunCode" @(Model.municipality == int.Parse(mun.MunCode) ? "selected" : "")>
+                                        @mun.MunName
+                                    </!option>
+                                }
+                            </select>
+                        }
+                        else if (sGrp == 5)
+                        {
+                            <input type="text" class="form-control" name="MunicipalityName" id="MunicipalityName" value="@UserMunicipality" readonly />
+                            <input type="hidden" name="Municipality" id="Municipality" value="@UserMunCode" readonly />
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">User Type</label>
+                        <select name="UserType" id="UserType" class="form-control" required title="User Type is required" onchange="userTypeChange(this.value)">
+                            @if (sGrp == 1)
+                            {
+                                <option value="">Select User Type</option>
+                                <!option value="Admin" @(Model.user_type == "Admin" ? "selected" : "")>Admin</!option>
+                                <!option value="Province Admin" @(Model.user_type == "Province Admin" ? "selected" : "")>Province Admin</!option>
+                                <!option value="Province Edit" @(Model.user_type == "Province Edit" ? "selected" : "")>Province Edit</!option>
+                                @*<!option value="District Admin" @(Model.user_type == "District Admin" ? "selected" : "")>District Admin</!option>
+                                <!option value="District Edit" @(Model.user_type == "District Edit" ? "selected" : "")>District Edit</!option>*@
+                                <!option value="Municipality Admin" @(Model.user_type == "Municipality Admin" ? "selected" : "")>Municipality Admin</!option>
+                                <!option value="Municipality Edit" @(Model.user_type == "Municipality Edit" ? "selected" : "")>Municipality Edit</!option>
+                                <!option value="ReadOnly" @(Model.user_type == "ReadOnly" ? "selected" : "")>ReadOnly</!option>
+                            }
+                            else if (sGrp == 7)
+                            {
+                                <option value="">Select User Type</option>
+
+                                <!option value="Province Edit" @(Model.user_type == "Province Edit" ? "selected" : "")>Province Edit</!option>
+                                @*<!option value="District Admin" @(Model.user_type == "District Admin" ? "selected" : "")>District Admin</!option>
+                                <!option value="District Edit" @(Model.user_type == "District Edit" ? "selected" : "")>District Edit</!option>*@
+                                <!option value="Municipality Admin" @(Model.user_type == "Municipality Admin" ? "selected" : "")>Municipality Admin</!option>
+                                <!option value="Municipality Edit" @(Model.user_type == "Municipality Edit" ? "selected" : "")>Municipality Edit</!option>
+                                <!option value="ReadOnly" @(Model.user_type == "ReadOnly" ? "selected" : "")>ReadOnly</!option>
+                            }
+                            else if (sGrp == 2)
+                            {
+                                @*<!option value="District Edit" @(Model.user_type == "District Edit" ? "selected" : "")>District Edit</!option>*@
+                                <!option value="Municipality Admin" @(Model.user_type == "Municipality Admin" ? "selected" : "")>Municipality Admin</!option>
+                                <!option value="Municipality Edit" @(Model.user_type == "Municipality Edit" ? "selected" : "")>Municipality Edit</!option>
+                                <!option value="ReadOnly" @(Model.user_type == "ReadOnly" ? "selected" : "")>ReadOnly</!option>
+                            }
+                            else if (sGrp == 5)
+                            {
+                                <!option value="Municipality Edit" @(Model.user_type == "Municipality Edit" ? "selected" : "")>Municipality Edit</!option>
+                                <!option value="ReadOnly" @(Model.user_type == "ReadOnly" ? "selected" : "")>ReadOnly</!option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Inventory Agency</label>
+                        @if (sGrp == 1)
+                        {
+                            <select class="form-control" name="InvAgency" id="InvAgency" required title="Inventory Agency is required">
+                                @foreach (var inv in AgencyList)
+                                {
+                                    <!option value="@inv.OrgName" @(Model.inv_agency == inv.OrgName ? "selected" : "")>
+                                        @inv.OrgName
+                                    </!option>
+                                }
+                            </select>
+                        }
+                        else if (sGrp == 2 || sGrp == 5 || sGrp == 7)
+                        {
+                            <input type="text" class="form-control" name="InvAgency" id="InvAgency" value="@UserAgency" readonly />
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Password</label>
+                        <input type="password" class="form-control" name="Password" id="Password" />
+                        <small class="help-block">Keep the password field empty, if it doesnot require any update.</small>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label class="control-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="ConfirmPassword" id="ConfirmPassword" />
+                    </div>
+                </div>
+            </div>
+            @if (Model.training_user == 1)
+            {
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="control-label">Update to actual user</label>
+                            <button class="btn btn-info btn-sm" type="button" onclick="setActualUser()">Set</button>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <div class="form-group">
+                <input style="float:left;" type="submit" value="Save" class="btn btn-success" />
+                <a style="float:right;" asp-action="Index" class="btn btn-danger">Back to User List</a>
+                <div style="clear:both;"></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="clear: both;"></div>
+@section scripts {
+    <script src="~/js/jquery.validate.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#NewUser').validate({
+                rules: {
+                    Password: {
+                        minlength: 5
+                    },
+                    ConfirmPassword: {
+                        minlength: 5,
+                        equalTo: "#Password"
+                    }
+                }
+            });
+        });
+        function getDistrict() {
+            var ProvinceCode = $("#Province").val();
+            $.ajax({
+                type: "POST",
+                url: '/System/GetDistrict',
+                data: { 'ProvinceCode': ProvinceCode },
+                dataType: "json",
+                success: function (data) {
+                    $('#District').html('<option value="0">Select District</option>');
+                    $('#District').append('<option value="0">ALL</option>');
+                    $('#Municipality').html('<option value="0">Select Municipality</option>');
+                    $.each(data, function (el) {
+                        $('#District').append('<option value=' + data[el].districtCode + '>' + data[el].districtCode + ' - ' + data[el].districtName + '</option>');
+                    });
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function getMunicipality() {
+            var dCode = $("#District").val();
+            $.ajax({
+                type: "POST",
+                url: '/System/GetMunicipality',
+                data: { 'dCode': dCode },
+                dataType: "json",
+                success: function (data) {
+                    if (dCode == 0) {
+                        $('#Municipality').html('<option value="">Select Municipality</option>');
+                        $('#Municipality').append('<option value="0">ALL</option>');
+                    } else {
+                        $('#Municipality').html('<option value="">Select Municipality</option>');
+                        $('#Municipality').append('<option value="0">ALL</option>');
+                        $.each(data, function (el) {
+                            $('#Municipality').append('<option value=' + data[el].munCode + '>' + data[el].munCode + ' - ' + data[el].munName + '</option>');
+                        });
+                    }
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function setActualUser() {
+            var userId = @Model.user_id;
+            $.ajax({
+                type: "POST",
+                url: '/Users/SetActualUser',
+                data: { 'userId': userId },
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        alert('User Updated Successfully.');
+                        location.reload();
+                           return false;
+                    } else {
+                        alert('Something went wrong. Please try again');
+                    }
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+
+        function userTypeChange(val) {
+            var district = document.getElementById("District");
+            var province = document.getElementById("Province");
+            var muni = document.getElementById("Municipality");
+            var sgrp = @sGrp;
+            if (val == 'Province Admin' || val == 'Province Edit') {
+                district.removeAttribute('required');
+                district.removeAttribute('title');
+                district.setAttribute('disabled', '');
+                $('#District').val('');
+                muni.removeAttribute('required');
+                muni.removeAttribute('title');
+                muni.setAttribute('disabled', '');
+                $('#Municipality').val('');
+            } else if (val == 'Admin') {
+                district.removeAttribute('required');
+                district.removeAttribute('title');
+                district.removeAttribute('disabled');
+                muni.removeAttribute('required');
+                muni.removeAttribute('title');
+                muni.removeAttribute('disabled');
+                district.setAttribute('readonly', true);
+                province.setAttribute('readonly', true);
+                muni.setAttribute('readonly', true);
+            }
+            else if (val == 'Municipality Admin' || val == 'Municipality Edit') {
+                district.setAttribute('title', 'District is required');
+                muni.setAttribute('title', 'Municipality is required');
+                district.setAttribute('required', '');
+                muni.setAttribute('required', '');
+                district.removeAttribute('disabled');
+                muni.removeAttribute('disabled');
+            }
+            else if (val == 'ReadOnly' && sgrp == 1) {
+                district.removeAttribute('required');
+                district.removeAttribute('title');
+                district.removeAttribute('disabled');
+                muni.removeAttribute('required');
+                muni.removeAttribute('title');
+                muni.removeAttribute('disabled');
+                $('#Province').append('<option value="0">ALL</option>');
+            }
+            else {
+                district.removeAttribute('required');
+                district.removeAttribute('title');
+                district.removeAttribute('disabled');
+                muni.removeAttribute('required');
+                muni.removeAttribute('title');
+                muni.removeAttribute('disabled');
+            }
+        }
+    </script>
+
+}
