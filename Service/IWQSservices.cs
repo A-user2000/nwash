@@ -9,7 +9,11 @@ namespace Wq_Surveillance.Service
         public string ExtractNumber(string input);
         public Dictionary<string, int> GetHH(string munCode);
         public Dictionary<string, int> GetPop(string munCode);
+<<<<<<< HEAD
         public string GetName(string procode);
+=======
+        public Dictionary<string, string> GetName(string munCode);
+>>>>>>> 0877ac2fec3764b8c9a05a754700235381e5d79c
 
         public Form1a UpdateWQSDataFA(Form1a WData, string username);
         public Form1b UpdateWQSDataFB(Form1b WData, string username);

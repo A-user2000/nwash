@@ -193,7 +193,14 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<WqTempMethodUsed> WqTempMethodUseds { get; set; }
 
+<<<<<<< HEAD
 
+=======
+   
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=wq_surveillance;Username=postgres;Password=postgresql123;", x => x.UseNetTopologySuite());
+>>>>>>> 0877ac2fec3764b8c9a05a754700235381e5d79c
 
     //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     //{

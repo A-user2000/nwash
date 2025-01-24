@@ -28,27 +28,35 @@ namespace Wq_Surveillance.Service
             if (string.IsNullOrEmpty(input))
                 throw new ArgumentException("Input cannot be null or empty.");
 
+            // Trim the input to remove any leading or trailing whitespace
+            input = input.Trim();
+
             // Check if the entire input is a valid number
-            if (int.TryParse(input.Trim(), out int wholeNumber))
+            if (int.TryParse(input, out int wholeNumber))
             {
                 return wholeNumber.ToString();
             }
 
-            // Split and process the input if it contains additional parts
-            var parts = input.Split('-');
-            if (parts.Length < 2)
-                throw new FormatException("Input format is invalid. Expected format: '<<number>> - <<text>>'");
+            // If the input contains a hyphen, try to extract the number from the first part
+            if (input.Contains('-'))
+            {
+                var parts = input.Split('-');
+                if (parts.Length < 2)
+                    throw new FormatException("Input format is invalid. Expected format: '<<number>> - <<text>>'");
 
-            if (int.TryParse(parts[0].Trim(), out int extractedNumber))
-            {
-                return extractedNumber.ToString();
+                if (int.TryParse(parts[0].Trim(), out int extractedNumber))
+                {
+                    return extractedNumber.ToString();
+                }
+                else
+                {
+                    throw new FormatException("The number part could not be parsed.");
+                }
             }
-            else
-            {
-                throw new FormatException("The number part could not be parsed.");
-            }
+
+            // If the input is not a number and does not contain a hyphen, throw an exception
+            throw new FormatException("Input is not a valid number or in the expected format: '<<number>> - <<text>>'");
         }
-
 
         public (int?, decimal?) GetPopandHH(string ProCode)
         {
@@ -152,6 +160,14 @@ namespace Wq_Surveillance.Service
                 .Where(s => s.Municipality != null && ExtractNumber(s.Municipality) == munCode)
                 .OrderByDescending(item => item.Id) // Sort by Id in descending order
                 .ToDictionary(item => item.Uuid, item => item.TotalBenificiaryPopulation ?? 0); // Handle null TotalHHServed
+        }
+          public Dictionary<string, string> GetName(string munCode)
+        {
+            return _wqsContext.ProjectDetails
+                .AsEnumerable() // Converts to in-memory collection
+                .Where(s => s.MunicipalityCode != null && ExtractNumber(s.MunicipalityCode) == munCode)
+                .OrderByDescending(item => item.Id)
+                .ToDictionary(item => item.Uuid, item => item.ProName);
         }
 
         public string GetName(string procode)
