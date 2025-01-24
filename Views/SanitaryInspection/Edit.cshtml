@@ -1,0 +1,179 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.SanitaryInspection>
+
+
+@{
+    ViewData["Title"] = "Sanitary Details";
+    var ws = 1;
+    var kk = (IEnumerable<Wq_Surveillance.Models.ProjectDetail>)ViewData["projectDetail"];
+
+}
+
+<style>
+    .bsv {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 20mm;
+        margin: 10mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 0px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Sanitary Report - NWASH</title>
+    <link rel="stylesheet" href="~/css/doc.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
+    @*    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">*@
+    <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/styles.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</head>
+<body>
+    <div class="bsv">
+        <div id="sanitary">
+            <center><h4 style="color:darkblue">NWASH</h4></center>
+            <center><h4 style="color:darkblue">Project: @ViewBag.ProjectName</h4></center>
+
+            @if (Model != null && Model.Count() != 0)
+            {
+                ws = 1;
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h5>Sanitary Inspection Question Answer</h5>
+                </div>
+                String date1 = "";
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h7>No: @ws</h7>
+
+                </div>
+                <table border="1" style="border-spacing:20px; border-color:lightgrey " id="hhDataTable" class="table ">
+                    <tbody style="font-size: 14px;">
+
+                        @foreach (var i in Model)
+
+                        {
+                            if (date1 == "")
+                            {
+                                date1 = @i.Time.ToString();
+                                <tr>
+                                    <td style="font-weight:bold" colspan="2">Date: @date1</td>
+                                </tr>
+
+
+                                <tr>
+                                    <td>@i.PointId</td>
+                                    <!--<td>@i.-->@*PointType*@<!--</td>-->
+
+                                    <td>
+                                        <select asp-for="@i.UserId" class="form-control" id="@i.Id" onchange="SaveValue(@i.Id)">
+                                            <option>छ</option>
+                                            <option>छैन</option>
+
+                                        </select>
+                                    </td>
+                                </tr>
+
+
+                            }
+                            else
+                            {
+                                if (date1 != @i.Time.ToString())
+                                {
+                                    date1 = @i.Time.ToString();
+                                    <tr><td style="font-weight:bold; " colspan="2">Date: @date1</td><td colspan="2"></td>></tr>
+
+
+                                    <tr>
+                                        <td>@i.PointId</td>
+                                        <!--<td>@i.-->@*PointType*@<!--</td>-->
+
+                                        <td>
+                                            <select asp-for="@i.UserId" class="form-control" id="@i.Id" onchange="SaveValue(@i.Id)">
+                                                <option>छ</option>
+                                                <option>छैन</option>
+
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@i.PointId</td>
+
+                                        <td>
+                                            <select asp-for="@i.UserId" class="form-control" id="@i.Id" onchange="SaveValue(@i.Id)">
+                                                <option>छ</option>
+                                                <option>छैन</option>
+
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                            ws++;
+                        }
+                    </tbody>
+                </table>
+                @*<div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>*@
+            }
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function OnType() {
+        var id = $("#value").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/WaterQuality/Edit",
+            data: {
+                'id': id
+            },
+            success: function (result) {
+                alert("Answer Sucessfully Updated");
+                $("#Edit").html(result);
+               // $("#filteredData").html(result);
+            },
+            error: function (result) {
+                alert('Sorry Please Try Again');
+            }
+        });
+
+    }
+
+    function SaveValue(valueId) {
+        var id = valueId;
+        var answer = $("#" + id).val();
+        $.ajax({
+            type: "POST",
+            url: "/SanitaryInspection/Update",
+            data: {
+                'id':id,'answer':answer
+            },
+            success: function (result) {
+                alert("Answer Sucessfully Updated");
+                window.location.reload();
+                // $("#filteredData").html(result);
+            }
+        })
+    }
+</script>

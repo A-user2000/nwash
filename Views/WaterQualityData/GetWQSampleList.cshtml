@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.WaterQualitySample>
+
+
+<div class="" table-responsive" style="width:85%;">
+    <div style="clear:both;"></div>
+
+    <table id="hhDataTable" class="table table-bordered table-striped" border="1">
+        <thead>
+            <tr style="background: #e8ecfd;">
+                <th>
+                    S.N.
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.Email)*@
+                    Sampled by
+                </th>
+                <th>
+                    Point Type
+                </th>
+                <th>
+                    Sample Code
+                </th>
+
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var sn = 1;
+            }
+            @foreach (var item in Model)
+            {
+                string sampleCode = item.SampleCode;
+
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(sampleCode);
+                string encodedUUID = System.Convert.ToBase64String(plainTextBytes);
+
+                <tr>
+                    <td>
+                        @sn
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Photo1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SampleCode)
+                    </td>
+                    <td>
+                        <a asp-action="WQDetailData" asp-route-encode="@encodedUUID" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>

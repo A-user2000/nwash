@@ -1,0 +1,310 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.WaterQualitySample>
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var context = HttpContextAccessor.HttpContext.Request.Host;
+    ViewData["Title"] = "Water Quality Edit";
+    var kk = (IEnumerable<Wq_Surveillance.Models.ProjectDetail>)ViewData["projectDetail"];
+    //var imageUrl = "http://nwash2.softwel.com.np/uploadedphotos/WaterQuality";
+
+    var imageUrl = context + "/WQ";
+    // var imageUrl = "https://nwash.gov.np//images/waterquality";
+}
+<style>
+    .bsv {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 20mm;
+        margin: 10mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 0px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Water Quality Edit</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
+    @* <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>*@
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/styleStep.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/doc.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="shortcut icon" href="~/images/logos/NWASH.svg" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/styles.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+</head>
+<body>
+
+    <div class="bsv">
+        <div id="WaterQuality">
+            <center><h4 style="color:darkblue">NWASH</h4></center>
+            <center><h4 style="color:darkblue">Project: @ViewBag.ProjectName</h4></center>
+
+            @if (Model != null && Model.Count() != 0)
+            {
+                var ws = 1;
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h5>Water Quality</h5>
+                </div>
+                string time = "";
+                String catz = "";
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h7>No: @ws</h7>
+                </div>
+                <center>
+                    <table border="1" style="border-spacing:20px; border-color:lightgrey " id="hhDataTable" class="table ">
+                        <tbody style="font-size: 14px;">
+
+                            @foreach (var i in Model)
+                            {
+                                time = @i.TestingTime.ToString();
+                                <tr><td colspan="4" style="text-align:left; font-weight:bold">Testing Time: @i.TestingTime</td></tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <input asp-for="@i.InstrumentsUsed" class="form-control" id="@i.Uuid" />
+                                    </td>
+                                    <td colspan="2">
+                                        <button class="btn btn-outline-success btn-sm" onclick="InstrumentSave(@i.Uuid)">Update</button>
+                                    </td>
+                                </tr>
+                                if (i.Photo1Uuid != null || @i.Photo2Uuid != null)
+                                {
+
+                                    @if (!String.IsNullOrEmpty(i.Photo1Uuid))
+                                    {
+
+                                    <td colspan="2">
+                                        <img src="@imageUrl/@i.Photo1Uuid[0]/@i.Photo1Uuid[1]/@i.Photo1Uuid[2]/@i.Photo1Uuid" width="150" data-toggle="modal" data-target="#imgModal" /><input type="button" value="Delete" class="btn btn-danger" style="float:right" onclick="DeletePhoto(@i.Uuid)" id="photo1" />
+                                    </td>
+
+                                    }
+                                    @if (!String.IsNullOrEmpty(i.Photo2Uuid))
+                                    {
+
+                                    <td colspan="2" style="border-inline-start: hidden;">
+                                        <img src="@imageUrl/@i.Photo2Uuid[0]/@i.Photo2Uuid[1]/@i.Photo2Uuid[2]/@i.Photo2Uuid" width="150" data-toggle="modal" data-target="#imgModal" /><input type="button" value="Delete" class="btn btn-danger" style="float:right" onclick="DeletePhoto(@i.Uuid)" id="photo2" />
+                                    </td>
+                                    }
+                                }
+                                if (i.Photo3Uuid != null || @i.Photo4Uuid != null)
+                                {
+                                <tr>
+                                        @if (!String.IsNullOrEmpty(i.Photo3Uuid))
+                                        {
+
+                                        <td colspan="2">
+                                            <img src="@imageUrl/@i.Photo3Uuid[0]/@i.Photo3Uuid[1]/@i.Photo3Uuid[2]/@i.Photo3Uuid" width="150" data-toggle="modal" data-target="#imgModal" /><input type="button" value="Delete" class="btn btn-danger" style="float:right" onclick="DeletePhoto(@i.Uuid)" id="photo3" />
+                                        </td>
+
+                                        }
+                                        @if (!String.IsNullOrEmpty(i.Photo4Uuid))
+                                        {
+
+                                        <td colspan="2" style="border-inline-start: hidden;">
+                                            <img src="@imageUrl/@i.Photo4Uuid[0]/@i.Photo4Uuid[1]/@i.Photo4Uuid[2]/@i.Photo4Uuid" width="150" data-toggle="modal" data-target="#imgModal" /><input type="button" value="Delete" class="btn btn-danger" style="float:right" onclick="DeletePhoto(@i.Uuid)" id="photo4" />
+                                        </td>
+
+                                        }
+                                </tr>
+                                }
+                                break;
+                            }
+
+
+
+                        <tr style="color: rgb(0,0,139); border-top: groove; border-bottom: groove" class="text-center">
+                            <td><b>SN</b></td>
+                            <td style="border-inline: hidden;"><b>Parameters</b></td>
+                            <td style="border-inline: hidden;"><b>Unit</b></td>
+                            <td stylr><b>Observed Value</b></td>
+                        </tr>
+                            @foreach (var i in Model)
+                            {
+                                if (catz == "")
+                                {
+
+                                    catz = @i.DescPhoto2.ToString();
+                                <tr><td style=" background-color:rgb(238,238,238); font-weight:bold" colspan="4">@catz Parameter</td></tr>
+
+                                <tr>
+                                    <td>@ws</td>
+                                    <td>@i.DescPhoto1 (@i.PointId)</td>
+                                    <td>@i.DescPhoto4</td>
+                                    <td><input asp-for="@i.DescPhoto3" class="form-control" id="@i.Id" onchange="SaveValue(@i.Id)" /></td>
+
+                                </tr>
+                                }
+                                else
+                                {
+                                    if (catz != @i.DescPhoto2.ToString())
+                                    {
+
+                                        catz = @i.DescPhoto2.ToString();
+                                        ws = 1;
+                                    <tr><td style=" background-color:rgb(238,238,238); font-weight:bold" colspan="4">@catz Parameter</td></tr>
+
+                                    <tr>
+                                        <td>@ws</td>
+                                        <td>@i.DescPhoto1 (@i.PointId)</td>
+                                        <td>@i.DescPhoto4</td>
+                                        <td><input asp-for="@i.DescPhoto3" class="form-control" id="@i.Id" onchange="SaveValue(@i.Id)" /></td>
+
+                                    </tr>
+
+                                    }
+                                    else
+                                    {
+                                    <tr>
+                                        <td>@ws</td>
+                                        <td>@i.DescPhoto1 (@i.PointId)</td>
+                                        <td>@i.DescPhoto4</td>
+                                        <td><input asp-for="@i.DescPhoto3" class="form-control" id="@i.Id" onchange="SaveValue(@i.Id)" /></td>
+
+                                    </tr>
+
+                                    }
+                                }
+                                ws++;
+
+
+                            }
+
+
+
+                        <div id="imgModal" class="modal fade">
+                            <div class="modal-dialog modal-lg" style="width: auto !important; display: block !important;">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <button type="button" class="close" data-dismiss="modal" title="Close">&times;</button>
+                                        <br />
+                                        <center><img class="showimage img-fluid" src="" /></center>
+                                        <br />
+                                        <a class="dlod btn btn-outline-primary btn-sm" href="" download style="float:right;" title="Download"><i class="fa fa-download"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </tbody>
+                    </table>
+
+                    @*<div>
+                                <input type="submit" value="Save" class="btn btn-primary" style="float:right" onclick="SaveValue()" />
+                            </div>*@
+
+                </center>
+            }
+
+
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+
+    $(document).ready(function () {
+        $('img').on('click', function () {
+            var image = $(this).attr('src');
+            //alert(image);
+            $('#imgModal').on('show.bs.modal', function () {
+                $(".showimage").attr("src", image);
+                $(".dlod").attr("href", image);
+            });
+        });
+    });
+
+    function SaveValue(valueId) {
+        var id = valueId;
+        var answer = $("#" + id).val();
+        $.ajax({
+            type: "POST",
+            url: "/WaterQualityData/Update",
+            data: {
+                'id': id, 'answer': answer
+            },
+
+            success: function (result) {
+                alert("Value Sucessfully Updated");
+                window.location.reload();
+                // $("#filteredData").html(result);
+            },
+            failure: function () {
+                alert("Something went wrong! Please refresh the page and try again");
+            }
+
+
+        })
+    }
+
+
+    function InstrumentSave(valueId) {
+        var id = valueId;
+        var answer = $("#" + id).val();
+
+        $.ajax({
+            type: "POST",
+            url: "/WaterQualityData/UpdateInstrument",
+            data: {
+                'id': id, 'answer': answer
+            },
+            success: function (result) {
+                alert("Instrument Used Sucessfully Updated");
+                window.location.reload();
+                // $("#filteredData").html(result);
+            },
+            failure: function () {
+                alert("Something went wrong! Please refresh the page and try again");
+            }
+
+        })
+    }
+
+    function DeletePhoto(photoId) {
+        var status = confirm("Are you sure you want to delete ?");
+        //alert(event.srcElement.id);
+
+        var id = photoId;
+        var photo = event.srcElement.id;
+
+        //var photo = "photoname";
+
+        if (status == true) {
+            // alert(status);
+            $.ajax({
+                type: "POST",
+                url: "/WaterQualityData/Delete",
+                data: {
+                    'id': id, 'photoindex': photo
+                },
+                success: function (result) {
+                    alert("photo Sucessfully deleted");
+                    window.location.reload();
+                    // $("#filteredData").html(result);
+                }
+            })
+        }
+    }
+
+</script>
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

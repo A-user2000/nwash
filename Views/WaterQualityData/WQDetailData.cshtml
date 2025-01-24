@@ -1,0 +1,258 @@
+﻿@model dynamic
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Water Quality Sample Data: " + Model.proDetails.ProName + " (" + Model.proDetails.ProCode + ")";
+}
+@{
+    var val = ViewData["value"].ToString();
+    var labData = ViewData["LabData"] as LabRegistration;
+    var sampleCode = ViewData["SampleCode"] as string;
+    var logoUrl = HttpContextAccessor.HttpContext.Request.Host;
+    //var logoUrl = "http://nwash.gov.np/";
+    var sUserCat = ViewData["sUserCat"] as string;
+    var letterheadFile = Model.labDetails.LogoPath;
+}
+<style>
+    /* tr td:last-child {
+                width: 1%;
+                white-space: nowrap;
+            }*/
+
+    .bsv {
+        width: 230mm;
+        min-height: 297mm;
+        padding: 15mm;
+        margin: 8mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 0px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+@if (val == "1")
+{
+    <div style="margin-left: 50px; font-family: 'Times New Roman';">
+        <div class="bsv" id="bsv_id">
+            <table style="width: 100%;">
+                @*<tr>
+            <td>
+            @if (!String.IsNullOrEmpty(letterheadFile))
+            {
+            <img src="@logoUrl/LabData/@Model.labDetails.LogoPath" style="width:753.9px !important" />
+            }
+            </td>
+            </tr>*@
+                <tr>
+                    <td style="width: 50%;">
+                        <center>
+                            <span style="font-size: 11pt;"><b><u>WATER QUALITY TEST REPORT</u></b></span>
+                        </center>
+                    </td>
+                </tr>
+            </table>
+            <div style="padding-left:10px;">
+                <table style="width:100%; font-size:10pt;">
+                    <tbody>
+                        <tr>
+                            <td>Name of Client:- </td>
+                            <td>@Model.info.ClientName</td>
+                            <td>Date of Collection:- </td>
+                            <td>@Model.info.SampleCollectionDate</td>
+                        </tr>
+                        <tr>
+                            <td>Sampled By:-</td>
+                            <td>@Model.info.SampledBy</td>
+                            <td>Date of Analysis:-</td>
+                            <td>@Model.info.AnalysisDate</td>
+                        </tr>
+                        <tr>
+                            <td>Sampling Point:-</td>
+                            <td>@Model.info.SamplingPoint</td>
+                            <td>Date of Completion:-</td>
+                            <td>@Model.info.CompletionDate</td>
+                        </tr>
+                        <tr>
+                            <td>Location:-</td>
+                            <td>@Model.info.SampleLocation</td>
+                            <td>GPS:-</td>
+                            <td>@Model.info.Gps</td>
+                        </tr>
+                    </tbody>
+                    @*<tr>
+                <td><br /></td>
+                </tr>*@
+                </table>
+                <br />
+                <table border="1" style="width: 100%; font-size: 10pt;">
+                    <thead>
+                        <tr>
+                            <th width="5%" style="text-align:center">S.No</th>
+                            <th width="10%" style="text-align:center">Category</th>
+                            <th width="25%" style="text-align:center">Parameters</th>
+                            <th width="10%" style="text-align:center">Observed Values</th>
+                            <th width="20%" style="text-align:center">NDWQS</th>
+                            <th width="30%" style="text-align:center">Methods Used</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var pc = 0; var cc = 0; var mc = 0;
+                        }
+                        @foreach (var item in Model.data)
+                        {
+                            if (item.category == "Physical")
+                            {
+                                pc++;
+                            }
+                            if (item.category == "Chemical")
+                            {
+                                cc++;
+                            }
+                            if (item.category == "Microbiological")
+                            {
+                                mc++;
+                            }
+                        }
+
+                        @{
+                            var i = 1; var j = 0; var k = 0;
+                        }
+                        @foreach (var item in Model.data)
+                        {
+                            if (item.category == "Physical")
+                            {
+                                <tr>
+                                    <td style="text-align:center">@i</td>
+
+                                    @if (i == 1)
+                                    {
+                                        <td style="text-align:center; vertical-align:middle" rowspan="@pc">Physical</td>
+                                    }
+
+                                    @if (item.lab_test.Equals(true))
+                                    {
+                                        <td>@item.parameter_name (@item.unit) *</td>
+                                        <td style="text-align:center">
+                                            @item.value
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.parameter_name (@item.unit)</td>
+                                        <td style="text-align:center">
+                                            @item.value
+                                        </td>
+                                    }
+
+                                    <td style="text-align:center">@item.range</td>
+                                    <td>@item.method_used</td>
+                                </tr>
+                                i++;
+                            }
+
+                            if (item.category == "Chemical")
+                            {
+                                <tr>
+                                    @if (j == 0)
+                                    {
+                                        <td style="text-align:center">@(i)</td>
+                                        <td style="text-align:center; vertical-align:middle" rowspan="@cc">Chemical</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align:center">@(i + j)</td>
+                                    }
+
+                                    @if (item.lab_test.Equals(true))
+                                    {
+                                        <td>@item.parameter_name (@item.unit) *</td>
+                                        <td style="text-align:center">
+                                            @item.value
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.parameter_name (@item.unit)</td>
+                                        <td style="text-align:center">
+                                            @item.value
+                                        </td>
+                                    }
+                                    <td style="text-align:center">@item.range</td>
+                                    <td>@item.method_used</td>
+                                </tr>
+                                j++;
+                            }
+                            if (item.category == "Microbiological")
+                            {
+                                if (item.id != 29)
+                                {
+                                    <tr>
+                                        @if (k == 0)
+                                        {
+                                            <td style="text-align:center">@(i + j)</td>
+                                            <td style="text-align:center; vertical-align:middle" rowspan="@mc">Microbiological</td>
+                                        }
+                                        else
+                                        {
+                                            <td style="text-align:center">@(i + j + k)</td>
+                                        }
+
+                                        @if (item.lab_test.Equals(true))
+                                        {
+                                            <td>@item.parameter_name (@item.unit) *</td>
+                                            <td style="text-align:center">
+                                                @item.value
+                                            </td>
+
+                                        }
+                                        else
+                                        {
+                                            <td>@item.parameter_name (@item.unit)</td>
+                                            <td style="text-align:center">
+                                                @item.value
+                                            </td>
+                                        }
+                                        <td style="text-align:center">@item.range</td>
+                                        <td>@item.method_used</td>
+
+                                    </tr>
+                                    k++;
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+                <p style="text-align:justify; font-size:10pt;">
+                    APHA: <em>
+                        American Public Health Association, Standard Methods for Examination of Water & Waste Water.<br />
+                        * These values show lower and upper limits.<br />
+                        () Values in parentheses refer the acceptable values only when alternative is not available.
+                    </em>
+                    <br />
+                    Note: - The entire test was conducted as per the National Drinking Water Quality Standard Guide Line, 2062BS
+                </p>
+            </div>
+        </div>
+    </div>
+}
+else if (val == "3")
+{
+    <div>
+        <center>
+            <h4 style="color: red;">
+                Lab Test data is not added to this sample.
+            </h4>
+        </center>
+    </div>
+}
+else
+{
+    <div>
+        <center>
+            <h4 style="color: red;">
+                The sample code did not match. Please check the code and try again.
+            </h4>
+        </center>
+    </div>
+}

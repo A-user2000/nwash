@@ -1,0 +1,254 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@model dynamic
+@{
+    ViewData["Title"] = "Water Quality - Scheme wise";
+
+    var provinceData = ViewData["Province"] as List<Province>;
+    var currentyear = Convert.ToInt32(DateTime.Now.Year.ToString());
+    var districtData = ViewData["District"] as List<District>;
+    var munData = ViewData["Municipality"] as List<Municipality>;
+    var pro = HttpContextAccessor.HttpContext.Session.GetString("PProvince");
+    var dis = HttpContextAccessor.HttpContext.Session.GetString("PDistrict");
+    var mun = HttpContextAccessor.HttpContext.Session.GetString("PMunicipality");
+}
+
+<form method="post">
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Province</label>
+                <select class="form-control" name="provinceCode" id="province" onchange="getDistrict();">
+                    <option value="">Select Province</option>
+                    @foreach (var province in provinceData)
+                    {
+                            <!option value="@province.ProvinceCode" @(province.ProvinceCode == HttpContextAccessor.HttpContext.Session.GetString("PProvince") ? "selected" : "")>@province.ProvinceName</!option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">District</label>
+                <select class="form-control" name="districtCode" id="district" onchange="getMunicipality();">
+                    @if (dis != null || pro != null)
+                    {
+                            <option value="0">Select District</option>
+                        @foreach (var district in districtData)
+                        {
+                                    <!option value="@district.DistrictCode" @(district.DistrictCode == HttpContextAccessor.HttpContext.Session.GetString("PDistrict") ? "selected" : "")>@district.DistrictCode - @district.DistrictName</!option>
+                        }
+
+                    }
+                    else
+                    {
+                            <option value="0">Select District</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Municipality</label>
+                <select class="form-control" name="munCode" id="municipality" onchange="getProjects();">
+                    @if (mun != null || dis != null)
+                    {
+                            <option value="0">Select Municipality</option>
+                        @foreach (var muni in munData)
+                        {
+                                    <!option value="@muni.MunCode" @(muni.MunCode == HttpContextAccessor.HttpContext.Session.GetString("PMunicipality") ? "selected" : "")>@muni.MunCode - @muni.MunName</!option>
+                        }
+                    }
+                    else
+                    {
+                            <option value="0">Select Municipality</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Project</label>
+                @*<select class="form-control" name="proCode" id="proCode" onchange="LoadGrpForm();">*@
+                <select class="form-control" name="proCode" id="proCode" onchange="cleanDiv()">
+                    <option value="0">Select Project</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="grpForm" style="width: 80%; margin:auto;">
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label class="control-label">Group</label>
+                <select class="form-control" name="grp" id="grp" onchange="getParameters();">
+                    <option value="0">Select Group</option>
+                    @foreach (var grps in Model.Groups)
+                    {
+                            <option value="@grps">@grps</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label class="control-label">Parameter</label>
+                <select class="form-control" name="parameter" id="parameter" onchange="LoadParData();">
+                    <option value="0">Select Parameter</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label class="control-label">Year</label>
+                <select class="form-control" name="dyear" id="dyear" onchange="LoadGrpForm();">
+                    @for (var i = currentyear; i >= 2020; i--)
+                    {
+                            <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="WqPar" style="margin-top:30px;">
+
+</div>
+
+@section scripts {
+        <script>
+             $(document).ready(function () {
+                var mun = "@mun";
+                    if (mun!== null) {
+                        getProjects();
+                    }
+             });
+
+            function getDistrict() {
+                var ProvinceCode = $("#province").val();
+                $('#grp').prop('selectedIndex', 0);
+                $('#parameter').prop('selectedIndex', 0);
+                $("#WqPar").html("");
+                $.ajax({
+                    type: "POST",
+                    url: '/System/GetDistrict',
+                    data: { 'ProvinceCode': ProvinceCode },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#district').html('<option value="0">Select District</option>');
+                        $('#municipality').html('<option value="0">Select Municipality</option>');
+                        $('#proCode').html('<option value="0">Select Project</option>');
+                        $.each(data, function (el) {
+                            $('#district').append('<option value=' + data[el].districtCode + '>' + data[el].districtCode + ' - ' + data[el].districtName + '</option>');
+                        });
+                    },
+                    failure: function () {
+                        alert("Something went wrong! Please refresh the page and try again");
+                    }
+                });
+            }
+
+            function getMunicipality() {
+                var dCode = $("#district").val();
+                $('#grp').prop('selectedIndex', 0);
+                $('#parameter').prop('selectedIndex', 0);
+                $("#WqPar").html("");
+                $.ajax({
+                    type: "POST",
+                    url: '/System/GetMunicipality',
+                    data: { 'dCode': dCode },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#municipality').html('<option value="0">Select Municipality</option>');
+                        $('#proCode').html('<option value="0">Select Project</option>');
+                        $.each(data, function (el) {
+                            $('#municipality').append('<option value=' + data[el].munCode + '>' + data[el].munCode + ' - ' + data[el].munName + '</option>');
+                        });
+                    },
+                    failure: function () {
+                        alert("Something went wrong! Please refresh the page and try again");
+                    }
+                });
+            }
+
+            function getProjects() {
+                var munCode = $("#municipality").val();
+                $('#grp').prop('selectedIndex', 0);
+                $('#parameter').prop('selectedIndex', 0);
+                $("#WqPar").html("");
+                $.ajax({
+                    type: "POST",
+                    url: '/System/GetProjectList',
+                    data: { 'munCode': munCode },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#proCode').html('<option value="0">Select Project</option>');
+                        $.each(data, function (el) {
+                            $('#proCode').append('<option value=' + data[el].proCode + '>' + data[el].proCode + ' - ' + data[el].proName + '</option>');
+                        });
+                    },
+                    failure: function () {
+                        alert("Something went wrong! Please refresh the page and try again");
+                    }
+                });
+            }
+
+
+            function cleanDiv() {
+                $("#WqPar").html("");
+                $('#grp').prop('selectedIndex', 0);
+                $('#parameter').prop('selectedIndex', 0);
+            }
+
+            function getParameters() {
+                var grpName = $("#grp").val();
+                $("#WqPar").html("");
+                $.ajax({
+                    type: "POST",
+                    url: '/WaterQualityData/GetSelectedParameters',
+                    data: { 'grpName': grpName },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#parameter').html('<option value="0">Select Parameter</option>');
+                        $.each(data, function (el) {
+                            $('#parameter').append('<option value=' + data[el].id + '>' + data[el].parameterName + '</option>');
+                        });
+                    },
+                    failure: function () {
+                        alert("Something went wrong! Please refresh the page and try again");
+                    }
+                });
+            }
+
+            function LoadGrpForm() {
+                $('#WqPar').html('');
+                $('#grpForm').css("display", "block");
+            }
+
+            function LoadParData() {
+                var province = $("#province").val();
+                var district = $("#district").val();
+                var munCode = $("#municipality").val();
+                var proCode = $("#proCode").val();
+                var parameter = $("#parameter").val();
+                var dyear = $("#dyear").val();
+
+                if (parameter != 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/WaterQualityData/GetSelectedParameterData',
+                        data: { 'province': province, 'district': district, 'munCode': munCode, 'proCode': proCode, 'parameter': parameter, 'dyear': dyear },
+                        success: function (data) {
+                            $("#WqPar").html(data);
+                        },
+                        failure: function () {
+                            alert("Something went wrong! Please refresh the page and try again");
+                        }
+                    });
+                } else {
+                    alert("Parameter is required");
+                }
+            }
+        </script>
+}

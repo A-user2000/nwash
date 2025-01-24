@@ -1,0 +1,267 @@
+﻿@model IList<Wq_Surveillance.Models.WaterQualitySample>
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Water Quality Details";
+    var projDetails = (IEnumerable<Wq_Surveillance.Models.ProjectDetail>)ViewData["projectDetail"];
+    var context = HttpContextAccessor.HttpContext.Request.Host;
+    var imageUrl = context + "/WQ";
+    var obsVal = "";
+}
+
+<style>
+    .bsv {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 20mm;
+        margin: 10mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 0px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Water Quality Report - NWASH</title>
+    <link rel="stylesheet" href="~/css/doc.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/styles.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('img').on('click', function () {
+                var image = $(this).attr('src');
+                //alert(image);
+                $('#imgModal').on('show.bs.modal', function () {
+                    $(".showimage").attr("src", image);
+                    $(".dlod").attr("href", image);
+                });
+            });
+        });
+
+        function Export2Doc(element, filename = '') {
+            var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+            var postHtml = "</body></html>";
+            var html = preHtml + document.getElementById(element).innerHTML + postHtml;
+
+            var blob = new Blob(['\ufeff', html], {
+                type: 'application/vnd.ms-word'
+
+            });
+
+            // Specify link url
+            var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+
+            // Specify file name
+            filename = filename ? filename + '.doc' : 'document.doc';
+
+            // Create download link element
+            var downloadLink = document.createElement("a");
+
+            document.body.appendChild(downloadLink);
+
+            if (navigator.msSaveOrOpenBlob) {
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+                // Create a link to the file
+                downloadLink.href = url;
+
+                // Setting the file name
+                downloadLink.download = filename;
+
+                //triggering the function
+                downloadLink.click();
+            }
+            document.body.removeChild(downloadLink);
+        }
+    </script>
+</head>
+
+<body>
+    <div style="margin:10px;float:right">
+        <button id="btn-export" class="btn btn-primary small" onclick="Export2Doc('WaterQuality')">Export as Word</button>
+    </div>
+    <div class="bsv">
+        <div id="WaterQuality">
+            <center><h4 style="color:darkblue">NWASH</h4></center>
+            <center><h4 style="color:darkblue">Project: @ViewBag.ProjectName</h4></center>
+
+            <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                <h5>Project Details</h5>
+            </div>
+            <table border="0">
+                <tbody style="font-size: 14px;">
+
+                    @foreach (var item in projDetails)
+                    {
+                        <tr>
+                            <td>Project Code </td>
+                            <td>@item.ProCode</td>
+                        </tr>
+                        <tr>
+                            <td>Project Name </td>
+                            <td>@item.ProName</td>
+                        </tr>
+                        <tr>
+                            <td>Project Type </td>
+                            <td>@item.ProType</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+
+            @if (Model != null && Model.Count() != 0)
+            {
+                var ws = 1;
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h5>Water Quality </h5>
+                </div>
+                //var img = "";
+                string time = "";
+                String catz = "";
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h7>No: @ws</h7>
+                </div>
+                <center>
+                    <table border="1" style="border-spacing:20px; border-color:lightgrey " id="hhDataTable" class="table ">
+                        <tbody style="font-size: 14px;">
+                            <tr><td colspan="4" style="text-align:left; font-weight:bold">Sampling Time: @Model[0].SamplingTime</td></tr>
+                            <tr><td colspan="4" style="text-align:left; font-weight:bold">Testing Time: @Model[0].TestingTime</td></tr>
+                            <tr><td colspan="4" style="text-align:left; font-weight:bold">Instrument Used: @Model[0].InstrumentsUsed</td></tr>
+
+                            @foreach (var i in Model)
+                            {
+
+                                if (i.Photo1Uuid != null || @i.Photo2Uuid != null)
+                                {
+
+                                    @if (!String.IsNullOrEmpty(i.Photo1Uuid))
+                                    {
+
+                                    <td colspan="2"><img src="@imageUrl/@i.Photo1Uuid[0]/@i.Photo1Uuid[1]/@i.Photo1Uuid[2]/@i.Photo1Uuid" width="150" data-toggle="modal" data-target="#imgModal" /></td>
+                                    }
+                                    @if (!String.IsNullOrEmpty(i.Photo2Uuid))
+                                    {
+
+                                    <td colspan="2" style="border-inline-start: hidden;"><img src="@imageUrl/@i.Photo2Uuid[0]/@i.Photo2Uuid[1]/@i.Photo2Uuid[2]/@i.Photo2Uuid" width="150" data-toggle="modal" data-target="#imgModal" /></td>
+                                    }
+                                }
+                                if (i.Photo3Uuid != null || @i.Photo4Uuid != null)
+                                {
+                                <tr>
+                                        @if (!String.IsNullOrEmpty(i.Photo3Uuid))
+                                        {
+
+                                        <td colspan="2"><img src="@imageUrl/@i.Photo3Uuid[0]/@i.Photo3Uuid[1]/@i.Photo3Uuid[2]/@i.Photo3Uuid" width="150" data-toggle="modal" data-target="#imgModal" /></td>
+                                        }
+                                        @if (!String.IsNullOrEmpty(i.Photo4Uuid))
+                                        {
+
+                                        <td colspan="2" style="border-inline-start: hidden;"><img src="@imageUrl/@i.Photo4Uuid[0]/@i.Photo4Uuid[1]/@i.Photo4Uuid[2]/@i.Photo4Uuid" width="150" data-toggle="modal" data-target="#imgModal" /></td>
+                                        }
+                                </tr>
+                                }
+                                break;
+
+                            }
+                        <tr style="color: rgb(0,0,139); border-top: groove; border-bottom: groove" class="text-center">
+                            <td><b>SN</b></td>
+                            <td style="border-inline: hidden;"><b>Parameters</b></td>
+                            <td style="border-inline: hidden;"><b>Unit</b></td>
+                            <td stylr><b>Observed Value</b></td>
+                        </tr>
+
+                            @foreach (var i in Model)
+                            {
+                                if (i.DescPhoto3 == "-999")
+                                {
+                                    obsVal = "";
+                                }
+
+                                if (catz == "")
+                                {
+                                    catz = i.DescPhoto2.ToString();
+                                <tr><td style=" background-color:rgb(238,238,238); font-weight:bold" colspan="4">@catz Parameter</td></tr>
+
+                                <tr>
+                                    <td>@ws</td>
+                                    <td>@i.DescPhoto1</td>
+                                    <td>@i.DescPhoto4</td>
+                                    <td style="text-align: center;">@obsVal</td>
+
+                                </tr>
+
+                                }
+                                else
+                                {
+                                    if (catz != @i.DescPhoto2.ToString())
+                                    {
+                                        catz = @i.DescPhoto2.ToString();
+                                        ws = 1;
+                                    <tr><td style=" background-color:rgb(238,238,238); font-weight:bold" colspan="4">@catz Parameter</td></tr>
+
+                                    <tr>
+                                        <td>@ws</td>
+                                        <td>@i.DescPhoto1</td>
+                                        <td>@i.DescPhoto4</td>
+                                        <td style="text-align: center;">@obsVal</td>
+
+                                    </tr>
+
+                                    }
+                                    else
+                                    {
+                                    <tr>
+                                        <td>@ws</td>
+                                        <td>@i.DescPhoto1</td>
+                                        <td>@i.DescPhoto4</td>
+                                        <td style="text-align: center;">@obsVal</td>
+                                    </tr>
+                                    }
+                                }
+
+                                ws++;
+                            }
+
+                        <div id="imgModal" class="modal fade">
+                            <div class="modal-dialog modal-lg" style="width: auto !important; display: block !important;">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <button type="button" class="close" data-dismiss="modal" title="Close">&times;</button>
+                                        <br />
+                                        <center><img class="showimage img-fluid" src="" /></center>
+                                        <br />
+                                        <a class="dlod btn btn-outline-primary btn-sm" href="" download style="float:right;" title="Download"><i class="fa fa-download"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </tbody>
+                    </table>
+
+                </center>
+
+            }
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+

@@ -1,12 +1,8 @@
-﻿/*using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Nwash.Functionality;
-using Nwash.Models;
-using Nwash.Service.Lab;
-using Nwash.Service.WaterQuality;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,38 +13,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wq_Surveillance.Models;
+using Wq_Surveillance.Service;
+using Wq_Surveillance.Service.WaterQuality;
 
-namespace Nwash.Controllers
+namespace Wq_Surveillance.Controllers
 {
     public class WaterQualityDataController : Controller
     {
         private readonly IHttpContextAccessor _sessionData;
+        private readonly IWQSservices _wqsservices;
         private string _sUID;
         private readonly WqsContext _Context;
-        private ILabService _service;
-        private IFunctionalityQuery _funcservice;
+        //private ILabService _service;
+        //private IFunctionalityQuery _funcservice;
         private IWaterQualityData _wqservice;
         private static IWebHostEnvironment _hostEnvironment;
 
-        public WaterQualityDataController(IHttpContextAccessor contextAccessor, IFunctionalityQuery service, WqsContext dnContext, IWaterQualityData wqservice, ILabService labservice, IWebHostEnvironment hostEnvironment)
+        public WaterQualityDataController(IWQSservices wqsservices, IHttpContextAccessor contextAccessor,  WqsContext dnContext, IWaterQualityData wqservice, /*ILabService labservice*/ IWebHostEnvironment hostEnvironment)
         {
-            _funcservice = service;
+            _wqsservices = wqsservices;
+
+            //_funcservice = service;
             _Context = dnContext;
             _sessionData = contextAccessor;
             _wqservice = wqservice;
-            _service = labservice;
+            //_service = labservice;
             _sUID = _sessionData.HttpContext.Session.GetString("SUserID");
             _hostEnvironment = hostEnvironment;
         }
         public IActionResult Index()
         {
-            if (_sUID == null)
+            if (_sUID != null)
+            //if (_sUID == null)
             {
                 return RedirectToAction("Index", "Login", new { area = "" });
             }
             else
             {
-                ViewData["Province"] = _funcservice.GetProvince();
+                ViewData["Province"] = _wqsservices.GetProvince();
                 var pcode = _sessionData.HttpContext.Session.GetString("PProvince");
                 var dcode = _sessionData.HttpContext.Session.GetString("PDistrict");
                 ViewData["District"] = _Context.Districts.Where(s => s.ProvinceCode == pcode).OrderBy(item => item.DistrictCode).ToList();
@@ -60,7 +62,7 @@ namespace Nwash.Controllers
         [HttpPost]
         public PartialViewResult GetWQSampleList(string proCode)
         {
-            var sd = from s in _Context.WaterQualitySample
+            var sd = from s in _Context.WaterQualitySamples
                      join u in _Context.Users on Convert.ToInt32(s.UserId) equals u.UserId
                      join p in _Context.ProjectDetails on s.ProjectUuid equals p.Uuid
                      join q in _Context.WqSampleDetails on s.Uuid equals q.SampleUuid
@@ -89,11 +91,11 @@ namespace Nwash.Controllers
             ViewData["ProjectDetail"] = project;
             ViewBag.ProjectName = project.OrderBy(S => S.Id).Select(x => x.ProName).FirstOrDefault();
 
-            var sTbl2 = from s in _Context.WaterQualitySample
+            var sTbl2 = from s in _Context.WaterQualitySamples
                         join u in _Context.Users on Convert.ToInt32(s.UserId) equals u.UserId
                         join p in _Context.ProjectDetails on s.ProjectUuid equals p.Uuid
                         join v in _Context.WaterQualityValues on s.Uuid equals v.SampleUuid
-                        join t in _Context.WaterQualityTemplate on v.ParameterId equals t.Id
+                        join t in _Context.WaterQualityTemplates on v.ParameterId equals t.Id
                         where s.ProjectUuid == prouuid && PointId == s.PointId && PointType == s.PointType
                         orderby t.Id, t.Category
                         select new WaterQualitySample
@@ -112,85 +114,86 @@ namespace Nwash.Controllers
             return PartialView(sTbl2.ToList());
         }
 
-        public ActionResult WQDetailData(string encode)
-        {
-            var base64EncodedBytes = Convert.FromBase64String(encode);
-            var code = Encoding.UTF8.GetString(base64EncodedBytes);
+        //public ActionResult WQDetailData(string encode)
+        //{
+        //    var base64EncodedBytes = Convert.FromBase64String(encode);
+        //    var code = Encoding.UTF8.GetString(base64EncodedBytes);
 
-            var sampleData = _Context.WaterQualitySample
-                              .Where(s => (s.SampleCode == code)).OrderBy(S => S.Id)
-                              .FirstOrDefault();
-            var returnval = 0;
-            if (sampleData != null)
-            {
-                var projectData = from s in _Context.ProjectDetails
-                                  join d in _Context.District on s.DistrictCode equals d.DistrictCode
-                                  join p in _Context.Municipality on s.MunicipalityCode equals p.MunCode
-                                  where s.Uuid == sampleData.ProjectUuid
-                                  select new ProjectDetails
-                                  {
-                                      ProCode = s.ProCode,
-                                      ProName = s.ProName,
-                                      DistrictCode = d.DistrictName,
-                                      MunicipalityCode = p.MunName
-                                  };
+        //    var sampleData = _Context.WaterQualitySamples
+        //                      .Where(s => (s.SampleCode == code)).OrderBy(S => S.Id)
+        //                      .FirstOrDefault();
+        //    var returnval = 0;
+        //    if (sampleData != null)
+        //    {
+        //        var projectData = from s in _Context.ProjectDetails
+        //                          join d in _Context.Districts on s.DistrictCode equals d.DistrictCode
+        //                          join p in _Context.Municipalities on s.MunicipalityCode equals p.MunCode
+        //                          where s.Uuid == sampleData.ProjectUuid
+        //                          select new ProjectDetail
+        //                          {
+        //                              ProCode = s.ProCode,
+        //                              ProName = s.ProName,
+        //                              DistrictCode = d.DistrictName,
+        //                              MunicipalityCode = p.MunName
+        //                          };
 
-                var data = _service.GetLabValue(sampleData.Uuid);
-                var info = _Context.WqSampleDetails
-                            .Where(s => (s.SampleUuid == sampleData.Uuid)).OrderBy(S => S.Id)
-                            .FirstOrDefault();
-                var labDetails = _Context.LabRegistration
-                           .Where(s => (s.Uuid == sampleData.LabUuid)).OrderBy(S => S.Id)
-                           .FirstOrDefault();
-                dynamic sdata = new ExpandoObject();
-                sdata.proDetails = projectData.FirstOrDefault();
-                sdata.labDetails = labDetails;
+        //        var data = _service.GetLabValue(sampleData.Uuid);
+        //        var info = _Context.WqSampleDetails
+        //                    .Where(s => (s.SampleUuid == sampleData.Uuid)).OrderBy(S => S.Id)
+        //                    .FirstOrDefault();
+        //        var labDetails = _Context.LabRegistration
+        //                   .Where(s => (s.Uuid == sampleData.LabUuid)).OrderBy(S => S.Id)
+        //                   .FirstOrDefault();
+        //        dynamic sdata = new ExpandoObject();
+        //        sdata.proDetails = projectData.FirstOrDefault();
+        //        sdata.labDetails = labDetails;
 
-                if (info != null)
-                {
-                    sdata.data = data;
-                    sdata.info = info;
+        //        if (info != null)
+        //        {
+        //            sdata.data = data;
+        //            sdata.info = info;
 
-                    returnval = 1;
+        //            returnval = 1;
 
-                    ViewData["SampleCode"] = code;
-                    ViewData["value"] = returnval;
-                    return View(sdata);
-                }
-                else
-                {
-                    returnval = 3;                              // Sample Entry not done yet by Lab.
-                    ViewData["SampleCode"] = code;
-                    ViewData["value"] = returnval;
-                    return View(sdata);
-                }
-            }
-            else
-            {
-                returnval = 2;
-                ViewData["value"] = returnval;
-                return View();
-            }
-        }
+        //            ViewData["SampleCode"] = code;
+        //            ViewData["value"] = returnval;
+        //            return View(sdata);
+        //        }
+        //        else
+        //        {
+        //            returnval = 3;                              // Sample Entry not done yet by Lab.
+        //            ViewData["SampleCode"] = code;
+        //            ViewData["value"] = returnval;
+        //            return View(sdata);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        returnval = 2;
+        //        ViewData["value"] = returnval;
+        //        return View();
+        //    }
+        //}
 
-        *//*
-         * Water Quality Report
-         * Parameter Wise
-         *//*
+        //*//*
+        // * Water Quality Report
+        // * Parameter Wise
+        // *//*
 
         public IActionResult WQScheme()
         {
-            if (_sUID == null)
-            {
+            if (_sUID != null)
+                //if (_sUID == null)
+                {
                 return RedirectToAction("Index", "Login", new { area = "" });
             }
             else
             {
-                ViewData["Province"] = _funcservice.GetProvince();
+                ViewData["Province"] = _wqsservices.GetProvince();
                 var pcode = _sessionData.HttpContext.Session.GetString("PProvince");
                 var dcode = _sessionData.HttpContext.Session.GetString("PDistrict");
-                ViewData["District"] = _Context.District.Where(s => s.ProvinceCode == pcode).OrderBy(item => item.DistrictCode).ToList();
-                ViewData["Municipality"] = _Context.Municipality.Where(s => s.DistrictCode == dcode).OrderBy(item => item.MunCode).ToList();
+                ViewData["District"] = _Context.Districts.Where(s => s.ProvinceCode == pcode).OrderBy(item => item.DistrictCode).ToList();
+                ViewData["Municipality"] = _Context.Municipalities.Where(s => s.DistrictCode == dcode).OrderBy(item => item.MunCode).ToList();
                 return View();
             }
         }
@@ -203,29 +206,30 @@ namespace Nwash.Controllers
             return PartialView(wqModel);
         }
 
-        *//*
-         * Scheme Wise
-         *//*
+        //*//*
+        // * Scheme Wise
+        // *//*
 
         public IActionResult WQParameter()
         {
-            if (_sUID == null)
+            if (_sUID != null)
+            //if (_sUID == null)
             {
                 return RedirectToAction("Index", "Login", new { area = "" });
             }
             else
             {
                 dynamic wqModel = new ExpandoObject();
-                ViewData["Province"] = _funcservice.GetProvince();
-                wqModel.Groups = _Context.WaterQualityTemplate
+                ViewData["Province"] = _wqsservices.GetProvince();
+                wqModel.Groups = _Context.WaterQualityTemplates
                                         .OrderBy(item => item.Id)
                                         .Select(s => s.Category)
                                         .Distinct()
                                         .ToList();
                 var pcode = _sessionData.HttpContext.Session.GetString("PProvince");
                 var dcode = _sessionData.HttpContext.Session.GetString("PDistrict");
-                ViewData["District"] = _Context.District.Where(s => s.ProvinceCode == pcode).OrderBy(item => item.DistrictCode).ToList();
-                ViewData["Municipality"] = _Context.Municipality.Where(s => s.DistrictCode == dcode).OrderBy(item => item.MunCode).ToList();
+                ViewData["District"] = _Context.Districts.Where(s => s.ProvinceCode == pcode).OrderBy(item => item.DistrictCode).ToList();
+                ViewData["Municipality"] = _Context.Municipalities.Where(s => s.DistrictCode == dcode).OrderBy(item => item.MunCode).ToList();
                 return View(wqModel);
             }
         }
@@ -234,7 +238,7 @@ namespace Nwash.Controllers
         [HttpPost]
         public JsonResult GetSelectedParameters(string grpName)
         {
-            var dict = _Context.WaterQualityTemplate.Where(s => s.Category == grpName).OrderBy(item => item.Id);
+            var dict = _Context.WaterQualityTemplates.Where(s => s.Category == grpName).OrderBy(item => item.Id);
             return Json(dict);
         }
 
@@ -265,7 +269,8 @@ namespace Nwash.Controllers
 
         public ActionResult Edit(string sId, string Email, string PointId, string prouuid, string PointType)
         {
-            if (_sUID == null)
+            if (_sUID != null)
+            //if (_sUID == null)
             {
                 return RedirectToAction("Index", "Login", new { area = "" });
             }
@@ -274,11 +279,11 @@ namespace Nwash.Controllers
                 var project = _Context.ProjectDetails.Where(u => u.Uuid == prouuid);
                 ViewData["ProjectDetail"] = project;
                 ViewBag.ProjectName = project.OrderBy(S => S.Id).Select(x => x.ProName).FirstOrDefault();
-                var sTbl2 = from s in _Context.WaterQualitySample
+                var sTbl2 = from s in _Context.WaterQualitySamples
                             join u in _Context.Users on Convert.ToInt32(s.UserId) equals u.UserId
                             join p in _Context.ProjectDetails on s.ProjectUuid equals p.Uuid
                             join v in _Context.WaterQualityValues on s.Uuid equals v.SampleUuid
-                            join t in _Context.WaterQualityTemplate on v.ParameterId equals t.Id
+                            join t in _Context.WaterQualityTemplates on v.ParameterId equals t.Id
                             where s.ProjectUuid == prouuid && s.PointId == PointId && s.PointType == PointType
                             orderby s.TestingTime, t.Category, t.Id
                             select new WaterQualitySample
@@ -304,7 +309,7 @@ namespace Nwash.Controllers
         public string Update(int id, string answer)
         {
             var uid = (int)_sessionData.HttpContext.Session.GetInt32("SUserID");
-            WaterQualityValues si = new WaterQualityValues { Id = id };
+            WaterQualityValue si = new WaterQualityValue { Id = id };
             si.Value = answer;
             si.EditedOn = DateTime.UtcNow;
             si.EditedBy = _Context.Users.Where(s => s.UserId == uid).OrderBy(s => s.UserId).Select(s => s.Name).FirstOrDefault();
@@ -327,7 +332,7 @@ namespace Nwash.Controllers
 
         public string Delete(int id, string photoindex)
         {
-            WaterQualitySample f = _Context.WaterQualitySample.OrderBy(S => S.Id).FirstOrDefault(x => x.Id == id);
+            WaterQualitySample f = _Context.WaterQualitySamples.OrderBy(S => S.Id).FirstOrDefault(x => x.Id == id);
             if (photoindex == "photo1")
             {
                 f.Photo1 = null;
@@ -353,30 +358,31 @@ namespace Nwash.Controllers
             return "success";
         }
 
-        *//*
-         * Historical Arsenic Data View
-         *//*
+        //*//*
+        // * Historical Arsenic Data View
+        // *//*
 
         public IActionResult HHArsenicResult()
         {
-            if (_sUID == null)
+            if (_sUID != null)
+            //if (_sUID == null)
             {
                 return RedirectToAction("Index", "Login", new { area = "" });
             }
             else
             {
-                ViewData["Province"] = _funcservice.GetProvince();
+                ViewData["Province"] = _wqsservices.GetProvince();
                 var pcode = _sessionData.HttpContext.Session.GetString("PProvince");
                 var dcode = _sessionData.HttpContext.Session.GetString("PDistrict");
-                ViewData["District"] = _Context.District.Where(s => s.ProvinceCode == pcode).OrderBy(item => item.DistrictCode).ToList();
-                ViewData["Municipality"] = _Context.Municipality.Where(s => s.DistrictCode == dcode).OrderBy(item => item.MunCode).ToList();
+                ViewData["District"] = _Context.Districts.Where(s => s.ProvinceCode == pcode).OrderBy(item => item.DistrictCode).ToList();
+                ViewData["Municipality"] = _Context.Municipalities.Where(s => s.DistrictCode == dcode).OrderBy(item => item.MunCode).ToList();
                 return View("ArsenicData/Index");
             }
         }
         [HttpPost]
         public PartialViewResult GetArsenicData(string munCode, string dCode)
         {
-            var aData = new List<ArsenicHis>();
+            var aData = new List<ArsenicHi>();
             if (munCode != "All")
             {
                 ViewData["munCode"] = munCode;
@@ -488,4 +494,4 @@ namespace Nwash.Controllers
             return File(fileBytes, contentType, fileName);
         }
     }
-}*/
+}

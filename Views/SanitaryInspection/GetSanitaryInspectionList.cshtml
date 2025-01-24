@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.ProjectDetail>
+@*@using Microsoft.AspNetCore.Http
+    @inject IHttpContextAccessor HttpContextAccessor*@
+
+<div class="table-responsive" style="width:85%;">
+    <div style="clear:both;"></div>
+
+    <table id="hhDataTable" class="table table-bordered table-striped" border="1">
+        <thead>
+            <tr style="background: #e8ecfd;">
+                <th>
+                    S.N.
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.Email)*@
+                    Name
+                </th>
+                <th>
+                    Point Type
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var sn = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+                string uuid = item.Uuid;
+
+                var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(uuid);
+                string encodedUUID = System.Convert.ToBase64String(plainTextBytes);
+
+                <tr>
+                    <td>
+                        @sn
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Photo3Path)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProCodeNmip)
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-prouuid="@item.Photo5Desc" asp-route-Uuid="@item.Uuid" asp-route-Email="@item.Photo3Path" asp-route-PointId="@item.AddBy" asp-route-ProCode="@item.ProCode" asp-route-rvtno="@item.Photo2Desc" asp-route-PointType="@item.ProCodeNmip" class="btn btn-sm btn-outline-primary" target="_blank">Edit</a> &nbsp;
+                        <a asp-action="SanitaryInspectionDetails" asp-route-prouuid="@item.Photo5Desc" asp-route-Uuid="@item.Uuid" asp-route-Email="@item.Photo3Path" asp-route-PointId="@item.AddBy" asp-route-ProCode="@item.ProCode" asp-route-rvtno="@item.Photo2Desc" asp-route-PointType="@item.ProCodeNmip" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>

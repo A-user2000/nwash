@@ -1,0 +1,201 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.SanitaryInspection>
+
+
+@{
+    ViewData["Title"] = "Sanitary Details";
+    var ws = 1;
+    var kk = (IEnumerable<Wq_Surveillance.Models.ProjectDetail>)ViewData["projectDetail"];
+
+}
+
+<style>
+    .bsv {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 20mm;
+        margin: 10mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 0px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Sanitary Report - NWASH</title>
+    <link rel="stylesheet" href="~/css/doc.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" crossorigin="anonymous">
+    @*    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">*@
+    <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/fontawesome-5.15.2/fontawesome-free-5.15.2-web/css/all.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/styles.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</head>
+<body>
+    @*<div style="margin:10px;float:right">
+        <button class="btn btn-primary small" onclick="Export2Doc('SanitaryInspections');">Export as Word</button>
+    </div>*@
+    <div class="bsv">
+        <div id="SanitaryInspections">
+            <center><h4 style="color:darkblue">NWASH</h4></center>
+            <center><h4 style="color:darkblue">Project: @ViewBag.ProjectName</h4></center>
+            @*<center><h4 style="color:darkblue">District: District</h4></center>*@
+
+            <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                <h5>Project Details</h5>
+            </div>
+            <table border="0">
+                <tbody style="font-size: 14px;">
+
+
+                    @foreach (var item in kk)
+                    {
+                        <tr>
+                            <td>Project Code </td>
+                            <td>@item.ProCode</td>
+                        </tr>
+                        <tr>
+                            <td>Project Name </td>
+                            <td>@item.ProName</td>
+                        </tr>
+                        <tr>
+                            <td>Project Type </td>
+                            <td>@item.ProType</td>
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table><br />
+
+            @if (Model != null && Model.Count() != 0)
+            {
+                ws = 1;
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h5>Sanitary Inspection Question Answer</h5>
+                </div>
+                String date1 = "";
+
+                <div style="background-color: #eee;color: rgba(0, 0, 0, 0.77) !important;margin-top:10px">
+                    <h7>No: @ws</h7>
+                </div>
+                <br />
+                <table border="1" style="border-spacing:20px; border-color:lightgrey " id="hhDataTable" class="table ">
+                    <tbody style="font-size: 14px;">
+
+                        @foreach (var i in Model)
+                        {
+
+                            if (date1 == "")
+                            {
+                                date1 = @i.Time.ToString();
+                                <tr>
+                                    <td style="font-weight:bold" colspan="2">Date: @date1</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>@i.PointId</td>
+                                    <td>@i.UserId</td>
+                                </tr>
+
+
+                            }
+                            else
+                            {
+                                if (date1 != @i.Time.ToString())
+                                {
+                                    date1 = @i.Time.ToString();
+                                    <tr><td style="font-weight:bold; " colspan="2">Date: @date1</td><td colspan="2"></td>></tr>
+
+                                    <tr>
+                                        <td>@i.PointId</td>
+                                        <td>@i.UserId</td>
+                                    </tr>
+
+                                }
+                                else
+                                {
+
+                                    <tr>
+                                        <td>@i.PointId</td>
+                                        <td>@i.UserId</td>
+                                    </tr>
+
+
+
+                                }
+
+                            }
+                            ws++;
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
+@*<script>
+
+    $(document).ready(function () {
+        $('img').on('click', function () {
+            var image = $(this).attr('src');
+            //alert(image);
+            $('#imgModal').on('show.bs.modal', function () {
+                $(".showimage").attr("src", image);
+                $(".dlod").attr("href", image);
+            });
+        });
+    });
+
+    //function Export2Doc(element, filename = '') {
+    //    var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+    //    var postHtml = "</body></html>";
+    //    var html = preHtml + document.getElementById(element).innerHTML + postHtml;
+
+    //    var blob = new Blob(['\ufeff', html], {
+    //        type: 'application/vnd.ms-word'
+
+    //    });
+
+    //    // Specify link url
+    //    var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+
+    //    // Specify file name
+    //    filename = filename ? filename + '.doc' : 'document.doc';
+
+    //    // Create download link element
+    //    var downloadLink = document.createElement("a");
+
+    //    document.body.appendChild(downloadLink);
+
+    //    if (navigator.msSaveOrOpenBlob) {
+    //        navigator.msSaveOrOpenBlob(blob, filename);
+    //    } else {
+    //        // Create a link to the file
+    //        downloadLink.href = url;
+
+    //        // Setting the file name
+    //        downloadLink.download = filename;
+
+    //        //triggering the function
+    //        downloadLink.click();
+    //    }
+
+    //    document.body.removeChild(downloadLink);
+    //}
+</script>*@

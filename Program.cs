@@ -7,6 +7,8 @@ using Wq_Surveillance.Models.Mapping;
 using Microsoft.Extensions.FileProviders;
 using wq.Service.OtherService;
 using Wq_Surveillance.NwashModels;
+using Wq_Surveillance.Service.WaterQuality;
+using Nwash.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -14,12 +16,17 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 // Add DbContext
 builder.Services.AddDbContext<WqsContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), o => o.UseNetTopologySuite()));
+
 builder.Services.AddDbContext<NwashContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("NwashConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("NwashConnection"), o => o.UseNetTopologySuite()));
 
 
 builder.Services.AddTransient<IOtherService, OtherService>();
+builder.Services.AddTransient<IProjectService, ProjectService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IWashSanitaryInspection, WashSanitaryInspection>();
+builder.Services.AddTransient<IWaterQualityData, WaterQualityData>();
 builder.Services.AddTransient<IWQSservices, WQSservices>();
 builder.Services.AddAutoMapper(typeof(MapModels));
 

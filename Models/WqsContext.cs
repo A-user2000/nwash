@@ -5,6 +5,7 @@ using Wq_Surveillance.Models;
 using Wq_Surveillance.Models.API;
 using Wq_Surveillance.Models.MapData;
 using Wq_Surveillance.Models.QueryTables;
+using Wq_Surveillance.Models.WaterQuality;
 
 namespace Wq_Surveillance.Models;
 
@@ -18,6 +19,11 @@ public partial class WqsContext : DbContext
         : base(options)
     {
     }
+
+    public virtual DbSet<UserList> UserLists { get; set; }
+    public virtual DbSet<UserList1> UserLists1 { get; set; }
+    public virtual DbSet<UserList2> UserLists2 { get; set; }
+    public virtual DbSet<ProjectList> ProjectList { get; set; }
 
     //Added Models
     public virtual DbSet<WqsRangeSummary> WqsRangeSummary { get; set; }
@@ -154,7 +160,11 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<UsersAccessProCode> UsersAccessProCodes { get; set; }
 
-    
+    //Water Quality
+    public virtual DbSet<WqGeneralValue> WqGeneralValue { get; set; }
+    public virtual DbSet<WQSufficientTapPopulation> WQSufficientTapPopulation { get; set; }
+    public virtual DbSet<WqParameterData> WqParameterData { get; set; }
+    public virtual DbSet<WqMigrate> WqMigrate { get; set; }
 
     public virtual DbSet<WardBoundary45n> WardBoundary45ns { get; set; }
 
@@ -183,12 +193,15 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<WqTempMethodUsed> WqTempMethodUseds { get; set; }
 
-   
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=127.0.0.1;Port=5432;Database=wq_surveillance;Username=postgres;Password=123;", x => x.UseNetTopologySuite());
 
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    if (!optionsBuilder.IsConfigured)
+    //    {
+    //        optionsBuilder.UseNpgsql(AppConfiguration.ConnectionString, o => o.UseNetTopologySuite());
+    //    }
+    //}
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("postgis");

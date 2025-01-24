@@ -1,0 +1,224 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Water Quality - Parameter wise";
+
+    var provinceData = ViewData["Province"] as List<Province>;
+    var districtData = ViewData["District"] as List<District>;
+    var munData = ViewData["Municipality"] as List<Municipality>;
+    var pro = HttpContextAccessor.HttpContext.Session.GetString("PProvince");
+    var dis = HttpContextAccessor.HttpContext.Session.GetString("PDistrict");
+    var mun = HttpContextAccessor.HttpContext.Session.GetString("PMunicipality");
+}
+<form method="post">
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Province</label>
+                <select class="form-control" name="provinceCode" id="province" onchange="getDistrict();">
+                    <option value="">Select Province</option>
+                    @foreach (var province in provinceData)
+                    {
+                        <!option value="@province.ProvinceCode" @(province.ProvinceCode == HttpContextAccessor.HttpContext.Session.GetString("PProvince") ? "selected" : "")>@province.ProvinceName</!option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">District</label>
+                <select class="form-control" name="districtCode" id="district" onchange="getMunicipality();">
+                    @if (dis != null || pro != null)
+                    {
+                        <option value="0">Select District</option>
+                        @foreach (var district in districtData)
+                        {
+                            <!option value="@district.DistrictCode" @(district.DistrictCode == HttpContextAccessor.HttpContext.Session.GetString("PDistrict") ? "selected" : "")>@district.DistrictCode - @district.DistrictName</!option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="0">Select District</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Municipality</label>
+                <select class="form-control" name="munCode" id="municipality" onchange="getProjects();">
+                    @if (mun != null || dis != null)
+                    {
+                        <option value="0">Select Municipality</option>
+                        @foreach (var muni in munData)
+                        {
+                            <!option value="@muni.MunCode" @(muni.MunCode == HttpContextAccessor.HttpContext.Session.GetString("PMunicipality") ? "selected" : "")>@muni.MunCode - @muni.MunName</!option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="0">Select Municipality</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Project</label>
+                <select class="form-control" name="proCode" id="proCode" onchange="cleanDiv();">
+                    <option value="0">Select Project</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-1" id="download-btn">
+            <div class="form-group">
+                <label class="control-label">&nbsp;</label><br />
+                <button class="form-control btn btn-outline-success" type="button" style="width: inherit;" onclick="LoadParameterData()">Get</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-2" style="z-index: 1;">
+        <div class="form-group" id="wqRView" style="display:none;">
+            <label class="control-label">Parameters</label>
+            <select class="form-control" name="parameters" id="parameters" onchange="GetParameterSummary();">
+                <option value="0">Select Parameters</option>
+                <option value="1">Turbidity</option>
+                <option value="2">pH</option>
+                <option value="3">Color</option>
+                <option value="5">Conductivity</option>
+                <option value="7">Iron</option>
+                <option value="8">Manganese</option>
+                <option value="9">Arsenic</option>
+                <option value="10">Fluoride</option>
+                <option value="11">Ammonia</option>
+                <option value="12">Chloride</option>
+                <option value="13">Sulphate</option>
+                <option value="14">Nitrate</option>
+                <option value="15">Copper</option>
+                <option value="16">Zinc</option>
+                <option value="17">Aluminium</option>
+                <option value="18">Total Hardness</option>
+                <option value="19">Residual Chlorine</option>
+                <option value="27">E-Coli</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-10 wash_data_content">
+        <center><div id="load_text"></div></center>
+        <div id="WQSum" style="margin-top:30px;">
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+         $(document).ready(function () {
+            var mun = "@mun";
+                if (mun!== null) {
+                    getProjects();
+                }
+         });
+
+        function getDistrict() {
+            var ProvinceCode = $("#province").val();
+            $("#WQSum").html("");
+            $.ajax({
+                type: "POST",
+                url: '/System/GetDistrict',
+                data: { 'ProvinceCode': ProvinceCode },
+                dataType: "json",
+                success: function (data) {
+                    $('#district').html('<option value="0">Select District</option>');
+                    $('#municipality').html('<option value="0">Select Municipality</option>');
+                    $('#proCode').html('<option value="0">Select Project</option>');
+                    $.each(data, function (el) {
+                        $('#district').append('<option value=' + data[el].districtCode + '>' + data[el].districtCode + ' - ' + data[el].districtName + '</option>');
+                    });
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function getMunicipality() {
+            var dCode = $("#district").val();
+            $("#WQSum").html("");
+            $.ajax({
+                type: "POST",
+                url: '/System/GetMunicipality',
+                data: { 'dCode': dCode },
+                dataType: "json",
+                success: function (data) {
+                    $('#municipality').html('<option value="0">Select Municipality</option>');
+                    $('#proCode').html('<option value="0">Select Project</option>');
+                    $.each(data, function (el) {
+                        $('#municipality').append('<option value=' + data[el].munCode + '>' + data[el].munCode + ' - ' + data[el].munName + '</option>');
+                    });
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function getProjects() {
+            var munCode = $("#municipality").val();
+            $("#WQSum").html("");
+            $.ajax({
+                type: "POST",
+                url: '/System/GetProjectList',
+                data: { 'munCode': munCode },
+                dataType: "json",
+                success: function (data) {
+                    $('#proCode').html('<option value="0">Select Project</option>');
+                    $.each(data, function (el) {
+                        $('#proCode').append('<option value=' + data[el].proCode + '>' + data[el].proCode + ' - ' + data[el].proName + '</option>');
+                    });
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function cleanDiv() {
+            $('#WQSum').html('');
+            $('#parameters').prop('selectedIndex', 0);
+        }
+
+        function LoadParameterData() {
+            var proCode = $("#proCode").val();
+            if (proCode != 0) {
+                $("#wqRView").css("display", "block");
+            } else {
+                alert("Please select the project at first.");
+            }
+        }
+
+        function GetParameterSummary() {
+            var parId = $("#parameters").val();
+            var proCode = $("#proCode").val();
+            $('#WQSum').html('');
+            if (parId != 0 && proCode != 0) {
+                $.ajax({
+                    type: "POST",
+                    url: '/WaterQualityData/GetWQSchemeReport',
+                    data: { 'proCode': proCode, 'parId': parId },
+                    success: function (data) {
+                        $("#WQSum").html(data);
+                    },
+                    failure: function () {
+                        alert("Something went wrong! Please refresh the page and try again");
+                    }
+                });
+            } else {
+                alert("Please select the project and parameter.");
+            }
+        }
+    </script>
+}

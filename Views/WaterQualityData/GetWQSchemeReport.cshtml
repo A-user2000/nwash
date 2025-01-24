@@ -1,0 +1,86 @@
+﻿@model dynamic
+
+@{
+    var samplePopPer = 0.0;
+    var popFufillingWQReqPer = 0.0;
+    var popNotFulfillingWQReqPer = 0.0;
+    var popNotHavingSufficientWQDataPer = 0.0;
+
+    var populationRegistered = 0;
+    var samplePop = 0;
+    var popFufillingWQReq = 0;
+    var popNotFulfillingWQReq = 0;
+    var popNotHavingSufficientWQData = 0;
+
+    if ((Model.sumData) == null)
+    {
+        samplePopPer = 0.0;
+        popFufillingWQReqPer = 0.0;
+        popNotFulfillingWQReqPer = 0.0;
+        popNotHavingSufficientWQDataPer = 0.0;
+    }
+    else
+    {
+        populationRegistered = Model.sumData.scheme_total_pop;
+        samplePop = Model.sumData.sample_total_pop;
+        popFufillingWQReq = Model.sumData.sufficient_val_pop;
+        popNotFulfillingWQReq = samplePop - popFufillingWQReq;
+        popNotHavingSufficientWQData = populationRegistered - samplePop;
+
+        if (populationRegistered != 0)
+        {
+            samplePopPer = Math.Round(samplePop / (double)populationRegistered * 100);
+            popFufillingWQReqPer = Math.Round(popFufillingWQReq / (double)populationRegistered * 100);
+            popNotFulfillingWQReqPer = Math.Round(popNotFulfillingWQReq / (double)populationRegistered * 100);
+            popNotHavingSufficientWQDataPer = Math.Round(popNotHavingSufficientWQData / (double)populationRegistered * 100);
+        }
+    }
+
+}
+
+
+<div class="table-responsive" style="width:80%">
+
+    <table class="table">
+        <tr>
+            <td style="width: 45%"><h6>Population getting service from taps that does not have sufficient WQ Data</h6></td>
+            <td style="width: 45%">
+                <div class="progress">
+                    <div class="progress-bar bg-secondary" role="progressbar" style="width:@popNotHavingSufficientWQDataPer%">
+                    </div>
+                </div>
+            </td>
+            <td>@popNotHavingSufficientWQData</td>
+        </tr>
+        <tr>
+            <td style="width: 45%"><h6>Population Getting Service from taps that does not fulfill safely managed WQ requirement</h6></tdstyle="width:>
+            <td style="width: 45%">
+                <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width:@popNotFulfillingWQReqPer%">
+                    </div>
+                </div>
+            </td>
+            <td>@popNotFulfillingWQReq</td>
+        </tr>
+        <tr>
+            <td style="width: 45%"><h6>Population Getting Service from taps that fulfill safely managed WQ requirements</h6></td>
+            <td style="width: 45%">
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width:@popFufillingWQReqPer%">
+                    </div>
+                </div>
+            </td>
+            <td>@popFufillingWQReq</td>
+        </tr>
+        <tr>
+            <td style="width: 45%"><h6>Population Registered</h6></td>
+            <td style="width: 45%">
+                <div class="progress">
+                    <div class="progress-bar bg-info" role="progressbar" style="width:100%">
+                    </div>
+                </div>
+            </td>
+            <td>@populationRegistered</td>
+        </tr>
+    </table>
+</div>

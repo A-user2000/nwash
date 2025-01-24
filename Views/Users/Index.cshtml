@@ -1,0 +1,545 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.UserList>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Users";
+    var sGrp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups");
+    var sn = 1;
+    var LabUsers = ViewBag.LabUsers;
+    var WASHUsers = ViewBag.WASHUsers;
+    var InactiveUsers = ViewBag.InactiveUsers;
+}
+<div class="ml-0">
+    <button class="btn btn-sm btn-outline-info active" id="btnAll" onclick="AllU()">All Active Users</button>
+    <button class="btn btn-sm btn-outline-info" id="btnAllN" onclick="AllIU()">All Inactive Users</button>
+    <button class="btn btn-sm btn-outline-info" id="btnWash" onclick="WashU()">WASH User</button>
+    <button class="btn btn-sm btn-outline-info" id="btnLab" onclick="LabU()">Lab User</button>
+</div>
+<br />
+<div class="row ml-0">
+    @*<div style="float: right;">*@
+    <a class="btn btn-outline-primary btn-sm" asp-action="Create" style="margin-top:5px; margin-left:5px">Create New User</a>
+    <button class="btn btn-success btn-sm" style=" background-color: rgb(33,115,70); box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; float: left; margin-left:5px" onclick="window.location = '@Url.Action("ExportToExcel", "ExportExcel", new { table_name1 = "user" })'">Export All Users</button>
+    @*</div>*@
+</div>
+
+
+
+<div style="clear:both"></div>
+<br />
+<div class="table-responsive" id="UserAllD">
+    <table class="table table-striped" id="UserAll">
+        <thead>
+            <tr>
+                <th>SN.</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    UserType
+                </th>
+                <th>
+                    District
+                </th>
+                <th>
+                    Municipality
+                </th>
+                <th>
+                    Inventory Agency
+                </th>
+                <th>
+                    User Category
+                </th>
+                <th>
+                    Last Active On
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody id="">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@sn</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.user_type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.district_name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.mun_name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.inv_agency)
+                    </td>
+                    <td>
+                        @if (item.user_category == 1)
+                        {
+                            <span>WASH User</span>
+                        }
+                        else
+                        {
+                            <span>Lab User</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.last_login_date)
+                    </td>
+                    <td>
+                        @if (item.status == 1)
+                        {
+                            <span style="color: green;">Active</span>
+                        }
+                        else
+                        {
+                            <span style="color: red;">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.user_id">Edit</a>&nbsp;
+                        @*<a asp-action="Details" asp-route-id="@item.user_id">Details</a> |*@
+                        @if (item.status == 1)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-danger" onclick="delete_user(@item.user_id)">Deactivate</a>
+                        }
+                        else if (item.status == 0)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-success" onclick="activate_user(@item.user_id)">Activate</a>
+                        }
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive" id="UserInactiveD" style="display:none">
+    <table class="table table-striped" id="UserInactive">
+        <thead>
+            <tr>
+                <th>SN.</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    UserType
+                </th>
+                <th>
+                    District
+                </th>
+                <th>
+                    Municipality
+                </th>
+                <th>
+                    Inventory Agency
+                </th>
+                <th>
+                    User Category
+                </th>
+                <th>
+                    Last Active On
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody id="">
+            @{
+                sn = 1;
+            }
+            @foreach (var item in InactiveUsers)
+            {
+                <tr>
+                    <td>@sn</td>
+                    <td>
+                        @item.name
+                    </td>
+                    <td>
+                        @item.email
+                    </td>
+                    <td>
+                        @item.user_type
+                    </td>
+                    <td>
+                        @item.district_name
+                    </td>
+                    <td>
+                        @item.mun_name
+                    </td>
+                    <td>
+                        @item.inv_agency
+                    </td>
+                    <td>
+                        @if (item.user_category == 1)
+                        {
+                            <span>WASH User</span>
+                        }
+                        else
+                        {
+                            <span>Lab User</span>
+                        }
+                    </td>
+
+                    <td>
+                        @item.last_login_date
+                    </td>
+                    <td>
+                        @if (item.status == 1)
+                        {
+                            <span style="color: green;">Active</span>
+                        }
+                        else
+                        {
+                            <span style="color: red;">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.user_id">Edit</a>&nbsp;
+                        @*<a asp-action="Details" asp-route-id="@item.user_id">Details</a> |*@
+                        @if (item.status == 1)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-danger" onclick="delete_user(@item.user_id)">Deactivate</a>
+                        }
+                        else if (item.status == 0)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-success" onclick="activate_user(@item.user_id)">Activate</a>
+                        }
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive" id="UserWashD" style="display:none">
+    <table class="table table-striped" id="UserWash">
+        <thead>
+            <tr>
+                <th>SN.</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    UserType
+                </th>
+                <th>
+                    District
+                </th>
+                <th>
+                    Municipality
+                </th>
+                <th>
+                    Inventory Agency
+                </th>
+                <th>
+                    User Category
+                </th>
+                <th>
+                    Last Active On
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody id="">
+            @{
+                sn = 1;
+            }
+            @foreach (var item in WASHUsers)
+            {
+                <tr>
+                    <td>@sn</td>
+                    <td>
+                        @item.name
+                    </td>
+                    <td>
+                        @item.email
+                    </td>
+                    <td>
+                        @item.user_type
+                    </td>
+                    <td>
+                        @item.district_name
+                    </td>
+                    <td>
+                        @item.mun_name
+                    </td>
+                    <td>
+                        @item.inv_agency
+                    </td>
+                    <td>
+                        @if (item.user_category == 1)
+                        {
+                            <span>WASH User</span>
+                        }
+                        else
+                        {
+                            <span>Lab User</span>
+                        }
+                    </td>
+
+                    <td>
+                        @item.last_login_date
+                    </td>
+                    <td>
+                        @if (item.status == 1)
+                        {
+                            <span style="color: green;">Active</span>
+                        }
+                        else
+                        {
+                            <span style="color: red;">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.user_id">Edit</a>&nbsp;
+                        @*<a asp-action="Details" asp-route-id="@item.user_id">Details</a> |*@
+                        @if (item.status == 1)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-danger" onclick="delete_user(@item.user_id)">Deactivate</a>
+                        }
+                        else if (item.status == 0)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-success" onclick="activate_user(@item.user_id)">Activate</a>
+                        }
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive" id="UserLabD" style="display:none">
+    <table class="table table-striped" id="UserLab">
+        <thead>
+            <tr>
+                <th>SN.</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    UserType
+                </th>
+                <th>
+                    District
+                </th>
+                <th>
+                    Municipality
+                </th>
+                <th>
+                    Inventory Agency
+                </th>
+                <th>
+                    User Category
+                </th>
+                <th>
+                    Last Active On
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody id="">
+            @{
+                sn = 1;
+            }
+            @foreach (var item in LabUsers)
+            {
+                <tr>
+                    <td>@sn</td>
+                    <td>
+                        @item.name
+                    </td>
+                    <td>
+                        @item.email
+                    </td>
+                    <td>
+                        @item.user_type
+                    </td>
+                    <td>
+                        @item.district_name
+                    </td>
+                    <td>
+                        @item.mun_name
+                    </td>
+                    <td>
+                        @item.inv_agency
+                    </td>
+                    <td>
+                        @if (item.user_category == 1)
+                        {
+                            <span>WASH User</span>
+                        }
+                        else
+                        {
+                            <span>Lab User</span>
+                        }
+                    </td>
+                    <td>
+                        @item.last_login_date
+                    </td>
+                    <td>
+                        @if (item.status == 1)
+                        {
+                            <span style="color: green;">Active</span>
+                        }
+                        else
+                        {
+                            <span style="color: red;">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.user_id">Edit</a>&nbsp;
+                        @*<a asp-action="Details" asp-route-id="@item.user_id">Details</a> |*@
+                        @if (item.status == 1)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-danger" onclick="delete_user(@item.user_id)">Deactivate</a>
+                        }
+                        else if (item.status == 0)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-success" onclick="activate_user(@item.user_id)">Activate</a>
+                        }
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function FormatTbl(tblId){
+        $('#'+tblId).DataTable({
+            "iDisplayLength": 10,
+            "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
+        });
+    }
+
+    function AllU(){
+        $('#btnAll').addClass("active");
+        $('#btnWash').removeClass("active");
+        $('#btnLab').removeClass("active");
+        $('#btnAllN').removeClass("active");
+        $("#UserAllD").css("display", "contents");
+        $("#UserWashD").css("display", "none");
+        $("#UserLabD").css("display", "none");
+        $("#UserInactiveD").css("display", "none");
+        FormatTbl('UserAll');
+    }
+    function AllIU(){
+        $('#btnAll').removeClass("active");
+        $('#btnWash').removeClass("active");
+        $('#btnLab').removeClass("active");
+        $('#btnAllN').addClass("active");
+        $("#UserAllD").css("display", "none");
+        $("#UserWashD").css("display", "none");
+        $("#UserLabD").css("display", "none");
+        $("#UserInactiveD").css("display", "contents");
+        FormatTbl('UserInactive');
+    }
+
+    function WashU(){
+        $('#btnAll').removeClass("active");
+        $('#btnWash').addClass("active");
+        $('#btnLab').removeClass("active");
+        $('#btnAllN').removeClass("active");
+        $("#UserAllD").css("display", "none");
+        $("#UserWashD").css("display", "contents");
+        $("#UserLabD").css("display", "none");
+        $("#UserInactiveD").css("display", "none");
+        FormatTbl('UserWash');
+    }
+    function LabU(){
+        $('#btnAll').removeClass("active");
+        $('#btnWash').removeClass("active");
+        $('#btnLab').addClass("active");
+        $('#btnAllN').removeClass("active");
+        $("#UserAllD").css("display", "none");
+        $("#UserWashD").css("display", "none");
+        $("#UserLabD").css("display", "contents");
+        $("#UserInactiveD").css("display", "none");
+        FormatTbl('UserLab');
+    }
+
+    function delete_user(userID) {
+        if (confirm("Are you sure to deactivate the user?")) {
+            $.ajax({
+                type: "POST",
+                url: '/Users/DeleteUsers',
+                data: { 'userID': userID },
+                success: function (data) {
+                    if (data == 1) {
+                        alert('Users Deactivated Successfully.');
+                    } else {
+                        alert('Something went wrong. Please try again');
+                    }
+                    location.reload();
+                },
+                failure: function () {
+                    alert('Something went wrong. Please try again');
+                }
+            });
+        }
+    }
+
+    function activate_user(userID) {
+        if (confirm("Are you sure to activate the user?")) {
+            $.ajax({
+                type: "POST",
+                url: '/Users/ActivateUsers',
+                data: { 'userID': userID },
+                success: function (data) {
+                    if (data == 1) {
+                        alert('Users Activated Successfully.');
+                    } else {
+                        alert('Something went wrong. Please try again');
+                    }
+                    location.reload();
+                },
+                failure: function () {
+                    alert('Something went wrong. Please try again');
+                }
+            });
+        }
+    }
+</script>
+

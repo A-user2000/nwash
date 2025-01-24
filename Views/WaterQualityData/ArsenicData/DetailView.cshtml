@@ -1,0 +1,64 @@
+﻿@model IList<Wq_Surveillance.Models.ArsenicHi>
+@{
+    var sn = 1;
+    var munCode = ViewData["munCode"] as string;
+    var dCode = ViewData["dCode"] as string;
+}
+
+<center>
+    <h5>Historical Arsenic Data</h5>
+</center>
+<div class="table-responsive" style="max-height:650px;overflow:scroll;font-size:10pt;">
+    <button href="" class="btn btn-outline-info btn-sm" style="float:right;" onclick="window.location = '@Url.Action("ArsenicDataToExcel", "WaterQualityData", new { table_name = "ArsenicData", munCode, dCode})'">
+        <i class="fa fa-file-excel"></i>&nbsp;Export to Excel
+    </button>
+    <div style="clear:both"></div>
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr style="text-align:center; background-color:aliceblue;">
+                <th>S.N.</th>
+                <th>House Owner</th>
+                <th>Community</th>
+                <th>Old VDC-Ward</th>
+                <th>Point ID</th>
+                <th>Point Type</th>
+                <th>Depth (m)</th>
+                <th>HH Served</th>
+                <th>Population</th>
+                <th>Construction Year (BS/AD)</th>
+                <th>Constructed By</th>
+                <th>Agency</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Test Type</th>
+                <th>Other Test</th>
+                <th>Arsenic Conc</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="text-align:right;">@sn.</td>
+                    <td>@item.OwnerName</td>
+                    <td>@item.Community</td>
+                    <td>@item.VdcName - @item.OldWard</td>
+                    <td>@item.PointId</td>
+                    <td>@item.Ptype</td>
+                    <td>@Math.Round(Convert.ToDouble(item.DepthM), 3)</td>
+                    <td>@item.NoHh</td>
+                    <td>@item.NoPop</td>
+                    <td>@item.ConYearBs/@item.ConYearAd</td>
+                    <td>@item.ConBy</td>
+                    <td>@item.Agency</td>
+                    <td>@Math.Round((double)item.Lat, 5)</td>
+                    <td>@Math.Round((double)item.Lon, 5)</td>
+                    <td>@item.TestType</td>
+                    <td>@item.OtherTest</td>
+                    <td>@item.ArcConc</td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>

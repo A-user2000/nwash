@@ -1,0 +1,67 @@
+﻿@model dynamic
+
+@{
+    if ((Model.pData) != null)
+    {
+        var dyear = ViewData["Year"] as string;
+        var suffDataNotAvailablePop = Model.pData.sample_pop - Model.pData.sufficient_data_pop;
+
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive" style="width:80%">
+                    <table class="table">
+                        <tr>
+                            <td>Population</td>
+                            <td>@Model.pData.total_pop</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total Sampling Points
+                            </td>
+                            <td>@Model.pData.sampling_points</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total Samples in year @dyear
+                            </td>
+                            <td>@Model.pData.samples_in_year</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Complying Samples
+                            </td>
+                            <td>@Model.pData.complying_samples</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                PH standard complied  (Population)
+                            </td>
+                            <td>@Model.pData.ph_complied_pop</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                PH standard Not complied (Population)
+                            </td>
+                            <td>@Model.pData.ph_not_complied_pop</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Sufficient Data not available (Population)
+                            </td>
+                            <td>@suffDataNotAvailablePop</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col" style="border-left: 1px #002f84 ">
+                <img src="~/PrintMap/mapImg.PNG" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <br />
+        <center> <span style="color: red;">Project data unavailable</span></center>
+    }
+
+}

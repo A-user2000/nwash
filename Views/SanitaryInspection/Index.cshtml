@@ -1,0 +1,201 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Sanitary Inspection";
+
+    var provinceData = ViewData["Province"] as List<Province>;
+    var districtData = ViewData["District"] as List<District>;
+    var munData = ViewData["Municipality"] as List<Municipality>;
+    var pro = HttpContextAccessor.HttpContext.Session.GetString("PProvince");
+    var dis = HttpContextAccessor.HttpContext.Session.GetString("PDistrict");
+    var mun = HttpContextAccessor.HttpContext.Session.GetString("PMunicipality");
+}
+
+<form method="post">
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Province</label>
+                <select class="form-control" name="provinceCode" id="province" onchange="getDistrict();">
+                    <option value="">Select Province</option>
+                    @foreach (var province in provinceData)
+                    {
+                        <!option value="@province.ProvinceCode" @(province.ProvinceCode == HttpContextAccessor.HttpContext.Session.GetString("PProvince") ? "selected" : "")>@province.ProvinceName</!option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">District</label>
+                <select class="form-control" name="districtCode" id="district" onchange="getMunicipality();">
+                    @if (dis != null || pro != null)
+                    {
+                        <option value="0">Select District</option>
+                        @foreach (var district in districtData)
+                        {
+                            <!option value="@district.DistrictCode" @(district.DistrictCode == HttpContextAccessor.HttpContext.Session.GetString("PDistrict") ? "selected" : "")>@district.DistrictCode - @district.DistrictName</!option>
+                        }
+
+                    }
+                    else
+                    {
+                        <option value="0">Select District</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Municipality</label>
+                <select class="form-control" name="munCode" id="municipality" onchange="getProjects();">
+                    @if (mun != null || dis != null)
+                    {
+                        <option value="0">Select Municipality</option>
+                        @foreach (var muni in munData)
+                        {
+                            <!option value="@muni.MunCode" @(muni.MunCode == HttpContextAccessor.HttpContext.Session.GetString("PMunicipality") ? "selected" : "")>@muni.MunCode - @muni.MunName</!option>
+                        }
+                    }
+                    else
+                    {
+                        <option value="0">Select Municipality</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="control-label">Project</label>
+                <select class="form-control" name="proCode" id="proCode" onchange="cleanDiv();">
+                    <option value="0">Select Project</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="form-group">
+                <label class="control-label">&nbsp;</label><br />
+                <button class="form-control btn btn-outline-primary" type="button" style="width: inherit;" onclick="GetSanitaryInspection()">Get</button>
+            </div>
+        </div>
+        <div class="col-md-1" id="download-btn" style="display: none;">
+            <div class="form-group">
+                <label class="control-label">&nbsp;</label><br />
+                @*<button class="form-control btn btn-outline-success" type="button" style="width: inherit;" onclick="DownloadReport()">Doc</button>*@
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="col-10 wash_data_content">
+    <center><div id="load_text"></div></center>
+    <div id="wqView" style="margin-top:30px;">
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script>
+         $(document).ready(function () {
+            var mun = "@mun";
+                if (mun!== null) {
+                    getProjects();
+                }
+         });
+
+        function getDistrict() {
+            var ProvinceCode = $("#province").val();
+            $("#reportId").html("");
+            $("#download-btn").css("display", "none");
+            $.ajax({
+                type: "POST",
+                url: '/System/GetDistrict',
+                data: { 'ProvinceCode': ProvinceCode },
+                dataType: "json",
+                success: function (data) {
+                    $('#district').html('<option value="0">Select District</option>');
+                    $('#municipality').html('<option value="0">Select Municipality</option>');
+                    $('#proCode').html('<option value="0">Select Project</option>');
+                    $.each(data, function (el) {
+                        $('#district').append('<option value=' + data[el].districtCode + '>' + data[el].districtCode + ' - ' + data[el].districtName + '</option>');
+                    });
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function getMunicipality() {
+            var dCode = $("#district").val();
+            $("#reportId").html("");
+            $("#download-btn").css("display", "none");
+            $.ajax({
+                type: "POST",
+                url: '/System/GetMunicipality',
+                data: { 'dCode': dCode },
+                dataType: "json",
+                success: function (data) {
+                    $('#municipality').html('<option value="0">Select Municipality</option>');
+                    $('#proCode').html('<option value="0">Select Project</option>');
+                    $.each(data, function (el) {
+                        $('#municipality').append('<option value=' + data[el].munCode + '>' + data[el].munCode + ' - ' + data[el].munName + '</option>');
+                    });
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function getProjects() {
+            var munCode = $("#municipality").val();
+            $("#reportId").html("");
+            $("#download-btn").css("display", "none");
+            $.ajax({
+                type: "POST",
+                url: '/System/GetProjectList',
+                data: { 'munCode': munCode },
+                dataType: "json",
+                success: function (data) {
+                    $('#proCode').html('<option value="0">Select Project</option>');
+                    $.each(data, function (el) {
+                        $('#proCode').append('<option value=' + data[el].proCode + '>' + data[el].proCode + ' - ' + data[el].proName + '</option>');
+                    });
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+        function cleanDiv() {
+            $('#reportId').html('');
+            $("#download-btn").css("display", "none");
+        }
+
+        function GetSanitaryInspection() {
+            $("#wqData").removeClass("active");
+            $("#wqReport").removeClass("active");
+            $("#GeneralInspection").removeClass("active");
+            $("#SanitaryInspection").addClass("active");
+            var proCode = $("#proCode").val();
+            $("#wqView").css("display", "block");
+            $.ajax({
+                type: "POST",
+                url: '/SanitaryInspection/GetSanitaryInspectionList',
+                data: { 'proCode': proCode },
+                success: function (data) {
+                    console.log(data);
+                    $("#wqView").html(data);
+                },
+                failure: function () {
+                    alert("Something went wrong! Please refresh the page and try again");
+                }
+            });
+        }
+
+
+    </script>
+}
