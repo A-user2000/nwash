@@ -240,7 +240,7 @@
                     <div class="col">
                         <div id="userAssignment" style="display: none;">
                             <label class="control-label"><span id="assignText"></span></label>
-                            <select name="AssignedArea" id="AssignedArea" class="form-control">
+                            <select name="AssignedLab" id="AssignedLab" class="form-control">
                             </select>
                         </div>
                     </div>
@@ -380,7 +380,7 @@
                     }
                     //$("#userAssignment").css("display", "none");
                     //$("#assignText").text("");
-                    //$('#AssignedArea').html('<option value="0">Select Lab</option>');
+                    //$('#AssignedLab').html('<option value="0">Select Lab</option>');
                 },
                 failure: function () {
                     alert("Something went wrong! Please refresh the page and try again");
@@ -406,10 +406,10 @@
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        $('#AssignedArea').html('<option value="">Select Lab</option>');
+                        $('#AssignedLab').html('<option value="">Select Lab</option>');
                         $.each(data, function (el) {
-                            $('#AssignedArea').append('<option value=' + data[el].uuid + '>' + data[el].labName + '</option>');
-                            document.getElementById('AssignedArea').setAttribute('required', 'true');
+                            $('#AssignedLab').append('<option value=' + data[el].uuid + '>' + data[el].labName + '</option>');
+                            document.getElementById('AssignedLab').setAttribute('required', 'true');
                         });
                     },
                     failure: function () {
@@ -430,10 +430,10 @@
                         dataType: "json",
                         async: false,
                         success: function (data) {
-                            $('#AssignedArea').html('<option value="">Select Project</option>');
+                            $('#AssignedLab').html('<option value="">Select Project</option>');
                             $.each(data, function (el) {
-                                $('#AssignedArea').append('<option value=' + data[el].uuid + '>' + data[el].proCode + ' - ' + data[el].proName + '</option>');
-                                document.getElementById('AssignedArea').setAttribute('required', 'true');
+                                $('#AssignedLab').append('<option value=' + data[el].uuid + '>' + data[el].proCode + ' - ' + data[el].proName + '</option>');
+                                document.getElementById('AssignedLab').setAttribute('required', 'true');
                             });
                         },
                         failure: function () {
@@ -443,7 +443,7 @@
                 }
             }
             else if (userCat == 1) {
-                document.getElementById('AssignedArea').removeAttribute('required');
+                document.getElementById('AssignedLab').removeAttribute('required');
                 $("#userAssignment").css("display", "none");
                 $("#UserType").val("");
             }
@@ -464,9 +464,9 @@
                         dataType: "json",
                         async: false,
                         success: function (data) {
-                            $('#AssignedArea').html('<option value="">Select Project</option>');
+                            $('#AssignedLab').html('<option value="">Select Project</option>');
                             $.each(data, function (el) {
-                                $('#AssignedArea').append('<option value=' + data[el].uuid + '>' + data[el].proCode + ' - ' + data[el].proName + '</option>');
+                                $('#AssignedLab').append('<option value=' + data[el].uuid + '>' + data[el].proCode + ' - ' + data[el].proName + '</option>');
                             });
                         },
                         failure: function () {

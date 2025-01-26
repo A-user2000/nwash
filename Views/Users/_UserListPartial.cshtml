@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Wq_Surveillance.Models.QueryTables.UserList>
+
+<div class="table-responsive" id="UserAllD">
+    <table class="table table-striped" id="UserAll">
+        <thead>
+            <tr>
+                <th>SN.</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>UserType</th>
+                <th>District</th>
+                <th>Municipality</th>
+                <th>Inventory Agency</th>
+                <th>User Category</th>
+                <th>Last Active On</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                int sn = 1;
+                foreach (var item in Model)
+                {
+                    if (item != null)
+                    {
+                        <tr>
+                            <td>@sn</td>
+                            <td>@item.name</td>
+                            <td>@item.email</td>
+                            <td>@item.user_type</td>
+                            <td>@item.district_name</td>
+                            <td>@item.mun_name</td>
+                            <td>@item.inv_agency</td>
+                            <td>
+                                @if (item.user_category == 1)
+                                {
+                                    <span>WASH User</span>
+                                }
+                                else
+                                {
+                                    <span>Lab User</span>
+                                }
+                            </td>
+                            <td>@item.last_login_date</td>
+                            <td>
+                                @if (item.status == 1)
+                                {
+                                    <span style="color: green;">Active</span>
+                                }
+                                else
+                                {
+                                    <span style="color: red;">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.user_id">Edit</a>&nbsp;
+                                @if (item.status == 1)
+                                {
+                                    <a href="#" class="btn btn-sm btn-outline-danger" onclick="delete_user(@item.user_id)">Deactivate</a>
+                                }
+                                else if (item.status == 0)
+                                {
+                                    <a href="#" class="btn btn-sm btn-outline-success" onclick="activate_user(@item.user_id)">Activate</a>
+                                }
+                            </td>
+                        </tr>
+                        sn++;
+                    }
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="11" class="text-center">No data available.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

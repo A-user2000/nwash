@@ -5,8 +5,8 @@ using Wq_Surveillance.Models;
 using NetTopologySuite.Geometries;
 using Microsoft.Extensions.Hosting.Internal;
 using Wq_Surveillance.Controllers;
-using Wq_Surveillance.Service.OtherService;
 using System.Data.SQLite;
+using Wq_Surveillance.Service.Other;
 
 public class WqsSync
 {
@@ -578,6 +578,7 @@ public class WqsSync
                             ResorvoirSanitationCondition3 = values["reservoirSanitationCondition3"]?.ToString(),
                             ResorvoirSanitationCondition4 = values["reservoirSanitationCondition4"]?.ToString(),
                             ResorvoirSanitationCondition5 = values["reservoirSanitationCondition5"]?.ToString(),
+                            ReservoirDetails = values["reservoirDetails"]?.ToString(),
                             Latitude = latitude,
                             Longitude = longitude,
                             VisitDate = values["visitDate"]?.ToString(),
@@ -594,6 +595,7 @@ public class WqsSync
                         existingReservoirSanitary.ResorvoirSanitationCondition3 = values["reservoirSanitationCondition3"]?.ToString();
                         existingReservoirSanitary.ResorvoirSanitationCondition4 = values["reservoirSanitationCondition4"]?.ToString();
                         existingReservoirSanitary.ResorvoirSanitationCondition5 = values["reservoirSanitationCondition5"]?.ToString();
+                        existingReservoirSanitary.ReservoirDetails = values["reservoirDetails"]?.ToString();
                         existingReservoirSanitary.Latitude = latitude;
                         existingReservoirSanitary.Longitude = longitude;
                         existingReservoirSanitary.VisitDate = values["visitDate"]?.ToString();
@@ -642,6 +644,7 @@ public class WqsSync
                         existingSourceSanitary.SourceSanitationCondition13 = values["sourceSanitationCondition13"]?.ToString();
                         existingSourceSanitary.SourceSanitationCondition14 = values["sourceSanitationCondition14"]?.ToString();
                         existingSourceSanitary.SourceSanitationCondition15 = values["sourceSanitationCondition15"]?.ToString();
+                        existingSourceSanitary.SourceDetails = values["sourceDetails"]?.ToString();
                         existingSourceSanitary.Latitude = latitude;
                         existingSourceSanitary.Longitude = longitude;
                         existingSourceSanitary.VisitDate = values["visitDate"]?.ToString();
@@ -675,6 +678,7 @@ public class WqsSync
                             SourceSanitationCondition13 = values["sourceSanitationCondition13"]?.ToString(),
                             SourceSanitationCondition14 = values["sourceSanitationCondition14"]?.ToString(),
                             SourceSanitationCondition15 = values["sourceSanitationCondition15"]?.ToString(),
+                            SourceDetails = values["sourceDetails"]?.ToString(),
                             Latitude = latitude,
                             Longitude = longitude,
                             VisitDate = values["visitDate"]?.ToString(),
@@ -717,6 +721,7 @@ public class WqsSync
                         existingStructureSanitary.StructureSanitationCondition8 = values["structureSanitationCondition8"]?.ToString();
                         existingStructureSanitary.StructureSanitationCondition9 = values["structureSanitationCondition9"]?.ToString();
                         existingStructureSanitary.StructureSanitationCondition10 = values["structureSanitationCondition10"]?.ToString();
+                        existingStructureSanitary.StructureDetails = values["structureDetails"]?.ToString();
                         existingStructureSanitary.Latitude = latitude;
                         existingStructureSanitary.Longitude = longitude;
                         existingStructureSanitary.VisitDate = values["visitDate"]?.ToString();
@@ -745,6 +750,7 @@ public class WqsSync
                             StructureSanitationCondition8 = values["structureSanitationCondition8"]?.ToString(),
                             StructureSanitationCondition9 = values["structureSanitationCondition9"]?.ToString(),
                             StructureSanitationCondition10 = values["structureSanitationCondition10"]?.ToString(),
+                            StructureDetails = values["structureDetails"]?.ToString(),
                             Latitude = latitude,
                             Longitude = longitude,
                             VisitDate = values["visitDate"]?.ToString(),
@@ -789,6 +795,7 @@ public class WqsSync
                             TapSanitationCondition5 = values["tapSanitationCondition5"]?.ToString(),
                             TapSanitationCondition6 = values["tapSanitationCondition6"]?.ToString(),
                             TapSanitationCondition7 = values["tapSanitationCondition7"]?.ToString(),
+                            TapDetails = values["tapDetails"]?.ToString(),
                             Latitude = latitude,
                             Longitude = longitude,
                             VisitDate = values["visitDate"]?.ToString(),
@@ -807,6 +814,7 @@ public class WqsSync
                         existingTapSanitary.TapSanitationCondition5 = values["tapSanitationCondition5"]?.ToString();
                         existingTapSanitary.TapSanitationCondition6 = values["tapSanitationCondition6"]?.ToString();
                         existingTapSanitary.TapSanitationCondition7 = values["tapSanitationCondition7"]?.ToString();
+                        existingTapSanitary.TapDetails = values["tapDetails"]?.ToString();
                         existingTapSanitary.Latitude = latitude;
                         existingTapSanitary.Longitude = longitude;
                         existingTapSanitary.VisitDate = values["visitDate"]?.ToString();

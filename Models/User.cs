@@ -39,5 +39,5 @@ public partial class User
 
     public int? UserCategory { get; set; }
 
-    public string? AssignedArea { get; set; }
+    public string? AssignedLab { get; set; }
 }

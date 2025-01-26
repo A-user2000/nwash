@@ -30,6 +30,7 @@ public partial class TapSanitary
     public string? TapSanitationCondition6 { get; set; }
 
     public string? TapSanitationCondition7 { get; set; }
+    public string? TapDetails { get; set; }
     public double? Latitude { get; set; }
 
     public double? Longitude { get; set; }

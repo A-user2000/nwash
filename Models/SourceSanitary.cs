@@ -45,6 +45,7 @@ public partial class SourceSanitary
     public string? SourceSanitationCondition14 { get; set; }
 
     public string? SourceSanitationCondition15 { get; set; }
+    public string? SourceDetails { get; set; }
     public double? Latitude { get; set; }
 
     public double? Longitude { get; set; }

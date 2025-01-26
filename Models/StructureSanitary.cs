@@ -37,6 +37,7 @@ public partial class StructureSanitary
     public string? StructureSanitationCondition9 { get; set; }
 
     public string? StructureSanitationCondition10 { get; set; }
+    public string? StructureDetails { get; set; }
     public double? Latitude { get; set; }
 
     public double? Longitude { get; set; }

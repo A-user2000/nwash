@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Wq_Surveillance.Models.UserList>
+﻿@model IEnumerable<Wq_Surveillance.Models.QueryTables.UserList>
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 @{
@@ -8,19 +8,21 @@
     var LabUsers = ViewBag.LabUsers;
     var WASHUsers = ViewBag.WASHUsers;
     var InactiveUsers = ViewBag.InactiveUsers;
+    var ActiveUsers = ViewBag.ActiveUsers;
 }
 <div class="ml-0">
-    <button class="btn btn-sm btn-outline-info active" id="btnAll" onclick="AllU()">All Active Users</button>
+@*     <button class="btn btn-sm btn-outline-info " id="btnAll" onclick="AllU()">All  Users</button>
+ *@    <button class="btn btn-sm btn-outline-info " id="btnAllA" onclick="AllAU()">All Active Users</button>
     <button class="btn btn-sm btn-outline-info" id="btnAllN" onclick="AllIU()">All Inactive Users</button>
     <button class="btn btn-sm btn-outline-info" id="btnWash" onclick="WashU()">WASH User</button>
-    <button class="btn btn-sm btn-outline-info" id="btnLab" onclick="LabU()">Lab User</button>
+    <button class="btn btn-sm btn-outline-info active" id="btnLab" onclick="LabU()">Lab User</button>
 </div>
 <br />
 <div class="row ml-0">
-    @*<div style="float: right;">*@
+    <div style="float: right;">
     <a class="btn btn-outline-primary btn-sm" asp-action="Create" style="margin-top:5px; margin-left:5px">Create New User</a>
     <button class="btn btn-success btn-sm" style=" background-color: rgb(33,115,70); box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; float: left; margin-left:5px" onclick="window.location = '@Url.Action("ExportToExcel", "ExportExcel", new { table_name1 = "user" })'">Export All Users</button>
-    @*</div>*@
+    </div>
 </div>
 
 
@@ -128,7 +130,111 @@
         </tbody>
     </table>
 </div>
+<div class="table-responsive" id="UserActiveD" style="display:none">
+    <table class="table table-striped" id="UserActive">
+        <thead>
+            <tr>
+                <th>SN.</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    UserType
+                </th>
+                <th>
+                    District
+                </th>
+                <th>
+                    Municipality
+                </th>
+                <th>
+                    Inventory Agency
+                </th>
+                <th>
+                    User Category
+                </th>
+                <th>
+                    Last Active On
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody id="">
+            @{
+                sn = 1;
+            }
+            @foreach (var item in ActiveUsers)
+            {
+                <tr>
+                    <td>@sn</td>
+                    <td>
+                        @item.name
+                    </td>
+                    <td>
+                        @item.email
+                    </td>
+                    <td>
+                        @item.user_type
+                    </td>
+                    <td>
+                        @item.district_name
+                    </td>
+                    <td>
+                        @item.mun_name
+                    </td>
+                    <td>
+                        @item.inv_agency
+                    </td>
+                    <td>
+                        @if (item.user_category == 1)
+                        {
+                            <span>WASH User</span>
+                        }
+                        else
+                        {
+                            <span>Lab User</span>
+                        }
+                    </td>
 
+                    <td>
+                        @item.last_login_date
+                    </td>
+                    <td>
+                        @if (item.status == 1)
+                        {
+                            <span style="color: green;">Active</span>
+                        }
+                        else
+                        {
+                            <span style="color: red;">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.user_id">Edit</a>&nbsp;
+                        @*<a asp-action="Details" asp-route-id="@item.user_id">Details</a> |*@
+                        @if (item.status == 1)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-danger" onclick="delete_user(@item.user_id)">Deactivate</a>
+                        }
+                        else if (item.status == 0)
+                        {
+                            <a href="#" class="btn btn-sm btn-outline-success" onclick="activate_user(@item.user_id)">Activate</a>
+                        }
+                    </td>
+                </tr>
+                sn++;
+            }
+        </tbody>
+    </table>
+</div>
 <div class="table-responsive" id="UserInactiveD" style="display:none">
     <table class="table table-striped" id="UserInactive">
         <thead>
@@ -341,7 +447,7 @@
     </table>
 </div>
 
-<div class="table-responsive" id="UserLabD" style="display:none">
+<div class="table-responsive" id="UserLabD" style="display:contents">
     <table class="table table-striped" id="UserLab">
         <thead>
             <tr>
@@ -453,53 +559,80 @@
             "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
         });
     }
+        $(document).ready(function() {
+        // Set the Lab Users table as the default table
+        LabU();
+    });
 
-    function AllU(){
+      function AllU() {
         $('#btnAll').addClass("active");
         $('#btnWash').removeClass("active");
         $('#btnLab').removeClass("active");
         $('#btnAllN').removeClass("active");
+        $('#btnAllA').removeClass("active"); // Added for All Active Users
         $("#UserAllD").css("display", "contents");
         $("#UserWashD").css("display", "none");
         $("#UserLabD").css("display", "none");
         $("#UserInactiveD").css("display", "none");
+        $("#UserActiveD").css("display", "none"); // Added for All Active Users
         FormatTbl('UserAll');
     }
-    function AllIU(){
+
+    function AllIU() {
         $('#btnAll').removeClass("active");
         $('#btnWash').removeClass("active");
         $('#btnLab').removeClass("active");
         $('#btnAllN').addClass("active");
+        $('#btnAllA').removeClass("active"); // Added for All Active Users
         $("#UserAllD").css("display", "none");
         $("#UserWashD").css("display", "none");
         $("#UserLabD").css("display", "none");
         $("#UserInactiveD").css("display", "contents");
+        $("#UserActiveD").css("display", "none"); // Added for All Active Users
         FormatTbl('UserInactive');
     }
 
-    function WashU(){
+    function AllAU() {
+        $('#btnAll').removeClass("active");
+        $('#btnWash').removeClass("active");
+        $('#btnLab').removeClass("active");
+        $('#btnAllN').removeClass("active");
+        $('#btnAllA').addClass("active"); // Added for All Active Users
+        $("#UserAllD").css("display", "none");
+        $("#UserWashD").css("display", "none");
+        $("#UserLabD").css("display", "none");
+        $("#UserInactiveD").css("display", "none");
+        $("#UserActiveD").css("display", "contents"); // Added for All Active Users
+        FormatTbl('UserActive');
+    }
+
+    function WashU() {
         $('#btnAll').removeClass("active");
         $('#btnWash').addClass("active");
         $('#btnLab').removeClass("active");
         $('#btnAllN').removeClass("active");
+        $('#btnAllA').removeClass("active"); // Added for All Active Users
         $("#UserAllD").css("display", "none");
         $("#UserWashD").css("display", "contents");
         $("#UserLabD").css("display", "none");
         $("#UserInactiveD").css("display", "none");
+        $("#UserActiveD").css("display", "none"); // Added for All Active Users
         FormatTbl('UserWash');
     }
-    function LabU(){
+
+    function LabU() {
         $('#btnAll').removeClass("active");
         $('#btnWash').removeClass("active");
         $('#btnLab').addClass("active");
         $('#btnAllN').removeClass("active");
+        $('#btnAllA').removeClass("active"); // Added for All Active Users
         $("#UserAllD").css("display", "none");
         $("#UserWashD").css("display", "none");
         $("#UserLabD").css("display", "contents");
         $("#UserInactiveD").css("display", "none");
+        $("#UserActiveD").css("display", "none"); // Added for All Active Users
         FormatTbl('UserLab');
     }
-
     function delete_user(userID) {
         if (confirm("Are you sure to deactivate the user?")) {
             $.ajax({
@@ -541,5 +674,111 @@
             });
         }
     }
-</script>
+</script> 
 
+
+
+
+
+@* @model IEnumerable<Wq_Surveillance.Models.QueryTables.UserList>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Users";
+    Console.WriteLine($"LabUsers: {ViewBag.LabUsers}");
+    Console.WriteLine($"WASHUsers: {ViewBag.WASHUsers}");
+    Console.WriteLine($"InactiveUsers: {ViewBag.InactiveUsers}");
+
+    var sGrp = HttpContextAccessor.HttpContext.Session.GetInt32("SGroups");
+    var LabUsers = ViewBag.LabUsers as IEnumerable<Wq_Surveillance.Models.QueryTables.UserList>;
+    var WASHUsers = ViewBag.WASHUsers as IEnumerable<Wq_Surveillance.Models.QueryTables.UserList>;
+    var InactiveUsers = ViewBag.InactiveUsers as IEnumerable<Wq_Surveillance.Models.QueryTables.UserList>;
+}
+
+<div class="ml-0">
+    <button class="btn btn-sm btn-outline-info" id="btnAll" onclick="showTable('UserAllD')">All Active Users</button>
+    <button class="btn btn-sm btn-outline-info" id="btnAllN" onclick="showTable('UserInactiveD')">All Inactive Users</button>
+    <button class="btn btn-sm btn-outline-info" id="btnWash" onclick="showTable('UserWashD')">WASH User</button>
+    <button class="btn btn-sm btn-outline-info" id="btnLab" onclick="showTable('UserLabD')">Lab User</button>
+</div>
+<br />
+<div class="row ml-0">
+    <a class="btn btn-outline-primary btn-sm" asp-action="Create" style="margin-top:5px; margin-left:5px">Create New User</a>
+    <button class="btn btn-success btn-sm" style=" background-color: rgb(33,115,70); box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; float: left; margin-left:5px" onclick="window.location = '@Url.Action("ExportToExcel", "ExportExcel", new { table_name1 = "user" })'">Export All Users</button>
+</div>
+
+<div style="clear:both"></div>
+<br />
+
+<!-- Render the partial views -->
+<div id="UserAllD" class="table-container" style="display:none;">
+    @await Html.PartialAsync("_UserListPartial", Model)
+</div>
+
+<div id="UserInactiveD" class="table-container" style="display:none;">
+    @if (InactiveUsers != null && InactiveUsers.Any())
+    {
+        @await Html.PartialAsync("_UserListPartial", InactiveUsers)
+    }
+    else
+    {
+        <p>No inactive users found.</p>
+    }
+</div>
+
+<div id="UserWashD" class="table-container" style="display:none;">
+    @if (WASHUsers != null && WASHUsers.Any())
+    {
+        @await Html.PartialAsync("_UserListPartial", WASHUsers)
+    }
+    else
+    {
+        <p>No WASH users found.</p>
+    }
+</div>
+
+<div id="UserLabD" class="table-container" style="display:none;">
+    @if (LabUsers != null && LabUsers.Any())
+    {
+        @await Html.PartialAsync("_UserListPartial", LabUsers)
+    }
+    else
+    {
+        <p>No lab users found.</p>
+    }
+</div>
+
+<script>
+    // Function to show the selected table and hide others
+    function showTable(tableId) {
+        // Hide all tables
+        var tables = document.querySelectorAll('.table-container');
+        tables.forEach(function(table) {
+            table.style.display = 'none';
+        });
+
+        // Show the selected table
+        var selectedTable = document.getElementById(tableId);
+        if (selectedTable) {
+            selectedTable.style.display = 'block';
+        }
+
+        // Remove active class from all buttons
+        var buttons = document.querySelectorAll('.btn');
+        buttons.forEach(function(button) {
+            button.classList.remove('active');
+        });
+
+        // Add active class to the clicked button
+        var clickedButton = event.target;
+        clickedButton.classList.add('active');
+    }
+
+    // Function to initialize DataTables (if needed)
+    function FormatTbl(tblId) {
+        $('#' + tblId).DataTable({
+            "iDisplayLength": 10,
+            "aLengthMenu": [[5, 10, 15, 25, 35, 50, 100, -1], [5, 10, 15, 25, 35, 50, 100, "All"]]
+        });
+    }
+</script> *@

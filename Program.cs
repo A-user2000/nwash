@@ -1,26 +1,29 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Wq_Surveillance.Service;
-using Wq_Surveillance.Models;
-using Wq_Surveillance.Service.OtherService;
-using Wq_Surveillance.Models.Mapping;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.FileProviders;
-using wq.Service.OtherService;
+
+using Wq_Surveillance;
+using Wq_Surveillance.Models;
 using Wq_Surveillance.NwashModels;
-using Wq_Surveillance.Service.WaterQuality;
-using Nwash.Service;
+using Wq_Surveillance.Models.Mapping;
+using Wq_Surveillance.Service.WQS;
+using Wq_Surveillance.Service.Users;
+using Wq_Surveillance.Service.WaterQualityData;
+using Wq_Surveillance.Service.WashSanitaryInspections;
+using Wq_Surveillance.Service.Other;
+using Wq_Surveillance.Service.Project;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHttpContextAccessor();
+
+AppConfiguration.LoadConfig(builder);
+
 // Add services to the container.
+var services = builder.Services;
+
+services.AddControllersWithViews();
 builder.Services.AddControllersWithViews();
-// Add DbContext
-builder.Services.AddDbContext<WqsContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), o => o.UseNetTopologySuite()));
 
-builder.Services.AddDbContext<NwashContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("NwashConnection"), o => o.UseNetTopologySuite()));
-
+services.AddDbContext<WqsContext>();
+services.AddDbContext<NwashContext>();
 
 builder.Services.AddTransient<IOtherService, OtherService>();
 builder.Services.AddTransient<IProjectService, ProjectService>();
@@ -31,56 +34,46 @@ builder.Services.AddTransient<IWQSservices, WQSservices>();
 builder.Services.AddAutoMapper(typeof(MapModels));
 
 builder.Services.AddEndpointsApiExplorer();
-
-
-
 // Add session services
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(60); // Set session timeout as needed
-    options.Cookie.HttpOnly = true;
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Make the session cookie HTTP-only
+    options.Cookie.IsEssential = true; // Mark the session cookie as essential
 });
-
-// Configure HTTPS redirection port (if needed, optional)
-//builder.WebHost.ConfigureKestrel(serverOptions =>
-//{
-//    serverOptions.ListenAnyIP(44310, listenOptions =>
-//    {
-//        listenOptions.UseHttps();
-//    });
-//});
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Wqs/Error");
-    app.UseHsts(); // Use HSTS for security in production scenarios
- 
-}
-else
-{
-    app.UseDeveloperExceptionPage();
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
-// HTTPS redirection
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wqs_images")),
-    RequestPath = "/wqs_images"
-});
-
-
+app.UseStaticFiles(
+    new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wqs_images")),
+        RequestPath = "/wqs_images"
+    }
+);
 app.UseRouting();
-app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Wqs}/{action=Index}/{id?}");
+var cookiePolicyOptions = new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+};
+
+app.UseCookiePolicy(cookiePolicyOptions);
+
+app.MapControllerRoute(name: "default", pattern: "{controller=WqsDashboard}/{action=Index}/{id?}");
 
 app.Run();

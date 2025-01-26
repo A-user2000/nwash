@@ -31,11 +31,14 @@
                     <div class="downloadCount">Download Count : 1</div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-lg-3 nospace thumbs">
-                    @using (Html.BeginForm("Apk", "ApkDownload", FormMethod.Get))
+                  @*   @using (Html.BeginForm("Apk", "ApkDownload", FormMethod.Get))
                     {
                         <input type="text" hidden name="fileName" value="" />
+                    <form asp-controller="ApkDownload" asp-action="DownloadApk" method="get">
                         <button class="btn btn-success" type="submit">Download APK</button>
-                    }
+                    </form>
+                    } *@
+                <a class="btn btn-success" href="@Url.Action("DownloadApk", "Apk")">Download APK</a>
                     <br />                    
                 </div>
             </div>

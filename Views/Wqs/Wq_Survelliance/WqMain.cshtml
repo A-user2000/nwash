@@ -44,7 +44,31 @@
                     <td>@item.Province</td>
                     <td>@item.Province</td>
                    
-                    </tr>
+                    @* <td>
+                        <a asp-controller="Wqs" asp-action="FormViewB" asp-route-encode="@encodedUUID" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+                        @if (sGrp == 1 || sGrp == 10)
+                        {
+                            <a asp-controller="Tubewell" asp-action="TubewellDataEdit" asp-route-id="@encodedUUID" class="btn btn-sm btn-outline-info" target="_blank">Edit</a>
+                            <button class="btn btn-sm btn-outline-danger" onclick="delete_tubewell_data('@encodedUUID')">Delete</button>
+                        }
+                        else if (sGrp == 5 || sGrp == 10)
+                        {
+                            if (item.MunCode == sMun.ToString())
+                            {
+                                <a asp-controller="Tubewell" asp-action="TubewellDataEdit" asp-route-id="@encodedUUID" class="btn btn-sm btn-outline-info" target="_blank">Edit</a>
+                                <button class="btn btn-sm btn-outline-danger" onclick="delete_tubewell_data('@encodedUUID')">Delete</button>
+                            }
+                        }
+                        else if (sGrp == 6 || sGrp == 11)
+                        {
+                            if (item.MunCode == sMun.ToString())
+                            {
+                                <a asp-controller="Tubewell" asp-action="TubewellDataEdit" asp-route-id="@encodedUUID" class="btn btn-sm btn-outline-info" target="_blank">Edit</a>
+
+                            }
+                        } *@
+                   @*  </td> *@
+                </tr>
             }
 
         </tbody>

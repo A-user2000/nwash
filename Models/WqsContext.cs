@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Wq_Surveillance.Models;
 using Wq_Surveillance.Models.API;
 using Wq_Surveillance.Models.MapData;
 using Wq_Surveillance.Models.QueryTables;
@@ -30,6 +29,8 @@ public partial class WqsContext : DbContext
     public virtual DbSet<DateAndInt> DateAndInt { get; set; }
     public virtual DbSet<WqsDataCollProvincewise> WqsDataCollProvincewise { get; set; }
     public virtual DbSet<MatWqProvincewise> MatWqProvincewise { get; set; }
+    public virtual DbSet<Form1bWspScore> Form1bWspScore { get; set; }
+    public virtual DbSet<Form1aWspInitiativeCount> Form1aWspInitiativeCount { get; set; }
 
     public virtual DbSet<ProjectDetailData> ProjectDetailData { get; set; }
     
@@ -193,22 +194,18 @@ public partial class WqsContext : DbContext
 
     public virtual DbSet<WqTempMethodUsed> WqTempMethodUseds { get; set; }
 
-<<<<<<< HEAD
-
-=======
-   
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql(AppConfiguration.DefaultConnection, x => x.UseNetTopologySuite());
+        }
+    }
+/*
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=wq_surveillance;Username=postgres;Password=postgresql123;", x => x.UseNetTopologySuite());
->>>>>>> 0877ac2fec3764b8c9a05a754700235381e5d79c
-
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    if (!optionsBuilder.IsConfigured)
-    //    {
-    //        optionsBuilder.UseNpgsql(AppConfiguration.ConnectionString, o => o.UseNetTopologySuite());
-    //    }
-    //}
+        => optionsBuilder.UseNpgsql(AppConfiguration.DefaultConnection, x => x.UseNetTopologySuite());
+*/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("postgis");
@@ -1526,6 +1523,9 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
+            entity.Property(e => e.ReservoirDetails)
+               .HasColumnType("character varying")
+               .HasColumnName("reservoir_details");
             entity.Property(e => e.ResorvoirSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("resorvoir_sanitation_condition_1");
@@ -1636,6 +1636,9 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
+            entity.Property(e => e.SourceDetails)
+    .HasColumnType("character varying")
+    .HasColumnName("source_details");
             entity.Property(e => e.SourceSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("source_sanitation_condition_1");
@@ -1789,6 +1792,9 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
+            entity.Property(e => e.StructureDetails)
+    .HasColumnType("character varying")
+    .HasColumnName("structure_details");
             entity.Property(e => e.StructureSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("structure_sanitation_condition_1");
@@ -1876,6 +1882,9 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
+            entity.Property(e => e.TapDetails)
+    .HasColumnType("character varying")
+    .HasColumnName("tap_details");
             entity.Property(e => e.TapSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("tap_sanitation_condition_1");
@@ -1953,9 +1962,9 @@ public partial class WqsContext : DbContext
             entity.Property(e => e.UserId)
                 .HasDefaultValueSql("nextval('system.users_user_id_seq1'::regclass)")
                 .HasColumnName("user_id");
-            entity.Property(e => e.AssignedArea)
+            entity.Property(e => e.AssignedLab)
                 .HasColumnType("character varying")
-                .HasColumnName("assigned_area");
+                .HasColumnName("assigned_lab");
             entity.Property(e => e.CreatedBy)
                 .HasColumnType("character varying")
                 .HasColumnName("created_by");

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Wq_Surveillance.Models;
 using Wq_Surveillance.Models.API;
-using Wq_Surveillance.Service.OtherService;
+using Wq_Surveillance.Service.Other;
 
 namespace Wq_Surveillance.Controllers
 {

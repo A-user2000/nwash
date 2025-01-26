@@ -53,13 +53,25 @@
 
         <div class="table-responsive">
             <table class="table table-borderless" style="width:90%;">
-                    <tr><td>Name of schema</td><td>data</td></tr>
-                    <tr><td>Project code</td><td>@Model.ProCode</td></tr>
-                    <tr><td>Address</td><td>@Model.Address</td></tr>
-                    <tr><td>Total HH served</td><td>@Model.TotalHhServed</td> </tr>
+                    <tr>
+                        <td>Name of schema</td>
+                        <td><input type="text" class="form-control" asp-for="Address" /></td>
+                    </tr>
+                    <tr>
+                        <td>Project code</td>
+                        <td><input type="text" class="form-control" asp-for="ProCode" value="@Model.ProCode" /></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td><input type="text" class="form-control" asp-for="Address" value="@Model.Address" /></td>
+                    </tr>
+                    <tr>
+                        <td>Total HH served</td>
+                        <td><input type="number" class="form-control" asp-for="TotalHhServed" value="@Model.TotalHhServed" /></td>
+                    </tr>
                     <tr>
                         <td>Population served</td>
-                        <td>@Model.TotalPop</td>
+                        <td><input type="number" class="form-control" asp-for="TotalPop" value="@Model.TotalPop" /></td>
                     </tr>
             </table>
             <div style="color:#002F84;">

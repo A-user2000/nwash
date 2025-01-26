@@ -1,0 +1,172 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Surveillance Data - Charts";
+    var provinceData = ViewData["Province"] as List<Province>;
+    var districtData = ViewData["District"] as List<District>;
+    var munData = ViewData["Municipality"] as List<Municipality>;
+    var pro = HttpContextAccessor.HttpContext.Session.GetString("PProvince");
+    var dis = HttpContextAccessor.HttpContext.Session.GetString("PDistrict");
+    var mun = HttpContextAccessor.HttpContext.Session.GetString("PMunicipality");
+}
+<a asp-area="" asp-controller="WqsChartnTable" asp-action="TablesViewIndex" class="btn btn-outline-primary" style="margin: 5px;">Tables</a>
+
+<div class="row">
+    <form method="post" class="col-md-9">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Province</label>
+                    <select class="form-control" name="provinceCode" id="province" onchange="getDistrict();">
+                        <option value="">Select Province</option>
+                        @foreach (var province in provinceData)
+                        {
+                            <!option value="@province.ProvinceCode" @(province.ProvinceCode == HttpContextAccessor.HttpContext.Session.GetString("PProvince") ? "selected" : "")>@province.ProvinceName</!option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">District</label>
+                    <select class="form-control" name="districtCode" id="district" onchange="getMunicipality();">
+                        @if (dis != null || pro != null)
+                        {
+                            <option value="0">Select District</option>
+                            @foreach (var district in districtData)
+                            {
+                                <!option value="@district.DistrictCode" @(district.DistrictCode == HttpContextAccessor.HttpContext.Session.GetString("PDistrict") ? "selected" : "")>@district.DistrictCode - @district.DistrictName</!option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="0">Select District</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Municipality</label>
+                    <select class="form-control" name="munCode" id="municipality" onchange="changeMun();">
+                        @if (mun != null || dis != null)
+                        {
+                            <option value="0">Select Municipality</option>
+                            @foreach (var muni in munData)
+                            {
+                                <!option value="@muni.MunCode" @(muni.MunCode == HttpContextAccessor.HttpContext.Session.GetString("PMunicipality") ? "selected" : "")>@muni.MunCode - @muni.MunName</!option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="0">Select Municipality</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-1" id="download-btn">
+                <div class="form-group">
+                    <label class="control-label">&nbsp;</label><br />
+                    <button class="form-control btn btn-outline-success" type="button" style="width: inherit;" onclick="GetCharts()">Get</button>
+                </div>
+            </div>
+        </div>
+    </form>
+   
+    <div class="col-md-12">
+        <center><div id="load_text"></div></center>
+        <div id="ProjectData" style="margin-top:30px;"></div>
+    </div>
+</div>
+
+<script>
+    function getDistrict() {
+        var provinceCode = $("#province").val();
+        $('#district').html('<option value="0">Select District</option>'); // Clear district dropdown
+        $('#municipality').html('<option value="0">Select Municipality</option>'); // Clear municipality dropdown
+        $('#ProjectData').html(''); // Clear table
+
+        if (provinceCode) {
+            $.ajax({
+                type: "POST",
+                url: '/System/GetDistrict',
+                data: { 'ProvinceCode': provinceCode },
+                dataType: "json",
+                beforeSend: function () {
+                    $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
+                },
+                complete: function () {
+                    $("#load_text").text("");
+                },
+                success: function (data) {
+                    // Populate district dropdown
+                    $.each(data, function (index, item) {
+                        $('#district').append('<option value="' + item.districtCode + '">' + item.districtCode + ' - ' + item.districtName + '</option>');
+                    });
+                },
+                error: function () {
+                    alert("Failed to load districts. Please refresh and try again.");
+                }
+            });
+        }
+    }
+
+    function getMunicipality() {
+        var districtCode = $("#district").val();
+        $('#municipality').html('<option value="0">Select Municipality</option>'); // Clear municipality dropdown
+        $('#ProjectData').html(''); // Clear table
+
+        if (districtCode) {
+            $.ajax({
+                type: "POST",
+                url: '/System/GetMunicipality',
+                data: { 'dCode': districtCode },
+                dataType: "json",
+                beforeSend: function () {
+                    $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
+                },
+                complete: function () {
+                    $("#load_text").text("");
+                },
+                success: function (data) {
+                    // Populate municipality dropdown
+                    $.each(data, function (index, item) {
+                        $('#municipality').append('<option value="' + item.munCode + '">' + item.munCode + ' - ' + item.munName + '</option>');
+                    });
+                },
+                error: function () {
+                    alert("Failed to load municipalities. Please refresh and try again.");
+                }
+            });
+        }
+    }
+
+    function changeMun() {
+        $('#ProjectData').html('');
+    }
+
+    function GetCharts() {
+        var munCode = $("#municipality").val();
+        if (munCode !== "0") {
+            $.ajax({
+                type: 'POST',
+                url: '/WqsChartnTable/ChartView',
+                data: { 'MunCode': munCode },
+                beforeSend: function () {
+                    $("#load_text").html("<b>Loading Data...</b><br><img src='/images/file_loading.gif'/>");
+                },
+                complete: function () {
+                    $("#load_text").text("");
+                },
+                success: function (data) {
+                    $('#ProjectData').html(data); 
+                },
+                error: function () {
+                    alert("Failed to load project data. Please try again.");
+                }
+            });
+        } else {
+            alert("Please select a municipality first.");
+        }
+    }
+</script>

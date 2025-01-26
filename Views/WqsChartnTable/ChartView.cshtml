@@ -1,0 +1,388 @@
+﻿@{
+    var Form1aWspStatus = ViewBag.Form1aWspStatus;
+    var Form1bWspScore = ViewBag.Form1bWspScore;
+}
+<style>
+  .contentdiv{
+        box-shadow: 0 5px 6px #41434288;
+        border: 1px grey solid;
+        padding: 15px;
+    }
+    .subcontentdiv{
+        border: 1px #65616159 solid;
+        margin: 5px;
+        padding: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+    }
+    .chartdiv{
+        border: 1px #80808085 solid;
+        border-radius: 10px;
+        padding: 5px;
+        margin: 5px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+    }
+</style>
+<div>
+    <div>
+        <div class="chartdiv">
+            <h5 class="text-center">
+                खानेपानी सुरक्षा योजनाको मुख्य गतिविधि
+            </h5>
+            <div id="WspSCount" style="height:500px"></div>
+        </div>
+    </div><br />
+    <div class="row">
+        <div class="col chartdiv">
+            <h5 class="text-center">
+                खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)
+            </h5>
+            <div id="WspScore" style="height:500px"></div>
+        </div>
+        <div class="col chartdiv">
+            <h5 class="text-center">
+                HH served and population served by WSP Implemented WSS
+            </h5>
+            <div id="WspHhPop" style="height:500px"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //chart 1    
+    am4core.ready(function () {
+        am4core.useTheme(am4themes_dataviz);
+        am4core.useTheme(am4themes_animated);
+        am4core.addLicense("ch-custom-attribution");
+
+        var chart = am4core.create('WspSCount', am4charts.XYChart)
+        chart.colors.step = 2;
+        chart.exporting.menu = new am4core.ExportMenu();
+        chart.exporting.menu.items = [
+            {
+                "label": "...",
+                "menu": [
+                    {
+                        "label": "Image",
+                        "menu": [
+                            { "type": "png", "label": "PNG" },
+                            { "type": "pdfdata", "label": "PDF" },
+                            { "type": "jpg", "label": "JPG" },
+                            { "type": "svg", "label": "SVG" },
+                        ]
+                    }, {
+                        "label": "Print", "type": "print"
+                    }
+                ]
+            }
+        ];
+
+        chart.legend = new am4charts.Legend()
+        chart.legend.position = 'top'
+        chart.legend.paddingBottom = 20
+        chart.legend.labels.template.maxWidth = 95
+
+        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        xAxis.dataFields.category = 'category'
+        xAxis.renderer.cellStartLocation = 0.1
+        xAxis.renderer.cellEndLocation = 0.9
+        xAxis.renderer.grid.template.location = 0;
+
+        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        yAxis.min = 0;
+        yAxis.title.text = "WSP Count";
+
+        var label = xAxis.renderer.labels.template;
+        label.wrap = true;
+        label.maxWidth = 120;
+
+        function createSeries(value, name) {
+            var series = chart.series.push(new am4charts.ColumnSeries())
+            series.dataFields.valueY = value
+            series.dataFields.categoryX = 'category'
+            series.name = name
+
+            series.events.on("hidden", arrangeColumns);
+            series.events.on("shown", arrangeColumns);
+            series.columns.template.tooltipText = "{name}: [bold]{valueY}[/]";
+            var bullet = series.bullets.push(new am4charts.LabelBullet())
+            bullet.interactionsEnabled = false
+            bullet.dy = 30;
+            bullet.label.fill = am4core.color('#ffffff')
+            return series;
+        }
+
+        var chartData = [];
+
+        var chartdata = @Json.Serialize(Form1aWspStatus);
+
+        // Loop through chartdata and add each score category to the chart data
+        chartdata.forEach(function (data) {
+            chartData.push({
+                category: data.initiative_name,
+                first: data.bad,
+                second:data.average,
+                third: data.good,
+                fourth: data.excellent ,
+                fifth: data.bad + data.good + data.excellent + data.average
+            });
+        });
+
+        // Set the chart data
+        chart.data = chartData;
+              
+
+        //createSeries('fourth', 'Advanced');
+        createSeries('first', 'नराम्रो');
+        createSeries('second', 'ठिकै');
+        createSeries('third', ' राम्रो');
+        createSeries('fourth', 'धेरै राम्रो');
+        createSeries('fifth', 'Sum');
+
+        function arrangeColumns() {
+
+            var series = chart.series.getIndex(0);
+
+            var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+            if (series.dataItems.length > 1) {
+                var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                var delta = ((x1 - x0) / chart.series.length) * w;
+                if (am4core.isNumber(delta)) {
+                    var middle = chart.series.length / 2;
+
+                    var newIndex = 0;
+                    chart.series.each(function (series) {
+                        if (!series.isHidden && !series.isHiding) {
+                            series.dummyData = newIndex;
+                            newIndex++;
+                        }
+                        else {
+                            series.dummyData = chart.series.indexOf(series);
+                        }
+                    })
+                    var visibleCount = newIndex;
+                    var newMiddle = visibleCount / 2;
+
+                    chart.series.each(function (series) {
+                        var trueIndex = chart.series.indexOf(series);
+                        var newIndex = series.dummyData;
+
+                        var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+
+                        series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                    })
+                }
+            }
+        }
+    });
+
+
+    //chart 2
+    am4core.ready(function () {
+        am4core.useTheme(am4themes_dataviz);
+        am4core.useTheme(am4themes_animated);
+
+        // Create chart instance
+        var chart = am4core.create("WspScore", am4charts.XYChart3D);
+        chart.colors.list = [
+            am4core.color("#283250"),
+        ]
+        chart.exporting.menu = new am4core.ExportMenu();
+        chart.exporting.menu.items = [
+            {
+                "label": "...",
+                "menu": [
+                    {
+                        "label": "Image",
+                        "menu": [
+                            { "type": "png", "label": "PNG" },
+                            { "type": "pdfdata", "label": "PDF" },
+                            { "type": "jpg", "label": "JPG" },
+                            { "type": "svg", "label": "SVG" },
+                        ]
+                    }, {
+                        "label": "Print", "type": "print"
+                    }
+                ]
+            }
+        ];
+        var chartData = [];
+
+        var chartdata = @Json.Serialize(Form1bWspScore); // Serialize C# data to JSON
+
+        // Loop through chartdata and add each score category to the chart data
+        chartdata.forEach(function (data) {
+            chartData.push({
+                "Option": data.score_category, // Use score_category as FSMOption
+                "Numbers": data.total_projects    // Use total_projects as Numbers
+            });
+        });
+
+        // Set the chart data
+        chart.data = chartData;
+
+        // Create axes
+        let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = "Option";
+        categoryAxis.renderer.minGridDistance = 20;
+        var label = categoryAxis.renderer.labels.template;
+        label.wrap = true;
+        label.maxWidth = 90;
+        categoryAxis.tooltip.label.rotation = 270;
+        categoryAxis.tooltip.label.horizontalCenter = "right";
+        categoryAxis.tooltip.label.verticalCenter = "middle";
+
+        let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.title.text = "Total Projects";
+
+        // Create series
+        var series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.valueY = "Numbers";
+        series.dataFields.categoryX = "Option";
+        series.name = "Numbers";
+        series.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+        series.columns.template.fillOpacity = .8;
+        series.columns.template.width = am4core.percent(30);
+
+        var columnTemplate = series.columns.template;
+        columnTemplate.strokeWidth = 2;
+        columnTemplate.stroke = am4core.color("#FFFFFF");
+
+        columnTemplate.adapter.add("fill", function (fill, target) {
+            return chart.colors.getIndex(target.dataItem.index);
+        })
+
+        columnTemplate.adapter.add("stroke", function (stroke, target) {
+            return chart.colors.getIndex(target.dataItem.index);
+        })
+        chart.cursor = new am4charts.XYCursor();
+        chart.cursor.lineX.strokeOpacity = 0;
+        chart.cursor.lineY.strokeOpacity = 0;
+    }); // end am4core.ready()
+
+
+    //chart 3
+    am4core.ready(function () {
+        am4core.useTheme(am4themes_dataviz);
+        am4core.useTheme(am4themes_animated);
+        am4core.addLicense("ch-custom-attribution");
+
+        var chart = am4core.create('WspHhPop', am4charts.XYChart)
+        chart.colors.step = 2;
+        chart.exporting.menu = new am4core.ExportMenu();
+        chart.exporting.menu.items = [
+            {
+                "label": "...",
+                "menu": [
+                    {
+                        "label": "Image",
+                        "menu": [
+                            { "type": "png", "label": "PNG" },
+                            { "type": "pdfdata", "label": "PDF" },
+                            { "type": "jpg", "label": "JPG" },
+                            { "type": "svg", "label": "SVG" },
+                        ]
+                    }, {
+                        "label": "Print", "type": "print"
+                    }
+                ]
+            }
+        ];
+
+        chart.legend = new am4charts.Legend()
+        chart.legend.position = 'top'
+        chart.legend.paddingBottom = 20
+        chart.legend.labels.template.maxWidth = 95
+
+        var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+        xAxis.dataFields.category = 'category'
+        xAxis.renderer.cellStartLocation = 0.1
+        xAxis.renderer.cellEndLocation = 0.9
+        xAxis.renderer.grid.template.location = 0;
+
+        var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        yAxis.min = 0;
+        yAxis.title.text = "WSP Count";
+
+        var label = xAxis.renderer.labels.template;
+        label.wrap = true;
+        label.maxWidth = 120;
+
+        function createSeries(value, name) {
+            var series = chart.series.push(new am4charts.ColumnSeries())
+            series.dataFields.valueY = value
+            series.dataFields.categoryX = 'category'
+            series.name = name
+
+            series.events.on("hidden", arrangeColumns);
+            series.events.on("shown", arrangeColumns);
+            series.columns.template.tooltipText = "{name}: [bold]{valueY}[/]";
+            var bullet = series.bullets.push(new am4charts.LabelBullet())
+            bullet.interactionsEnabled = false
+            bullet.dy = 30;
+            bullet.label.fill = am4core.color('#ffffff')
+            return series;
+        }
+
+        var chartData = [];
+
+        var chartdata = @Json.Serialize(Form1bWspScore);
+
+        // Loop through chartdata and add each score category to the chart data
+        chartdata.forEach(function (data) {
+            chartData.push({
+                category: data.score_category,
+                first: data.total_households,
+                second: data.total_beneficiaries               
+            });
+        });
+
+        // Set the chart data
+        chart.data = chartData;
+
+
+        //createSeries('fourth', 'Advanced');
+        createSeries('first', 'Total HH Served');
+        createSeries('second', 'Population Served');
+     
+
+        function arrangeColumns() {
+
+            var series = chart.series.getIndex(0);
+
+            var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+            if (series.dataItems.length > 1) {
+                var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                var delta = ((x1 - x0) / chart.series.length) * w;
+                if (am4core.isNumber(delta)) {
+                    var middle = chart.series.length / 2;
+
+                    var newIndex = 0;
+                    chart.series.each(function (series) {
+                        if (!series.isHidden && !series.isHiding) {
+                            series.dummyData = newIndex;
+                            newIndex++;
+                        }
+                        else {
+                            series.dummyData = chart.series.indexOf(series);
+                        }
+                    })
+                    var visibleCount = newIndex;
+                    var newMiddle = visibleCount / 2;
+
+                    chart.series.each(function (series) {
+                        var trueIndex = chart.series.indexOf(series);
+                        var newIndex = series.dummyData;
+
+                        var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+
+                        series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                        series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                    })
+                }
+            }
+        }
+    });
+</script>

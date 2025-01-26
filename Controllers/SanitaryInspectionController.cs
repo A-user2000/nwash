@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-using Wq_Surveillance.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wq_Surveillance.Models;
+using Wq_Surveillance.Service.WashSanitaryInspections;
+using Wq_Surveillance.Service.WQS;
 
 namespace Wq_Surveillance.Controllers
 {

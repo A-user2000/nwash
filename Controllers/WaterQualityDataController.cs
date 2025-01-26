@@ -13,8 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Wq_Surveillance.Models;
-using Wq_Surveillance.Service;
-using Wq_Surveillance.Service.WaterQuality;
+using Wq_Surveillance.Service.WaterQualityData;
+using Wq_Surveillance.Service.WQS;
 
 namespace Wq_Surveillance.Controllers
 {

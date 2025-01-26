@@ -58,58 +58,11 @@
 <br />
 <div class="contentdiv">
     <div class="row subcontentdiv">
-        <div class="col-8" data-aos="fade-down">
-            <h5 class="text-center">Water Quality - No. of Sample</h5>
-            <table class="table table-responsive table-bordered" style="display:inline-table !important; border: 2px solid;" data-aos="fade-left">
-                <thead class="text-center" style="background: #58997485; border: 2px solid;">
-                        <tr>
-                            <th>Water Quality Paramaeter</th>
-                            <th colspan="2">E-Coli</th>
-                            <th colspan="2">PH</th>
-                            <th colspan="2">Turbidity</th>
-                            <th colspan="2">Iron</th>
-                            <th colspan="2">Arsenic</th>
-                            <th colspan="2">Residual Chlorine</th>
-                        </tr>
-                        <tr>
-                            <th>Standard Value</th>
-                            <th>0</th>
-                            <th>>0</td>
-                            <th>6.5 - 8.5</th>
-                            <th>Out of Range</th>
-                            <th>0 - 5</th>
-                            <th>Out of Range</th>
-                            <th>0 - 30</th>
-                            <th>Out of Range</th>
-                            <th>0 - 0.5</th>
-                            <th>Out of Range</th>
-                            <th>0.10 - 0.50</th>
-                            <th>Out of Range</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in WqTblProvince)
-                        {
-                            <tr>
-                                <td style="background: #58997485;">@item.province_name</td>
-                                <td>@item.ecoli_0</td>
-                                <td>@item.ecoli_less0</td>
-                                <td>@item.ph_between</td>
-                                <td>@item.ph_out_of_range</td>
-                                <td>@item.turbid_between</td>
-                                <td>@item.turbid_out_of_range</td>
-                                <td>@item.iron_between</td>
-                                <td>@item.iron_out_of_range</td>
-                                <td>@item.arsenic_between</td>
-                                <td>@item.arsenic_out_of_range</td>
-                                <td>@item.residual_between</td>
-                                <td>@item.residual_out_of_range</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        <div class="col-4" data-aos="fade-down">
+        <div class="col-7 chartdiv" data-aos="fade-left">
+            <h5 class="text-center">Data Collection</h5>
+            <div id="datacollection_linechart" style="height:500px"></div>
+        </div>
+        <div class="col" data-aos="fade-down">
             <div id="SurveillanceOverview" data-aos="fade-right">
                 <h5 class="text-center">Surveillance Overview</h5>
                 <div class="col" style=" background: linear-gradient(230deg, #003f1c, #6aab86);border-radius: 10px;padding: 20px;color: white;text-align: center;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
@@ -124,10 +77,58 @@
     </div>
       <br />
     <div class="row subcontentdiv">
-        <div class="col chartdiv" data-aos="fade-left">
-            <h5 class="text-center">Data Collection</h5>
-            <div id="datacollection_linechart" style="height:500px"></div>
-        </div>       
+        <div class="col-8" data-aos="fade-down">
+            <h5 class="text-center">Water Quality - No. of Sample</h5>
+            <table class="table table-responsive table-bordered" style="display:inline-table !important; border: 2px solid;" data-aos="fade-left">
+                <thead class="text-center" style="background: #58997485; border: 2px solid;">
+                    <tr>
+                        <th>Water Quality Paramaeter</th>
+                        <th colspan="2">E-Coli</th>
+                        <th colspan="2">PH</th>
+                        <th colspan="2">Turbidity</th>
+                        <th colspan="2">Iron</th>
+                        <th colspan="2">Arsenic</th>
+                        <th colspan="2">Residual Chlorine</th>
+                    </tr>
+                    <tr>
+                        <th>Standard Value</th>
+                        <th>0</th>
+                        <th>>0</td>
+                        <th>6.5 - 8.5</th>
+                        <th>Out of Range</th>
+                        <th>0 - 5</th>
+                        <th>Out of Range</th>
+                        <th>0 - 30</th>
+                        <th>Out of Range</th>
+                        <th>0 - 0.5</th>
+                        <th>Out of Range</th>
+                        <th>0.10 - 0.50</th>
+                        <th>Out of Range</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in WqTblProvince)
+                    {
+                        <tr>
+                            <td style="background: #58997485;">@item.province_name</td>
+                            <td>@item.ecoli_0</td>
+                            <td>@item.ecoli_less0</td>
+                            <td>@item.ph_between</td>
+                            <td>@item.ph_out_of_range</td>
+                            <td>@item.turbid_between</td>
+                            <td>@item.turbid_out_of_range</td>
+                            <td>@item.iron_between</td>
+                            <td>@item.iron_out_of_range</td>
+                            <td>@item.arsenic_between</td>
+                            <td>@item.arsenic_out_of_range</td>
+                            <td>@item.residual_between</td>
+                            <td>@item.residual_out_of_range</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+       
         <div class="col chartdiv" data-aos="fade-right">
             <h5 class="text-center">Data Collection - Province - Wise</h5>
             <div id="datacolprovincewise" style="height:500px"></div>
@@ -254,12 +255,26 @@
     chart.cursor.xAxis = dateAxis;
     chart.cursor.behavior = "zoomX"; // Enable zooming on the X-axis
 
-    // Add scrollbar for sideways scrolling
-    chart.scrollbarX = new am4charts.XYChartScrollbar();
-    chart.scrollbarX.series.push(series); // Connect scrollbar to the series
-    chart.scrollbarX.marginBottom = 20; // Adjust scrollbar position
-    chart.scrollbarX.startGrip.disabled = false; // Enable scrollbar grips
-    chart.scrollbarX.endGrip.disabled = false;
+    // Add scrollbar
+    chart.scrollbarX = new am4core.Scrollbar();
+
+    chart.scrollbarX.startGrip.background.fill = am4core.color("#CBA5A4");
+    chart.scrollbarX.endGrip.background.fill = am4core.color("#CBA5A4");
+    chart.scrollbarX.thumb.background.fill = am4core.color("#CBA5A4");
+
+    chart.scrollbarX.startGrip.icon.stroke = am4core.color("#8A5658");
+    chart.scrollbarX.endGrip.icon.stroke = am4core.color("#8A5658");
+
+
+    // Applied on hover
+    chart.scrollbarX.startGrip.background.states.getKey("hover").properties.fill = am4core.color("#BC8C8A");
+    chart.scrollbarX.endGrip.background.states.getKey("hover").properties.fill = am4core.color("#BC8C8A");
+    chart.scrollbarX.thumb.background.states.getKey("hover").properties.fill = am4core.color("#BC8C8A");
+
+    // Applied on mouse down
+    chart.scrollbarX.startGrip.background.states.getKey("down").properties.fill = am4core.color("#AD7371");
+    chart.scrollbarX.endGrip.background.states.getKey("down").properties.fill = am4core.color("#AD7371");
+    chart.scrollbarX.thumb.background.states.getKey("down").properties.fill = am4core.color("#AD7371");
 
     // Add legend
     chart.legend = new am4charts.Legend();

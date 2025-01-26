@@ -14,14 +14,9 @@ namespace Wq_Surveillance.Controllers
         {
             return View();
         }
-        public IActionResult DownloadAPK(string fileName)
+        public IActionResult DownloadApk()
         {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return NotFound("File name is required.");
-            }
-
-            // Construct the file path
+            // Path to the APK file in the wwwroot/apks folder
             var filePath = Path.Combine(_env.WebRootPath, "apks", "wqs.apk");
 
             // Check if the file exists
@@ -30,12 +25,9 @@ namespace Wq_Surveillance.Controllers
                 return NotFound("File not found.");
             }
 
-            // Determine the MIME type for the APK file
-            var mimeType = "application/vnd.android.package-archive";
-
-            // Return the file for download
+            // Serve the file for download
             var fileStream = System.IO.File.OpenRead(filePath);
-            return File(fileStream, mimeType, fileName);
+            return File(fileStream, "application/vnd.android.package-archive", "wqs.apk");
         }
     }
 }

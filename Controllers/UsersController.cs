@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Wq_Surveillance.Models;
-using Wq_Surveillance.Service;
-//using Wq_Surveillance.Service.Project;
+using Wq_Surveillance.Models.QueryTables;
+using Wq_Surveillance.Service.Project;
+using Wq_Surveillance.Service.Users;
+using Wq_Surveillance.Service.Project;
 
 namespace Wq_Surveillance.Controllers
 {
@@ -39,26 +41,64 @@ namespace Wq_Surveillance.Controllers
         }
 
         // GET: Users
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public ActionResult Index()
+        //{
+        //    if (_sUID == null) // Check if the user is not logged in
+        //    {
+        //        return RedirectToAction("Index", "Login", new { area = "" });
+        //    }
+        //    else
+        //    {
+        //        var sGrp = 1; // Hardcoded for testing
+        //        if (sGrp == 1)
+        //        {
+        //            // Fetch the list of users from the service
+        //            var userList = _service.GetAllUsers(); // Returns List<UserList>
+
+        //            // Fetch additional data for ViewBag
+        //            ViewBag.LabUsers = _service.GetLabUsers(); // Ensure this returns data
+        //            ViewBag.WASHUsers = _service.GetWashUsers(); // Ensure this returns data
+        //            ViewBag.InactiveUsers = _service.InactiveUsers(); // Ensure this returns data
+
+        //            // Debugging: Log the counts of each list
+        //            Console.WriteLine($"All Users: {userList?.Count}");
+        //            Console.WriteLine($"Lab Users: {ViewBag.LabUsers?.Count}");
+        //            Console.WriteLine($"WASH Users: {ViewBag.WASHUsers?.Count}");
+        //            Console.WriteLine($"Inactive Users: {ViewBag.InactiveUsers?.Count}");
+
+        //            // Pass the userList as the model to the view
+        //            return View(userList);
+        //        }
+        //        else
+        //        {
+        //            return RedirectToAction("Index", "Dashboard", new { area = "" });
+        //        }
+        //    }
+        //}
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public ActionResult Index()
         {
-            if (_sUID != null)
-                //if (_sUID == null)
+            if (_sUID == null) // Check if the user is not logged in
             {
                 return RedirectToAction("Index", "Login", new { area = "" });
             }
             else
             {
-                //var sGrp = _sessionData.HttpContext.Session.GetInt32("SGroups");
-                var sGrp = 1;
-                if (sGrp == 1 || sGrp == 2 || sGrp == 5 || sGrp == 7)
+                var sGrp = 1; // Hardcoded for testing
+                if (sGrp == 1)
                 {
-                    var AllUserList = _service.GetUsers(); //active
+                    // Fetch the list of users from the service
+                    var userList = _service.GetAllUsers();
 
+                    // Fetch additional data for ViewBag
+                    ViewBag.ActiveUsers = _service.ActiveUsers();
                     ViewBag.LabUsers = _service.GetLabUsers();
                     ViewBag.WASHUsers = _service.GetWashUsers();
                     ViewBag.InactiveUsers = _service.InactiveUsers();
-                    return View(AllUserList);
+
+                    // Pass the userList as the model to the view
+                    return View(userList);
                 }
                 else
                 {
@@ -67,7 +107,6 @@ namespace Wq_Surveillance.Controllers
             }
         }
 
-        // GET: Details/5
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public ActionResult Details(int id)
         {
@@ -434,21 +473,12 @@ namespace Wq_Surveillance.Controllers
         [HttpPost]
         public JsonResult GetLabListForUsers(string munCode)
         {
-            //if (munCode == "0")
-            //{
+           
             var dict = _wqsContext.LabRegistration
                         .Select(s => new { s.Uuid, s.LabName })
                         .OrderBy(item => item.LabName);
             return Json(dict);
-            //}
-            //else
-            //{
-            //    var dict = _wqsContext.LabRegistration
-            //                .Where(s => s.Municipality == munCode)
-            //                .Select(s => new { s.Uuid, s.LabName })
-            //                .OrderBy(item => item.LabName); ;
-            //    return Json(dict);
-            //}
+       
 
         }
         [HttpPost]

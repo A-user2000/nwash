@@ -1,0 +1,127 @@
+﻿@{
+    var tblname = ViewBag.TblName;
+}
+<div>
+    @if(tblname == "Tbl1")
+    {
+        <h4 class="text-center fw-bold">
+            खानेपानी सुरक्षा योजनाको मुख्य गतिविधि
+        </h4>
+        <table class="table table-responsive table-bordered" style="display:inline-table !important; border: 2px solid;" >
+            <thead class="text-center" style="background: #58997485; border: 2px solid;">  
+                <tr>
+                    <th rowspan="2">Initiative Name</th>
+                    <th colspan="4">Status</th>
+                </tr>
+                <tr>
+                    <th>
+                        नराम्रो
+                    </th>
+                    <th>
+                        ठिकै
+                    </th><th>
+                        राम्रो
+                    </th><th>
+                        धेरै राम्रो
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.initiative_name</td>
+                        <td>@item.bad</td>
+                        <td>@item.average</td>
+                        <td>@item.good</td>
+                        <td>@item.excellent</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (tblname == "Tbl2")
+    {
+        <h4 class="text-center fw-bold">
+            खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)
+        </h4>
+          <table class="table table-responsive table-bordered" style="display:inline-table !important; border: 2px solid;" >
+            <thead class="text-center" style="background: #58997485; border: 2px solid;">                 
+                <tr>
+                    <th>
+                        Range
+                    </th>
+                    <th>
+                        Status
+                    </th><th>
+                      No. of Scheme
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                 @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.ranges
+                        </td>
+                        <td>
+                            @item.score_category
+                        </td>
+                        <td>
+                            @item.total_projects
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (tblname == "Tbl3")
+    {
+        <h4 class="text-center fw-bold">
+            HH served and population served by WSP Implemented WSS
+        </h4>
+         <table class="table table-responsive table-bordered" style="display:inline-table !important; border: 2px solid;" >
+            <thead class="text-center" style="background: #58997485; border: 2px solid;">                 
+                <tr>
+                    <th>
+                        No. of Scheme
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                      Total HH Served
+                    </th>
+                    <th>
+                      Population Served
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                 @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.total_projects
+                        </td>
+                        <td>
+                            @item.score_category
+                        </td>
+                        <td>
+                            @item.total_households
+                        </td>
+                        <td>
+                            @item.total_beneficiaries
+                        </td>
+                     </tr>
+                }
+             </tbody>
+         </table>
+    }
+    else
+    {
+        <h5>So Such Tables</h5>
+    }
+</div>
+
