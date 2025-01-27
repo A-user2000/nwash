@@ -1523,9 +1523,7 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
-            entity.Property(e => e.ReservoirDetails)
-               .HasColumnType("character varying")
-               .HasColumnName("reservoir_details");
+          
             entity.Property(e => e.ResorvoirSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("resorvoir_sanitation_condition_1");
@@ -1636,9 +1634,7 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
-            entity.Property(e => e.SourceDetails)
-    .HasColumnType("character varying")
-    .HasColumnName("source_details");
+          
             entity.Property(e => e.SourceSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("source_sanitation_condition_1");
@@ -1769,8 +1765,6 @@ public partial class WqsContext : DbContext
         });
 
 
-
-
         modelBuilder.Entity<StructureSanitary>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("structure_sanitary_pkey");
@@ -1792,9 +1786,7 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
-            entity.Property(e => e.StructureDetails)
-    .HasColumnType("character varying")
-    .HasColumnName("structure_details");
+            
             entity.Property(e => e.StructureSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("structure_sanitation_condition_1");
@@ -1882,9 +1874,7 @@ public partial class WqsContext : DbContext
                 .HasColumnName("form_id");
             entity.Property(e => e.Latitude).HasColumnName("latitude");
             entity.Property(e => e.Longitude).HasColumnName("longitude");
-            entity.Property(e => e.TapDetails)
-    .HasColumnType("character varying")
-    .HasColumnName("tap_details");
+           
             entity.Property(e => e.TapSanitationCondition1)
                 .HasColumnType("character varying")
                 .HasColumnName("tap_sanitation_condition_1");

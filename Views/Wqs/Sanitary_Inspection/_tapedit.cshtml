@@ -1,4 +1,4 @@
-﻿@model Wq_Surveillance.Models.TapSanitary
+﻿@model List<Wq_Surveillance.Models.TapSanitary>
 @{
     var uuid = ViewData["uuid"] as string;
 }
@@ -20,21 +20,24 @@
                         <button class="btn btn-primary btn-sm ml-auto js-btn-next" type="button" title="Next" id="nextButton" onclick="btnNextPrev('reservoir')">Next</button>
                     </div>
 
-                    <!-- Your form starts here -->
-                    <form id="sanitaryForm" method="post" onsubmit="updateSanitaryData(event)">
+                  @for (int i = 0; i < Model.Count; i++)
+                    {
+                   <div class="form-container mb-4 p-3 border rounded">
+                            
+                    <form id="sanitaryForm" method="post" onsubmit="updateTapData(event)">
                         @Html.AntiForgeryToken() <!-- Add Anti-Forgery Token -->
-                        <input type="hidden" asp-for="FormId" />
+                                <input type="hidden" asp-for="@Model[i].FormId" />
 
                         <!-- Sanitary Inspection Section -->
                         <div style="background-color: #eee; color: rgba(0, 0, 0, 0.77) !important; margin-top:10px">
-                            <h7>Tap Details</h7>
+                            <h7>Tap Details @(i+1)</h7>
                         </div>
 
                         <table class="table table-borderless" style="width:90%;">
                             <tr>
                                 <td>धाराको वरीपरी राम्रो सरसफाइ छ ?</td>
                                 <td>
-                                    <select class="form-control multisteps-form__input" asp-for="TapSanitationCondition1">
+                                    <select class="form-control multisteps-form__input" asp-for="@Model[i].TapSanitationCondition1">
                                         <option value="छ">छ</option>
                                         <option value="छैन">छैन</option>
                                         <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -44,7 +47,7 @@
                             <tr>
                                 <td>धाराबाट बगेको पानी या बर्षातको पानी जम्मा हुने अवस्था छ ?</td>
                                 <td>
-                                    <select class="form-control multisteps-form__input" asp-for="TapSanitationCondition2">
+                                            <select class="form-control multisteps-form__input" asp-for="@Model[i].TapSanitationCondition2">
                                         <option value="छ">छ</option>
                                         <option value="छैन">छैन</option>
                                         <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -54,7 +57,7 @@
                             <tr>
                                 <td>भाडोमा खानेपानी थाप्नु भन्दा पहिले हात धुने गर्नुहुन्छ ?</td>
                                 <td>
-                                    <select class="form-control multisteps-form__input" asp-for="TapSanitationCondition3">
+                                            <select class="form-control multisteps-form__input" asp-for="@Model[i].TapSanitationCondition3">
                                         <option value="छ">छ</option>
                                         <option value="छैन">छैन</option>
                                         <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -64,7 +67,7 @@
                             <tr>
                                 <td>घरमा सूधारीएको चर्पि नभएको कारण पानी प्रदुषित हुने सम्भावना छ ?</td>
                                 <td>
-                                    <select class="form-control multisteps-form__input" asp-for="TapSanitationCondition4">
+                                            <select class="form-control multisteps-form__input" asp-for="@Model[i].TapSanitationCondition4">
                                         <option value="छ">छ</option>
                                         <option value="छैन">छैन</option>
                                         <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -74,7 +77,7 @@
                             <tr>
                                 <td>पिउने पानीको संकलन, भण्डारण या प्रयोग गर्दा स्वच्छताको कमिले धाराको सफा पानी प्रदुषित हुने अवस्था छ ?</td>
                                 <td>
-                                    <select class="form-control multisteps-form__input" asp-for="TapSanitationCondition5">
+                                            <select class="form-control multisteps-form__input" asp-for="@Model[i].TapSanitationCondition5">
                                         <option value="छ">छ</option>
                                         <option value="छैन">छैन</option>
                                         <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -84,7 +87,7 @@
                             <tr>
                                 <td>धाराको प्लेटफर्ममा फोहोर जस्तै कपडा धुने, भाँडा माझ्ने, नुहाउने, बच्चाको दिसा धुने, आदि गरिन्छ ?</td>
                                 <td>
-                                    <select class="form-control multisteps-form__input" asp-for="TapSanitationCondition6">
+                                            <select class="form-control multisteps-form__input" asp-for="@Model[i].TapSanitationCondition6">
                                         <option value="छ">छ</option>
                                         <option value="छैन">छैन</option>
                                         <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -96,10 +99,11 @@
                         <!-- Update and Cancel Buttons -->
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="button" class="btn btn-danger" onclick="deleteSanitaryData()">Delete</button>
+                                    <button type="button" class="btn btn-danger" onclick="deleteSanitaryData('@Model[i].Uuid')">Delete</button>
                         </div>
                     </form>
                 </div>
+                }
             </div>
         </div>
     </div>

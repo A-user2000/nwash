@@ -544,103 +544,136 @@ namespace Wq_Surveillance.Controllers
             var base64EncodedBytes = Convert.FromBase64String(encode);
             var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
 
-            // Get the Form1a data based on the decoded FormId
-            var hhData = _wqsContext.ReservoirSanitaries
-                              .Where(s => (s.FormId == uuid))
-                              .FirstOrDefault();
+            // Get all Form1a data with the matching FormId
+            var hhDataList = _wqsContext.ReservoirSanitaries
+                                  .Where(s => s.FormId == uuid)
+                                  .ToList();
 
             // If no data is found, handle the case gracefully
-            if (hhData == null)
+            if (!hhDataList.Any())
             {
                 return NotFound(); // or return an error view
             }
 
-            // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
-            //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
-            var formData = _mapper.Map<FormResDto>(hhData);
+            // Create a list to hold the mapped DTOs
+            var formDataList = new List<FormResDto>();
 
+            foreach (var hhData in hhDataList)
+            {
+                // Get the corresponding WqSurveillanceMain data
+                var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
 
-            formData.ProName = _wqsservices.GetName(data.ProjectName);
-            formData.ProCode = (data.ProjectName);
-            formData.Address = data.Address;  // Assuming GetAddress provides the address
+                // If data is found, map and populate the DTO
+                if (data != null)
+                {
+                    var formData = _mapper.Map<FormResDto>(hhData);
 
-            var res = _wqsservices.GetPopandHH(formData.ProCode);
-            formData.TotalPop = data.TotalBenificiaryPopulation;
+                    formData.ProName = _wqsservices.GetName(data.ProjectName);
+                    formData.ProCode = data.ProjectName;
+                    formData.Address = data.Address;
 
-            formData.TotalHhServed = data.TotalHhServed;
+                    var res = _wqsservices.GetPopandHH(formData.ProCode);
+                    formData.TotalPop = data.TotalBenificiaryPopulation;
+                    formData.TotalHhServed = data.TotalHhServed;
 
-            return View("~/Views/Wqs/Reservoir_Sanitary/ResView.cshtml", formData);
+                    formDataList.Add(formData);
+                }
+            }
+
+            // Pass the list of form data to the view
+            return View("~/Views/Wqs/Reservoir_Sanitary/ResView.cshtml", formDataList);
         }
+
         public IActionResult FormViewSou(string encode)
         {
             // Decode the base64 encoded FormId
             var base64EncodedBytes = Convert.FromBase64String(encode);
             var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
 
-            // Get the Form1a data based on the decoded FormId
-            var hhData = _wqsContext.SourceSanitaries
-                              .Where(s => (s.FormId == uuid))
-                              .FirstOrDefault();
+            // Get all SourceSanitaries data with the matching FormId
+            var hhDataList = _wqsContext.SourceSanitaries
+                                  .Where(s => s.FormId == uuid)
+                                  .ToList();
 
             // If no data is found, handle the case gracefully
-            if (hhData == null)
+            if (!hhDataList.Any())
             {
                 return NotFound(); // or return an error view
             }
 
-            // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
-            //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
-            var formData = _mapper.Map<FormSouDto>(hhData);
+            // Create a list to hold the mapped DTOs
+            var formDataList = new List<FormSouDto>();
 
+            foreach (var hhData in hhDataList)
+            {
+                // Get the corresponding WqSurveillanceMain data
+                var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
 
+                // If data is found, map and populate the DTO
+                if (data != null)
+                {
+                    var formData = _mapper.Map<FormSouDto>(hhData);
 
-            formData.ProCode = (data.ProjectName);
-            formData.Address = data.Address;  // Assuming GetAddress provides the address
-            formData.ProName = _wqsservices.GetName(data.ProjectName);
+                    formData.ProCode = data.ProjectName;
+                    formData.Address = data.Address;
+                    formData.ProName = _wqsservices.GetName(data.ProjectName);
 
-            var res = _wqsservices.GetPopandHH(formData.ProCode);// Assuming ExtractNumber is a method to get the ProCode
-            formData.TotalPop = data.TotalBenificiaryPopulation;
+                    var res = _wqsservices.GetPopandHH(formData.ProCode);
+                    formData.TotalPop = data.TotalBenificiaryPopulation;
+                    formData.TotalHhServed = data.TotalHhServed;
 
-            formData.TotalHhServed = data.TotalHhServed;
+                    formDataList.Add(formData);
+                }
+            }
 
-            return View("~/Views/Wqs/Source_Sanitary/SouView.cshtml", formData);
+            // Pass the list of form data to the view
+            return View("~/Views/Wqs/Source_Sanitary/SouView.cshtml", formDataList);
         }
+
         public IActionResult FormViewStr(string encode)
         {
             // Decode the base64 encoded FormId
             var base64EncodedBytes = Convert.FromBase64String(encode);
             var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
 
-            // Get the Form1a data based on the decoded FormId
-            var hhData = _wqsContext.StructureSanitaries
-                              .Where(s => (s.FormId == uuid))
-                              .FirstOrDefault();
+            // Get all StructureSanitaries data with the matching FormId
+            var hhDataList = _wqsContext.StructureSanitaries
+                                .Where(s => s.FormId == uuid)
+                                .ToList();
 
             // If no data is found, handle the case gracefully
-            if (hhData == null)
+            if (!hhDataList.Any())
             {
                 return NotFound(); // or return an error view
             }
 
-            // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
-            //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
-            var formData = _mapper.Map<FormStrDto>(hhData);
+            // Create a list to hold the mapped DTOs
+            var formDataList = new List<FormStrDto>();
 
+            foreach (var hhData in hhDataList)
+            {
+                // Get the corresponding WqSurveillanceMain data
+                var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
 
+                // If data is found, map and populate the DTO
+                if (data != null)
+                {
+                    var formData = _mapper.Map<FormStrDto>(hhData);
 
-            formData.ProCode = (data.ProjectName);
-            formData.Address = data.Address;  // Assuming GetAddress provides the address
-            formData.ProName = _wqsservices.GetName(data.ProjectName);
+                    formData.ProCode = data.ProjectName;
+                    formData.Address = data.Address;
+                    formData.ProName = _wqsservices.GetName(data.ProjectName);
 
-            var res = _wqsservices.GetPopandHH(formData.ProCode);// Assuming ExtractNumber is a method to get the ProCode
-            formData.TotalPop = data.TotalBenificiaryPopulation;
+                    var res = _wqsservices.GetPopandHH(formData.ProCode);
+                    formData.TotalPop = data.TotalBenificiaryPopulation;
+                    formData.TotalHhServed = data.TotalHhServed;
 
-            formData.TotalHhServed = data.TotalHhServed;
+                    formDataList.Add(formData);
+                }
+            }
 
-            return View("~/Views/Wqs/Structure_Sanitary/StrView.cshtml", formData);
+            // Pass the list of form data to the view
+            return View("~/Views/Wqs/Structure_Sanitary/StrView.cshtml", formDataList);
         }
         public IActionResult FormViewTap(string encode)
         {
@@ -648,34 +681,44 @@ namespace Wq_Surveillance.Controllers
             var base64EncodedBytes = Convert.FromBase64String(encode);
             var uuid = Encoding.UTF8.GetString(base64EncodedBytes);
 
-            // Get the Form1a data based on the decoded FormId
-            var hhData = _wqsContext.TapSanitaries
-                              .Where(s => (s.FormId == uuid))
-                              .FirstOrDefault();
+            // Get all TapSanitaries data with the matching FormId
+            var hhDataList = _wqsContext.TapSanitaries
+                                .Where(s => s.FormId == uuid)
+                                .ToList();
 
             // If no data is found, handle the case gracefully
-            if (hhData == null)
+            if (!hhDataList.Any())
             {
                 return NotFound(); // or return an error view
             }
 
-            // Map the data to the DTO (Form1ADto) and add ProCode and Address
-            var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));  // Assuming GetAddress is a method that provides the address
-            //var data = GetFormId(uuid); // Assuming GetFormId is a method that provides ProCode
-            var formData = _mapper.Map<FormTapDto>(hhData);
+            // Create a list to hold the mapped DTOs
+            var formDataList = new List<FormTapDto>();
 
+            foreach (var hhData in hhDataList)
+            {
+                // Get the corresponding WqSurveillanceMain data
+                var data = _wqsContext.WqSurveillanceMains.FirstOrDefault(p => p.Uuid.Equals(hhData.FormId));
 
+                // If data is found, map and populate the DTO
+                if (data != null)
+                {
+                    var formData = _mapper.Map<FormTapDto>(hhData);
 
-            formData.ProCode = (data.ProjectName);
-            formData.Address = data.Address;  // Assuming GetAddress provides the address
-            formData.ProName = _wqsservices.GetName(data.ProjectName);
+                    formData.ProCode = data.ProjectName;
+                    formData.Address = data.Address;
+                    formData.ProName = _wqsservices.GetName(data.ProjectName);
 
-            var res = _wqsservices.GetPopandHH(formData.ProCode);// Assuming ExtractNumber is a method to get the ProCode
-            formData.TotalPop = data.TotalBenificiaryPopulation;
+                    var res = _wqsservices.GetPopandHH(formData.ProCode);
+                    formData.TotalPop = data.TotalBenificiaryPopulation;
+                    formData.TotalHhServed = data.TotalHhServed;
 
-            formData.TotalHhServed = data.TotalHhServed;
+                    formDataList.Add(formData);
+                }
+            }
 
-            return View("~/Views/Wqs/Tap_Sanitary/TapView.cshtml", formData);
+            // Pass the list of form data to the view
+            return View("~/Views/Wqs/Tap_Sanitary/TapView.cshtml", formDataList);
         }
 
         public IActionResult SanView(string encode)
@@ -697,46 +740,47 @@ namespace Wq_Surveillance.Controllers
             var combinedData = new FormCombinedDto
             {
                 WqData = _mapper.Map<WQDto>(resMainData), // Populate the common data
-                ReservoirSanitationData = null,
-                SourceSanitationData = null,
-                StructureSanitationData = null,
-                TapSanitationData = null
+                ReservoirSanitationData = new List<FormResDto>(), // Initialize as empty list
+                SourceSanitationData = new List<FormSouDto>(), // Initialize as empty list
+                StructureSanitationData = new List<FormStrDto>(), // Initialize as empty list
+                TapSanitationData = new List<FormTapDto>() // Initialize as empty list
             };
-            combinedData.WqData.ProName= _wqsservices.GetName(resMainData.ProjectName);
+            combinedData.WqData.ProName = _wqsservices.GetName(resMainData.ProjectName);
+
             // Retrieve Reservoir Sanitation Data
             var hhData = _wqsContext.ReservoirSanitaries
                          .Where(s => s.FormId == uuid)
-                         .FirstOrDefault();
-            if (hhData != null)
+                         .ToList(); // Retrieve all matching records
+            if (hhData != null && hhData.Any())
             {
-                combinedData.ReservoirSanitationData = _mapper.Map<FormResDto>(hhData);
+                combinedData.ReservoirSanitationData = _mapper.Map<List<FormResDto>>(hhData);
             }
 
             // Retrieve Source Sanitation Data
             var sourceData = _wqsContext.SourceSanitaries
                              .Where(s => s.FormId == uuid)
-                             .FirstOrDefault();
-            if (sourceData != null)
+                             .ToList(); // Retrieve all matching records
+            if (sourceData != null && sourceData.Any())
             {
-                combinedData.SourceSanitationData = _mapper.Map<FormSouDto>(sourceData);
+                combinedData.SourceSanitationData = _mapper.Map<List<FormSouDto>>(sourceData);
             }
 
             // Retrieve Structure Sanitation Data
             var StructureData = _wqsContext.StructureSanitaries
                                 .Where(s => s.FormId == uuid)
-                                .FirstOrDefault();
-            if (StructureData != null)
+                                .ToList(); // Retrieve all matching records
+            if (StructureData != null && StructureData.Any())
             {
-                combinedData.StructureSanitationData = _mapper.Map<FormStrDto>(StructureData);
+                combinedData.StructureSanitationData = _mapper.Map<List<FormStrDto>>(StructureData);
             }
 
             // Retrieve Tap Sanitation Data
             var TapData = _wqsContext.TapSanitaries
                           .Where(s => s.FormId == uuid)
-                          .FirstOrDefault();
-            if (TapData != null)
+                          .ToList(); // Retrieve all matching records
+            if (TapData != null && TapData.Any())
             {
-                combinedData.TapSanitationData = _mapper.Map<FormTapDto>(TapData);
+                combinedData.TapSanitationData = _mapper.Map<List<FormTapDto>>(TapData);
             }
 
             return View("~/Views/Wqs/Sanitary_Inspection/SanitaryView.cshtml", combinedData);
@@ -964,10 +1008,10 @@ namespace Wq_Surveillance.Controllers
             // Initialize the combined data model
             var combinedData = new FormCombinedDto
             {
-                ReservoirSanitationData = null,
-                SourceSanitationData = null,
-                StructureSanitationData = null,
-                TapSanitationData = null
+                ReservoirSanitationData = new List<FormResDto>(), 
+                SourceSanitationData = new List<FormSouDto>(),    
+                StructureSanitationData = new List<FormStrDto>(), 
+                TapSanitationData = new List<FormTapDto>()        
             };
 
             // Retrieve Main Data (common for all forms)
@@ -983,37 +1027,37 @@ namespace Wq_Surveillance.Controllers
             // Retrieve Reservoir Sanitation Data
             var hhData = _wqsContext.ReservoirSanitaries
                          .Where(s => s.FormId == uuid)
-                         .FirstOrDefault();
-            if (hhData != null)
+                         .ToList(); // Retrieve all matching records
+            if (hhData != null && hhData.Any())
             {
-                combinedData.ReservoirSanitationData = _mapper.Map<FormResDto>(hhData);
+                combinedData.ReservoirSanitationData = _mapper.Map<List<FormResDto>>(hhData);
             }
 
             // Retrieve Source Sanitation Data
             var sourceData = _wqsContext.SourceSanitaries
                              .Where(s => s.FormId == uuid)
-                             .FirstOrDefault();
-            if (sourceData != null)
+                             .ToList(); // Retrieve all matching records
+            if (sourceData != null && sourceData.Any())
             {
-                combinedData.SourceSanitationData = _mapper.Map<FormSouDto>(sourceData);
+                combinedData.SourceSanitationData = _mapper.Map<List<FormSouDto>>(sourceData);
             }
 
             // Retrieve Structure Sanitation Data
             var StructureData = _wqsContext.StructureSanitaries
                                 .Where(s => s.FormId == uuid)
-                                .FirstOrDefault();
-            if (StructureData != null)
+                                .ToList(); // Retrieve all matching records
+            if (StructureData != null && StructureData.Any())
             {
-                combinedData.StructureSanitationData = _mapper.Map<FormStrDto>(StructureData);
+                combinedData.StructureSanitationData = _mapper.Map<List<FormStrDto>>(StructureData);
             }
 
             // Retrieve Tap Sanitation Data
             var TapData = _wqsContext.TapSanitaries
                           .Where(s => s.FormId == uuid)
-                          .FirstOrDefault();
-            if (TapData != null)
+                          .ToList(); // Retrieve all matching records
+            if (TapData != null && TapData.Any())
             {
-                combinedData.TapSanitationData = _mapper.Map<FormTapDto>(TapData);
+                combinedData.TapSanitationData = _mapper.Map<List<FormTapDto>>(TapData);
             }
 
             return PartialView("~/Views/Wqs/Sanitary_Inspection/SanEdit.cshtml", combinedData);
@@ -1026,7 +1070,7 @@ namespace Wq_Surveillance.Controllers
             {
                 var Tap = _wqsContext.TapSanitaries
                             .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
+                            .ToList();
                 if (Tap == null)
                 {
                     // Return a partial view with a message for empty Tap form
@@ -1038,7 +1082,7 @@ namespace Wq_Surveillance.Controllers
             {
                 var Reservoir = _wqsContext.ReservoirSanitaries
                             .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
+                            .ToList();
                 if (Reservoir == null)
                 {
                     // Return a partial view with a message for empty Reservoir form
@@ -1050,7 +1094,7 @@ namespace Wq_Surveillance.Controllers
             {
                 var Source = _wqsContext.SourceSanitaries
                             .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
+                            .ToList();
                 if (Source == null)
                 {
                     // Return a partial view with a message for empty Source form
@@ -1062,7 +1106,7 @@ namespace Wq_Surveillance.Controllers
             {
                 var Structure = _wqsContext.StructureSanitaries
                             .Where(s => s.FormId == uuid)
-                            .FirstOrDefault();
+                            .ToList();
                 if (Structure == null)
                 {
                     // Return a partial view with a message for empty Structure form

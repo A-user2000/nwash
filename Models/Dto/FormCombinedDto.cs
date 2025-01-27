@@ -2,11 +2,10 @@
 {
     public class FormCombinedDto
     {
-     
-        public FormResDto ReservoirSanitationData { get; set; }
-        public FormSouDto SourceSanitationData { get; set; }
-        public FormStrDto StructureSanitationData { get; set; }
-        public FormTapDto TapSanitationData { get; set; }
-        public WQDto WqData { get; set; }
+        public WQDto WqData { get; set; } // Single instance (common data)
+        public List<FormResDto> ReservoirSanitationData { get; set; } // List for multiple forms
+        public List<FormSouDto> SourceSanitationData { get; set; } // List for multiple forms
+        public List<FormStrDto> StructureSanitationData { get; set; } // List for multiple forms
+        public List<FormTapDto> TapSanitationData { get; set; } // List for multiple forms
     }
 }

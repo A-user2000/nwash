@@ -1,8 +1,9 @@
-﻿@model Wq_Surveillance.Models.Dto.FormTapDto
+﻿@model List<Wq_Surveillance.Models.Dto.FormTapDto>
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     var contextHost = HttpContextAccessor.HttpContext.Request.Host;
+    var firstForm = Model.FirstOrDefault(); // Get the first form for common details
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -10,10 +11,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width" />
     <title>Form Data - WQS</title>
-  
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" crossorigin="anonymous">
-  
-
     <style>
         .bsv {
             width: 275mm;
@@ -25,7 +23,6 @@
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
     </style>
-
 </head>
 <body>
     <div class="container-fluid" style="float: left; position: fixed; padding-top: 20px; padding-bottom: 20px; top: 0px;background: #fff !important;z-index: 999;">
@@ -38,91 +35,88 @@
         <div class="dropdown-divider" style="border-top: 1px solid #002f84;"></div>
 
         <div style="clear: both;"></div>
-        @if (contextHost.Host.Contains("training"))
-        {
-            <div class="container-fluid" style="background:#0330467a; padding:5px; float:left;">
-                <h5 style="margin-bottom:0px;">खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)</h5>
-            </div>
-        }
-        else
-        {
-            <div class="container-fluid" style="background:#e9ebf4; padding:5px; float:left;">
-                <h5 style="margin-bottom:0px;">
-                    खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)
-                </h5>
-            </div>
-        }
-
+        <div class="container-fluid" style="background:#e9ebf4; padding:5px; float:left;">
+            <h5 style="margin-bottom:0px;">
+                खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)
+            </h5>
+        </div>
     </div>
     <div class="bsv" style="margin-top:165px;">
+        <!-- Common Table (Displayed Only Once) -->
+        @if (firstForm != null)
+        {
+            <div class="table-responsive">
+                <table class="table table-borderless" style="width:90%;">
+                    <tr><td>Name of schema</td><td>@firstForm.ProName</td></tr>
+                    <tr><td>Project code</td><td>@firstForm.ProCode</td></tr>
+                    <tr><td>Address</td><td>@firstForm.Address</td></tr>
+                    <tr><td>Total HH served</td><td>@firstForm.TotalHhServed</td> </tr>
+                    <tr>
+                        <td>Population served</td>
+                        <td>@firstForm.TotalPop</td>
+                    </tr>
+                </table>
+            </div>
+        }
 
-
-        <div class="table-responsive">
-            <table class="table table-borderless" style="width:90%;">
-                <tr><td>Name of schema</td><td>@Model.ProName</td></tr>
-                <tr><td>Project code</td><td>@Model.ProCode</td></tr>
-                <tr><td>Address</td><td>@Model.Address</td></tr>
-                <tr><td>Total HH served</td><td>@Model.TotalHhServed</td> </tr>
-                <tr>
-                    <td>Population served</td>
-                    <td>@Model.TotalPop</td>
-                </tr>
-
-            </table>
+        <!-- Loop Through Each Form -->
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var form = Model[i];
             <div style="color:#002F84;">
-                <h4 style="text-align: center;">Sanitary Inspection</h4>
+                <h4 style="text-align: center;">Sanitary Inspection - Tap Form @(i + 1)</h4>
             </div>
             <br />
-            <table class="table table-borderless" style="width:90%;">
-                <tr>
-                    <td>
-                        धाराको वरीपरी राम्रो सरसफाइ छ ?
-                    </td>
-                    <td>@Model.TapSanitationCondition1</td>
-                </tr>
-                <tr>
-                    <td>
-                        धाराबाट बगेको पानी या बर्षातको पानी जम्मा हुने अवस्था छ ?
-                    </td>
-                    <td>
-                        @Model.TapSanitationCondition2
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        भाडोमा खानेपानी थाप्नु भन्दा पहिले हात धुने गर्नुहुन्छ ?
-                    </td>
-                    <td>@Model.TapSanitationCondition3</td>
-                </tr>
-                <tr>
-                    <td>
-                        घरमा सूधारीएको चर्पि नभएको कारण पानी प्रदुषित हुने सम्भावना छ ?
-                    </td>
-                    <td>@Model.TapSanitationCondition4</td>
-                </tr>
-                <tr>
-                    <td>
-                        पिउने पानीको संकलन, भण्डारण या प्रयोग गर्दा स्वच्छताको कमिले धाराको सफा पानी प्रदुषित हुने अवस्था छ ?
-                    </td>
-                    <td>@Model.TapSanitationCondition5</td>
-                </tr>
-                <tr>
-                    <td>
-                        धाराको प्लेटफर्ममा फोहोर जस्तै कपडा धुने, भाँडा माझ्ने, नुहाउने, बच्चाको दिसा धुने, आदि गरिन्छ ?
-                    </td>
-                    <td>@Model.TapSanitationCondition6</td>
-                </tr>
-                <tr>
-                    <td>
-                        धाराको मीटर जडानमा पानी लीकेज छ ?
-                    </td>
-                    <td>@Model.TapSanitationCondition7</td>
-                </tr>
-
-
-            </table>
-        </div>
+            <div class="table-responsive">
+                <table class="table table-borderless" style="width:90%;">
+                    <tr>
+                        <td>
+                            धाराको वरीपरी राम्रो सरसफाइ छ ?
+                        </td>
+                        <td>@form.TapSanitationCondition1</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            धाराबाट बगेको पानी या बर्षातको पानी जम्मा हुने अवस्था छ ?
+                        </td>
+                        <td>
+                            @form.TapSanitationCondition2
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            भाडोमा खानेपानी थाप्नु भन्दा पहिले हात धुने गर्नुहुन्छ ?
+                        </td>
+                        <td>@form.TapSanitationCondition3</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            घरमा सूधारीएको चर्पि नभएको कारण पानी प्रदुषित हुने सम्भावना छ ?
+                        </td>
+                        <td>@form.TapSanitationCondition4</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            पिउने पानीको संकलन, भण्डारण या प्रयोग गर्दा स्वच्छताको कमिले धाराको सफा पानी प्रदुषित हुने अवस्था छ ?
+                        </td>
+                        <td>@form.TapSanitationCondition5</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            धाराको प्लेटफर्ममा फोहोर जस्तै कपडा धुने, भाँडा माझ्ने, नुहाउने, बच्चाको दिसा धुने, आदि गरिन्छ ?
+                        </td>
+                        <td>@form.TapSanitationCondition6</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            धाराको मीटर जडानमा पानी लीकेज छ ?
+                        </td>
+                        <td>@form.TapSanitationCondition7</td>
+                    </tr>
+                </table>
+            </div>
+            <hr style="border-top: 2px solid #002f84; margin: 20px 0;" />
+        }
     </div>
     <div id="imgModal" class="modal fade">
         <div class="modal-dialog modal-lg" style="width: auto !important; display: block !important;">

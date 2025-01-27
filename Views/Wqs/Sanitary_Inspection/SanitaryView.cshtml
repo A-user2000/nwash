@@ -27,19 +27,19 @@
     <script src="~/js/styles.js" crossorigin="anonymous"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-  
-  
+
+
 
 
     <style>
         .bsv {
-            width: 275mm;
-            padding: 15mm 20mm;
-            margin: 10mm auto;
-            border: 1px #D3D3D3 solid;
-            border-radius: 0px;
-            background: white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        width: 275mm;
+        padding: 15mm 20mm;
+        margin: 10mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 0px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
     </style>
 
@@ -55,12 +55,12 @@
         <div class="dropdown-divider" style="border-top: 1px solid #002f84;"></div>
 
         <div style="clear: both;"></div>
-      
-            <div class="container-fluid" style="background:#e9ebf4; padding:5px; float:left;">
-                <h5 style="margin-bottom:0px;">
-                    खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)
-                </h5>
-            </div>
+
+        <div class="container-fluid" style="background:#e9ebf4; padding:5px; float:left;">
+            <h5 style="margin-bottom:0px;">
+                खानेपानी सुरक्षा योजनाको विस्तृत लेखाजोखा फाराम (WSP Implemented WSS)
+            </h5>
+        </div>
 
     </div>
     <div class="bsv" style="margin-top:165px;">
@@ -83,53 +83,49 @@
             </div>
             <br />
 
-            @if (Model.ReservoirSanitationData != null)
+            @if (Model.ReservoirSanitationData != null && Model.ReservoirSanitationData.Any())
             {
-            <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
-                <h5 style="float: left;">&nbsp;Reservoir</h5>
-                <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#reservoirInfo">▼</button>
-                <div style="clear: both"></div>
-            </div>
+                <div style="background-color: #7a99d2; color: #fff !important; margin-bottom: 10px; padding-bottom: 5px; padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Reservoir</h5>
+                    <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#reservoirInfo">▼</button>
+                    <div style="clear: both"></div>
+                </div>
                 <div id="reservoirInfo" class="collapse">
-                    <table class="table table-borderless" style="width:90%;">
-                        <tr>
-                            <td>
-                                पानी टंकि वरिपरि बार नभएको र छोप्ने ढक्कन नभएको कारण अनावस्यक मानिस तथा जनावर को प्रवेश तथा प्रदुषित गतिबिधि हुने गरेको
-                            </td>
-                            <td>@Model.ReservoirSanitationData.ResorvoirSanitationCondition1</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                पानी टंकि वरिपरि पेटि नभएको वा सतहको पानी तर्काउने ढल नभएको वा वरिपरि फोहर भएको कारण फोहर पानीको मिसावट हुनसक्ने सम्भावना भएको
-                            </td>
-                            <td>
-                                @Model.ReservoirSanitationData.ResorvoirSanitationCondition2
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                पानी टंकिको पर्खालमा चुहावट भएको या पाईप फिटिंगहरुमा चुहावट भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको
-                            </td>
-                            <td>@Model.ReservoirSanitationData.ResorvoirSanitationCondition3</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                नियमित सफाइको अभावमा पानी टंकिमा फोहोर जमेको या पर्खालमा जैबिक सतह बनेको ले जैबिक प्रदुषण बढेको
-                            </td>
-                            <td>@Model.ReservoirSanitationData.ResorvoirSanitationCondition4</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                पानी टंकिको उचित सन्चालन नभएको कारण प्रसोधित पानी प्रदुषित भएको
-                            </td>
-                            <td>@Model.ReservoirSanitationData.ResorvoirSanitationCondition5</td>
-                        </tr>
-                    </table>
+                    @foreach (var reservoir in Model.ReservoirSanitationData.Select((value, index) => new { value, index }))
+                    {
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="background-color: #d9e1f2; color: #000; padding: 5px; border-radius: 5px; width: fit-content;">
+                                Reservoir Sanitation Form @(reservoir.index + 1)
+                            </h6>
+                            <table class="table table-borderless" style="width:90%;">
+                                <tr>
+                                    <td>पानी टंकि वरिपरि बार नभएको र छोप्ने ढक्कन नभएको कारण अनावस्यक मानिस तथा जनावर को प्रवेश तथा प्रदुषित गतिबिधि हुने गरेको</td>
+                                    <td>@reservoir.value.ResorvoirSanitationCondition1</td>
+                                </tr>
+                                <tr>
+                                    <td>पानी टंकि वरिपरि पेटि नभएको वा सतहको पानी तर्काउने ढल नभएको वा वरिपरि फोहर भएको कारण फोहर पानीको मिसावट हुनसक्ने सम्भावना भएको</td>
+                                    <td>@reservoir.value.ResorvoirSanitationCondition2</td>
+                                </tr>
+                                <tr>
+                                    <td>पानी टंकिको पर्खालमा चुहावट भएको या पाईप फिटिंगहरुमा चुहावट भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको</td>
+                                    <td>@reservoir.value.ResorvoirSanitationCondition3</td>
+                                </tr>
+                                <tr>
+                                    <td>नियमित सफाइको अभावमा पानी टंकिमा फोहोर जमेको या पर्खालमा जैबिक सतह बनेको ले जैबिक प्रदुषण बढेको</td>
+                                    <td>@reservoir.value.ResorvoirSanitationCondition4</td>
+                                </tr>
+                                <tr>
+                                    <td>पानी टंकिको उचित सन्चालन नभएको कारण प्रसोधित पानी प्रदुषित भएको</td>
+                                    <td>@reservoir.value.ResorvoirSanitationCondition5</td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
                 </div>
             }
             else
             {
-                <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
+                <div style="background-color: #7a99d2; color: #fff !important; margin-bottom: 10px; padding-bottom: 5px; padding-top: 5px;">
                     <h5 style="float: left;">&nbsp;Reservoir</h5>
                     <div style="clear: both"></div>
                 </div>
@@ -137,116 +133,86 @@
                     Reservoir form data is not available.
                 </div>
             }
-                <!-- Source Sanitation Conditions Section -->
-            @if (Model.SourceSanitationData != null)
+           
+            @if (Model.SourceSanitationData != null && Model.SourceSanitationData.Any())
             {
-
-            <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
-                <h5 style="float: left;">&nbsp;Source</h5>
-                <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#sourceInfo">▼</button>
-                <div style="clear: both"></div>
-            </div>
-            <div id="sourceInfo" class="collapse">
-                <table class="table table-borderless" style="width:90%;">
-                    <tr>
-                        <td>
-                            मुहान क्षेत्रमा रुख बिरुवा नभएकोले बाढी पहिरोले मुहानमा प्रदूषण को सम्भावना भएको
-
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition1</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            खुल्ला दिसा पिसाब को कारण मुहान क्षेत्रमा जैविक प्रदूषणको संभावना
-
-                        </td>
-                        <td>
-                            @Model.SourceSanitationData.SourceSanitationCondition2
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            मुहान वरिपरि ढलको अभावमा जमिनको प्रदुषित पानी को प्रवेश
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition3</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            अनावश्यक मानिस तथा जनावरको मुहान क्षेत्रमा सजीलै पहुच
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition4</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            मुहान क्षेत्रमा सरसफाइको कमिले गर्दा प्रदूषण को सम्भावना
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition5</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            मुहान क्षेत्रमा रुख बिरुवा नभएकोले बाढि पहिरोले मुहानमा प्रदूषण को सम्भावना भएको
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition6</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            खुल्ला दिसा पिसाब को कारण मुहान क्षेत्रमा जैविक प्रदूषण को संभावना
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition7</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            पानीको मुहानमा खोला बाट पानी तर्काउदा अत्याधिक ठोस फोहर तथा धमीलोपनाको नियन्त्रणको अभाव
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition8</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            अनावश्यक मानिस तथा जनावरको मुहान क्षेत्रमा सजिलै पहुच
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition9</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            मुहान क्षेत्रमा सरसफाइको कमिले गर्दा प्रदूषण को सम्भावना
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition10</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            ट्युव वेलको हेड को वरीपरी पेटि नभएको कारण जमिनको फोहर पानी पाइप बाट भित्र प्रवेस हुनसक्ने सम्भावना
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition11</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            वरिपरि वातावरणमा खुल्ला दिसा पिसाब गरिने भएकोले जमिनको पानीमा जैबिक प्रदूषण हुनसक्ने सम्भावना
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition12</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            वरिपरि जमिनमा रसायनिक वा फोहर पानीको खुल्ला बिसर्जन भएको कारण जमिनको पानी प्रदुषित भएको
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition13</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            जमिनको पानीमा प्राकृतिक रुपमा रासायनिक मिसावट भएको
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition14</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            जमिन मुनि पानीको तिब्र रिचार्ज भएर वा तिब्र पम्पिंग भएको कारण सतहको फोहर पानी मिसावट भएको हुनसक्ने सम्भावना
-                        </td>
-                        <td>@Model.SourceSanitationData.SourceSanitationCondition15</td>
-                    </tr>
-
-
-                </table>
-             </div>
+                <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Source</h5>
+                    <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#sourceInfo">▼</button>
+                    <div style="clear: both"></div>
+                </div>
+                <div id="sourceInfo" class="collapse">
+                    @foreach (var source in Model.SourceSanitationData.Select((data, index) => new { data, index }))
+                    {
+                        <div style="margin-bottom: 15px;">
+                            <h6 style="background-color: #d9e1f2; color: #000; padding: 5px; border-radius: 5px; width: fit-content;">
+                                Source Sanitary Form @(source.index + 1)
+                            </h6>
+                            <table class="table table-borderless" style="width:90%;">
+                                <tr>
+                                    <td>मुहान क्षेत्रमा रुख बिरुवा नभएकोले बाढी पहिरोले मुहानमा प्रदूषण को सम्भावना भएको</td>
+                                    <td>@source.data.SourceSanitationCondition1</td>
+                                </tr>
+                                <tr>
+                                    <td>खुल्ला दिसा पिसाब को कारण मुहान क्षेत्रमा जैविक प्रदूषणको संभावना</td>
+                                    <td>@source.data.SourceSanitationCondition2</td>
+                                </tr>
+                                <tr>
+                                    <td>मुहान वरिपरि ढलको अभावमा जमिनको प्रदुषित पानी को प्रवेश</td>
+                                    <td>@source.data.SourceSanitationCondition3</td>
+                                </tr>
+                                <tr>
+                                    <td>अनावश्यक मानिस तथा जनावरको मुहान क्षेत्रमा सजीलै पहुच</td>
+                                    <td>@source.data.SourceSanitationCondition4</td>
+                                </tr>
+                                <tr>
+                                    <td>मुहान क्षेत्रमा सरसफाइको कमिले गर्दा प्रदूषण को सम्भावना</td>
+                                    <td>@source.data.SourceSanitationCondition5</td>
+                                </tr>
+                                <tr>
+                                    <td>मुहान क्षेत्रमा रुख बिरुवा नभएकोले बाढि पहिरोले मुहानमा प्रदूषण को सम्भावना भएको</td>
+                                    <td>@source.data.SourceSanitationCondition6</td>
+                                </tr>
+                                <tr>
+                                    <td>खुल्ला दिसा पिसाब को कारण मुहान क्षेत्रमा जैविक प्रदूषण को संभावना</td>
+                                    <td>@source.data.SourceSanitationCondition7</td>
+                                </tr>
+                                <tr>
+                                    <td>पानीको मुहानमा खोला बाट पानी तर्काउदा अत्याधिक ठोस फोहर तथा धमीलोपनाको नियन्त्रणको अभाव</td>
+                                    <td>@source.data.SourceSanitationCondition8</td>
+                                </tr>
+                                <tr>
+                                    <td>अनावश्यक मानिस तथा जनावरको मुहान क्षेत्रमा सजिलै पहुच</td>
+                                    <td>@source.data.SourceSanitationCondition9</td>
+                                </tr>
+                                <tr>
+                                    <td>मुहान क्षेत्रमा सरसफाइको कमिले गर्दा प्रदूषण को सम्भावना</td>
+                                    <td>@source.data.SourceSanitationCondition10</td>
+                                </tr>
+                                <tr>
+                                    <td>ट्युव वेलको हेड को वरीपरी पेटि नभएको कारण जमिनको फोहर पानी पाइप बाट भित्र प्रवेस हुनसक्ने सम्भावना</td>
+                                    <td>@source.data.SourceSanitationCondition11</td>
+                                </tr>
+                                <tr>
+                                    <td>वरिपरि वातावरणमा खुल्ला दिसा पिसाब गरिने भएकोले जमिनको पानीमा जैबिक प्रदूषण हुनसक्ने सम्भावना</td>
+                                    <td>@source.data.SourceSanitationCondition12</td>
+                                </tr>
+                                <tr>
+                                    <td>वरिपरि जमिनमा रसायनिक वा फोहर पानीको खुल्ला बिसर्जन भएको कारण जमिनको पानी प्रदुषित भएको</td>
+                                    <td>@source.data.SourceSanitationCondition13</td>
+                                </tr>
+                                <tr>
+                                    <td>जमिनको पानीमा प्राकृतिक रुपमा रासायनिक मिसावट भएको</td>
+                                    <td>@source.data.SourceSanitationCondition14</td>
+                                </tr>
+                                <tr>
+                                    <td>जमिन मुनि पानीको तिब्र रिचार्ज भएर वा तिब्र पम्पिंग भएको कारण सतहको फोहर पानी मिसावट भएको हुनसक्ने सम्भावना</td>
+                                    <td>@source.data.SourceSanitationCondition15</td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                </div>
             }
             else
             {
@@ -258,88 +224,71 @@
                     Source form data is not available.
                 </div>
             }
-            @if (Model.StructureSanitationData != null)
-{
-            <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
-                <h5 style="float: left;">&nbsp;Structure</h5>
-                <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#structureInfo">▼</button>
-                <div style="clear: both"></div>
-            </div>
-            <div id="structureInfo" class="collapse">
-                <table class="table table-borderless" style="width:90%;">
-                    <tr>
-                        <td>
-                            पानी टंकि वरिपरि बार नभएको र छोप्ने ढक्कन नभएको कारण अनावस्यक मानिस तथा जनावर को प्रवेश तथा प्रदुषित गतिबिधि हुने गरेको  ।
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition1</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            बिपिटि  वरी परी पेटि नभएको वा सतहको पानी तर्काउने ढल नभएको वा वरी परी फोहर भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको
-                        </td>
-                        <td>
-                            @Model.StructureSanitationData.StructureSanitationCondition2
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            बिपिटि टंकिको पर्खालमा चुहावट भएको या पाईप फिटिंगहरुमा चुहावट भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition3</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            बाढी पहिरो को कारण बिपिटिमा फोहर पानी ले पुरिएको कारण या भल्भमा फोहर पानी पसेको कारण प्रदुषण भएको
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition4</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            बिपिटिको उचित सन्चालन नभएको कारण प्रसोधित पानी प्रदुषित भएको
-
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition5</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            मुहानमा अत्तेधिक धमिलो पानी भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण सेडिमेन्ट वा रफिंग इकाइ बाट प्रसोद्धित पानीमा बढि धमिलो पानी भएको
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition6</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            मुहानमा अत्तेधिक घुलित पदार्थ भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण फिल्टर इकाइ  बाट प्रसोद्धित पानीमा बढि घुलित पदार्थ भएको
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition7</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            मुहानमा रसयनिक पदार्थ भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण प्रसोधित पानीमा बढि रसायनिक तत्व भएको
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition8</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            क्लोरिन को मात्रा कम भएको या सम्पर्क समय कम भएको या उचित रुपमा सन्चालन नभएको कारण प्रसोधित पानीमा इ-कोलि देखिएको छ
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition9</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            प्रसोधित पानीमा अपर्याप्त क्लोरिन अवशेष भएको ले पाइप प्रणालिमा हुने प्रदुषण को जोखिम भएको
-                        </td>
-                        <td>@Model.StructureSanitationData.StructureSanitationCondition10</td>
-                    </tr>
 
 
-                </table>
-            
-            </div>
+            @if (Model.StructureSanitationData != null && Model.StructureSanitationData.Any())
+            {
+                <div style="background-color: #7a99d2; color: #fff !important; margin-bottom: 10px; padding-bottom: 5px; padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Structure</h5>
+                    <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#structureInfo">▼</button>
+                    <div style="clear: both"></div>
+                </div>
+                <div id="structureInfo" class="collapse">
+                    @foreach (var structure in Model.StructureSanitationData.Select((value, index) => new { value, index }))
+                    {
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="background-color: #d9e1f2; color: #000; padding: 5px; border-radius: 5px; width: fit-content;">
+                                Structure Sanitation Form @(structure.index + 1)
+                            </h6>
+                            <table class="table table-borderless" style="width:90%;">
+                                <tr>
+                                    <td>पानी टंकि वरिपरि बार नभएको र छोप्ने ढक्कन नभएको कारण अनावस्यक मानिस तथा जनावर को प्रवेश तथा प्रदुषित गतिबिधि हुने गरेको ।</td>
+                                    <td>@structure.value.StructureSanitationCondition1</td>
+                                </tr>
+                                <tr>
+                                    <td>बिपिटि वरी परी पेटि नभएको वा सतहको पानी तर्काउने ढल नभएको वा वरी परी फोहर भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition2</td>
+                                </tr>
+                                <tr>
+                                    <td>बिपिटि टंकिको पर्खालमा चुहावट भएको या पाईप फिटिंगहरुमा चुहावट भएको कारण फोहर पानी को मिसावट हुनसक्ने सम्भावना भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition3</td>
+                                </tr>
+                                <tr>
+                                    <td>बाढी पहिरो को कारण बिपिटिमा फोहर पानी ले पुरिएको कारण या भल्भमा फोहर पानी पसेको कारण प्रदुषण भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition4</td>
+                                </tr>
+                                <tr>
+                                    <td>बिपिटिको उचित सन्चालन नभएको कारण प्रसोधित पानी प्रदुषित भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition5</td>
+                                </tr>
+                                <tr>
+                                    <td>मुहानमा अत्तेधिक धमिलो पानी भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण सेडिमेन्ट वा रफिंग इकाइ बाट प्रसोद्धित पानीमा बढि धमिलो पानी भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition6</td>
+                                </tr>
+                                <tr>
+                                    <td>मुहानमा अत्तेधिक घुलित पदार्थ भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण फिल्टर इकाइ बाट प्रसोद्धित पानीमा बढि घुलित पदार्थ भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition7</td>
+                                </tr>
+                                <tr>
+                                    <td>मुहानमा रसयनिक पदार्थ भएको या इकाइको क्षमता कम भएको या उचित सन्चालन नभएको कारण प्रसोधित पानीमा बढि रसायनिक तत्व भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition8</td>
+                                </tr>
+                                <tr>
+                                    <td>क्लोरिन को मात्रा कम भएको या सम्पर्क समय कम भएको या उचित रुपमा सन्चालन नभएको कारण प्रसोधित पानीमा इ-कोलि देखिएको छ</td>
+                                    <td>@structure.value.StructureSanitationCondition9</td>
+                                </tr>
+                                <tr>
+                                    <td>प्रसोधित पानीमा अपर्याप्त क्लोरिन अवशेष भएको ले पाइप प्रणालिमा हुने प्रदुषण को जोखिम भएको</td>
+                                    <td>@structure.value.StructureSanitationCondition10</td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                </div>
             }
             else
             {
-                <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
+                <div style="background-color: #7a99d2; color: #fff !important; margin-bottom: 10px; padding-bottom: 5px; padding-top: 5px;">
                     <h5 style="float: left;">&nbsp;Structure</h5>
                     <div style="clear: both"></div>
                 </div>
@@ -347,76 +296,66 @@
                     Structure form data is not available.
                 </div>
             }
-            @if (Model.TapSanitationData != null)
-{
-              <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
-                <h5 style="float: left;">&nbsp;Tap</h5>
-                <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#tapInfo">▼</button>
-                <div style="clear: both"></div>
-            </div>
-            <div id="tapInfo" class="collapse">
-                <table class="table table-borderless" style="width:90%;">
-                    <tr>
-                        <td>
-                            धाराको वरीपरी राम्रो सरसफाइ छ ?
-                        </td>
-                        <td>@Model.TapSanitationData.TapSanitationCondition1</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            धाराबाट बगेको पानी या बर्षातको पानी जम्मा हुने अवस्था छ ?
-                        </td>
-                        <td>
-                            @Model.TapSanitationData.TapSanitationCondition2
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            भाडोमा खानेपानी थाप्नु भन्दा पहिले हात धुने गर्नुहुन्छ ?
-                        </td>
-                        <td>@Model.TapSanitationData.TapSanitationCondition3</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            घरमा सूधारीएको चर्पि नभएको कारण पानी प्रदुषित हुने सम्भावना छ ?
-                        </td>
-                        <td>@Model.TapSanitationData.TapSanitationCondition4</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            पिउने पानीको संकलन, भण्डारण या प्रयोग गर्दा स्वच्छताको कमिले धाराको सफा पानी प्रदुषित हुने अवस्था छ ?
-                        </td>
-                        <td>@Model.TapSanitationData.TapSanitationCondition5</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            धाराको प्लेटफर्ममा फोहोर जस्तै कपडा धुने, भाँडा माझ्ने, नुहाउने, बच्चाको दिसा धुने, आदि गरिन्छ ?
-                        </td>
-                        <td>@Model.TapSanitationData.TapSanitationCondition6</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            धाराको मीटर जडानमा पानी लीकेज छ ?
-                        </td>
-                        <td>@Model.TapSanitationData.TapSanitationCondition7</td>
-                    </tr>
 
 
-                </table>
-            
-            </div>
+            @if (Model.TapSanitationData != null && Model.TapSanitationData.Any())
+            {
+                <div style="background-color: #7a99d2; color: #fff !important; margin-bottom: 10px; padding-bottom: 5px; padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Tap</h5>
+                    <button type="button" class="btn coll-btn btn-sm" style="float:right" data-toggle="collapse" data-target="#tapInfo">▼</button>
+                    <div style="clear: both"></div>
+                </div>
+                <div id="tapInfo" class="collapse">
+                    @foreach (var tap in Model.TapSanitationData.Select((value, index) => new { value, index }))
+                    {
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="background-color: #d9e1f2; color: #000; padding: 5px; border-radius: 5px; width: fit-content;">
+                                Tap Sanitation Form @(tap.index + 1)
+                            </h6>
+                            <table class="table table-borderless" style="width:90%;">
+                                <tr>
+                                    <td>धाराको वरीपरी राम्रो सरसफाइ छ ?</td>
+                                    <td>@tap.value.TapSanitationCondition1</td>
+                                </tr>
+                                <tr>
+                                    <td>धाराबाट बगेको पानी या बर्षातको पानी जम्मा हुने अवस्था छ ?</td>
+                                    <td>@tap.value.TapSanitationCondition2</td>
+                                </tr>
+                                <tr>
+                                    <td>भाडोमा खानेपानी थाप्नु भन्दा पहिले हात धुने गर्नुहुन्छ ?</td>
+                                    <td>@tap.value.TapSanitationCondition3</td>
+                                </tr>
+                                <tr>
+                                    <td>घरमा सूधारीएको चर्पि नभएको कारण पानी प्रदुषित हुने सम्भावना छ ?</td>
+                                    <td>@tap.value.TapSanitationCondition4</td>
+                                </tr>
+                                <tr>
+                                    <td>पिउने पानीको संकलन, भण्डारण या प्रयोग गर्दा स्वच्छताको कमिले धाराको सफा पानी प्रदुषित हुने अवस्था छ ?</td>
+                                    <td>@tap.value.TapSanitationCondition5</td>
+                                </tr>
+                                <tr>
+                                    <td>धाराको प्लेटफर्ममा फोहोर जस्तै कपडा धुने, भाँडा माझ्ने, नुहाउने, बच्चाको दिसा धुने, आदि गरिन्छ ?</td>
+                                    <td>@tap.value.TapSanitationCondition6</td>
+                                </tr>
+                                <tr>
+                                    <td>धाराको मीटर जडानमा पानी लीकेज छ ?</td>
+                                    <td>@tap.value.TapSanitationCondition7</td>
+                                </tr>
+                            </table>
+                        </div>
+                    }
+                </div>
             }
-else
-{
-    <div style="background-color: #7a99d2;color: #fff !important;margin-bottom: 10px;padding-bottom: 5px;padding-top: 5px;">
-        <h5 style="float: left;">&nbsp;Tap</h5>
-        <div style="clear: both"></div>
-    </div>
-    <div class="alert alert-info" role="alert">
-        Tap form data is not available.
-    </div>
-}
+            else
+            {
+                <div style="background-color: #7a99d2; color: #fff !important; margin-bottom: 10px; padding-bottom: 5px; padding-top: 5px;">
+                    <h5 style="float: left;">&nbsp;Tap</h5>
+                    <div style="clear: both"></div>
+                </div>
+                <div class="alert alert-info" role="alert">
+                    Tap form data is not available.
+                </div>
+            }
 
         </div>
     </div>

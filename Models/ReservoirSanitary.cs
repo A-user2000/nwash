@@ -25,7 +25,6 @@ public partial class ReservoirSanitary
     public string? ResorvoirSanitationCondition4 { get; set; }
 
     public string? ResorvoirSanitationCondition5 { get; set; }
-    public string? ReservoirDetails { get; set; }
     public double? Latitude { get; set; }
 
     public double? Longitude { get; set; }
