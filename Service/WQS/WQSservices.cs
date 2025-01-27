@@ -545,6 +545,59 @@ namespace Wq_Surveillance.Service.WQS
 
             return delValue;
         }
+        public bool UpdateSourceForm(SourceSanitary WData, string username)
+        {
+            // Find by BOTH FormId AND UUID
+            var existingRecord = _wqsContext.SourceSanitaries
+                .FirstOrDefault(s =>
+                    s.FormId == WData.FormId &&
+                    s.Uuid == WData.Uuid);
+
+            if (existingRecord == null) return false;
+
+            // Update fields
+            existingRecord.SourceSanitationCondition1 = WData.SourceSanitationCondition1;
+            existingRecord.SourceSanitationCondition2 = WData.SourceSanitationCondition2;
+                existingRecord.SourceSanitationCondition3 = WData.SourceSanitationCondition3;
+                existingRecord.SourceSanitationCondition4 = WData.SourceSanitationCondition4;
+                existingRecord.SourceSanitationCondition5 = WData.SourceSanitationCondition5;
+                existingRecord.SourceSanitationCondition6 = WData.SourceSanitationCondition6;
+                existingRecord.SourceSanitationCondition7 = WData.SourceSanitationCondition7;
+                existingRecord.SourceSanitationCondition8 = WData.SourceSanitationCondition8;
+                existingRecord.SourceSanitationCondition9 = WData.SourceSanitationCondition9;
+                existingRecord.SourceSanitationCondition10 = WData.SourceSanitationCondition10;
+                existingRecord.SourceSanitationCondition11 = WData.SourceSanitationCondition11;
+                existingRecord.SourceSanitationCondition12 = WData.SourceSanitationCondition12;
+                existingRecord.SourceSanitationCondition13 = WData.SourceSanitationCondition13;
+                existingRecord.SourceSanitationCondition14 = WData.SourceSanitationCondition14;
+                existingRecord.SourceSanitationCondition15 = WData.SourceSanitationCondition15;
+
+                // Update audit fields
+                existingRecord.EditedBy = username;
+                existingRecord.EditedOn = DateTime.UtcNow;
+
+                _wqsContext.SaveChanges();
+           
+
+            return true; // Explicit null return for not found
+        }
+
+        public bool DeleteSourceForm(string formId, string uuid)
+        {
+            // Find by BOTH identifiers
+            var recordToDelete = _wqsContext.SourceSanitaries
+                .FirstOrDefault(s =>
+                    s.FormId == formId &&
+                    s.Uuid == uuid);
+
+            if (recordToDelete == null) return false;
+
+            _wqsContext.SourceSanitaries.Remove(recordToDelete);
+            int affectedRows = _wqsContext.SaveChanges();
+
+            // Return true only if exactly 1 row was affected
+            return affectedRows == 1;
+        }
 
     }
 }

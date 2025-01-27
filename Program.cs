@@ -74,6 +74,6 @@ var cookiePolicyOptions = new CookiePolicyOptions
 
 app.UseCookiePolicy(cookiePolicyOptions);
 
-app.MapControllerRoute(name: "default", pattern: "{controller=WqsDashboard}/{action=Index}/{id?}");
+app.MapControllerRoute(name: "default", pattern: "{controller=Wqs}/{action=Index}/{id?}");
 
 app.Run();

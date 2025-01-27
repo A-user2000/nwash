@@ -64,55 +64,7 @@ namespace Wq_Surveillance.Controllers
 
 
 
-        //public PartialViewResult Wqdata(string munCode)
-        //{
-
-        //    ViewData["munCode"] = munCode;
-
-        //    var data = _wqsContext.WqSurveillanceMains
-        //        .AsEnumerable() // Converts to in-memory collection
-        //        .Where(s => s.Municipality != null && _wqsservices.ExtractNumber(s.Municipality) == munCode)
-        //        .OrderByDescending(item => item.Id)
-        //        .ToList();
-
-        //    List<WQDto> dto = new();
-
-        //    foreach (var item in data)
-        //    {
-        //        WQDto val = _mapper.Map<WQDto>(item);
-        //        var pd = _wqsContext.ProjectDetails.FirstOrDefault(p => p.ProCode.Equals(_wqsservices.ExtractNumber(item.ProjectName)));
-
-        //        if (pd != null)
-        //        {
-        //            var projectData = _wqsContext.Taps
-        //            .Where(t => t.ProUuid.Equals(pd.Uuid)).ToList();
-
-        //            if (projectData != null)
-        //            {
-        //                val.TotalPop = 0;
-        //                val.TotalHh = 0;
-        //                foreach (var pdl in projectData)
-        //                {
-        //                    val.TotalPop += (pdl.MalePop ?? 0) + (pdl.FemalePop ?? 0);
-        //                    val.TotalHh += (pdl.HhServerd ?? 0);
-
-        //                }
-        //            }
-        //            else
-        //            {
-        //                val.TotalPop = null;  // Or 0 if it's an int
-        //                val.TotalHhServed = null;  // Or 0 if it's an int
-        //            }
-        //        }
-        //        else
-        //        {
-        //            val.TotalPop = null;  // Or 0 if it's an int
-        //            val.TotalHh = null;  // Or 0 if it's an int
-        //        }
-        //        dto.Add(val);
-        //    }
-        //}
-
+  
         public PartialViewResult Wqdata(string munCode)
         {
 
@@ -1248,18 +1200,47 @@ namespace Wq_Surveillance.Controllers
             }
 
             var username = User.Identity.Name;
-            var updateData = _wqsservices.UpdateWQSDataSou(WData, username);
 
-            if (updateData != null)
+            // Now returns boolean
+            var updateSuccess = _wqsservices.UpdateSourceForm(WData, username);
+
+            return Json(new
             {
-                return Json(new { success = true, message = "Data Updated Successfully" });
+                success = updateSuccess,
+                message = updateSuccess ? "Data Updated Successfully" : "Record not found"
+            });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteSourceForm([FromBody] DeleteSourceRequest request)
+        {
+            try
+            {
+                // Decode from base64
+                var mainFormId = DecodeBase64(request.mainFormId);
+                var sourceUuid = DecodeBase64(request.sourceUuid);
+
+                _wqsservices.DeleteSourceForm(mainFormId, sourceUuid);
+                return Json(new { success = true });
             }
-            else
+            catch (Exception ex)
             {
-                return Json(new { success = false, message = "Something Went Wrong. Please try again later." });
+                return Json(new { success = false, message = ex.Message });
             }
         }
-          [HttpPost]
+
+        private string DecodeBase64(string encoded)
+        {
+            byte[] data = Convert.FromBase64String(encoded);
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public class DeleteSourceRequest
+        {
+            public string mainFormId { get; set; }
+            public string sourceUuid { get; set; }
+        }
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult FormSanStrEditPost(StructureSanitary WData)
         {

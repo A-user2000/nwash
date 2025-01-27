@@ -30,6 +30,10 @@ namespace Wq_Surveillance.Service.WQS
         public int DeleteSou(string FormId);
         public int DeleteStr(string FormId);
         public int DeleteTap(string FormId);
+        public bool UpdateSourceForm(SourceSanitary WData, string username);
+
+        public bool DeleteSourceForm(string formId, string uuid);
+
 
 
 

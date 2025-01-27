@@ -1,44 +1,37 @@
 ﻿@model List<Wq_Surveillance.Models.SourceSanitary>
 @{
-    var uuid = ViewData["uuid"] as string;
+    var mainFormId = ViewData["uuid"] as string;
 }
-<!-- Add the multisteps-form styling and structure -->
+
 <div class="row">
     <div class="col-12 col-lg-8 m-auto">
         <div class="multisteps-form__form">
-            <div class="multisteps-form__panel shadow p-4 rounded bg-white js-active" data-animation="scaleIn">
-                <h3 class="multisteps-form__title">Source</h3>
+            <div class="multisteps-form__panel shadow p-4 rounded bg-white js-active">
+                <h3 class="multisteps-form__title">Source Forms</h3>
                 <div class="multisteps-form__content">
-                    <style>
-                        .button-row {
-                            display: flex;
-                            justify-content: space-between; /* Space between Prev and Next buttons */
-                        }
-                    </style>
-                    <div class="button-row d-flex mt-4">
-                        <button class="btn btn-primary btn-sm js-btn-prev" type="button" title="Prev" id="reservoir" onclick="btnNextPrev('reservoir')">Prev</button>
-                        <button class="btn btn-primary btn-sm ml-auto js-btn-next" type="button" title="Next" id="structure" onclick="btnNextPrev('structure')">Next</button>
-                    </div>
-                    <!-- Loop through each SourceSanitary item in the list -->
-                    @for (int i = 0; i < Model.Count; i++)
+                    @foreach (var source in Model)
                     {
                         <div class="form-container mb-4 p-3 border rounded">
                             <form class="sanitaryForm" method="post" onsubmit="updateSourceData(event)">
-                                @Html.AntiForgeryToken() <!-- Add Anti-Forgery Token -->
-                                <input type="hidden" asp-for="@Model[i].FormId" />
+                                @Html.AntiForgeryToken()
 
-                                <!-- Sanitary Inspection Section -->
-                                <div style="background-color: #eee; color: rgba(0, 0, 0, 0.77) !important; margin-top:10px">
-                                    <h7>Source Details @(i + 1)</h7>
+                                <!-- Main Form Identifier -->
+                                <input type="hidden" name="FormId" value="@mainFormId" />
+
+                                <!-- Individual Source Form Identifier -->
+                                <input type="hidden" asp-for="@source.Uuid" name="Uuid" />
+
+                                <div style="background-color: #eee; margin-top:10px">
+                                    <h7>Source Details (@source.Uuid)</h7>
                                 </div>
 
                                 <table class="table table-borderless" style="width:90%;">
                                     <tr>
+                                        <td>मुहान क्षेत्रमा रुख बिरुवा...</td>
                                         <td>
-                                            मुहान क्षेत्रमा रुख बिरुवा नभएकोले बाढी पहिरोले मुहानमा प्रदूषण को सम्भावना भएको
-                                        </td>
-                                        <td>
-                                            <select class="form-control" asp-for="@Model[i].SourceSanitationCondition1">
+                                            <select class="form-control"
+                                                    asp-for="@source.SourceSanitationCondition1"
+                                                    name="SourceSanitationCondition1">
                                                 <option value="छ">छ</option>
                                                 <option value="छैन">छैन</option>
                                                 <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -50,7 +43,7 @@
                                             खुल्ला दिसा पिसाब को कारण मुहान क्षेत्रमा जैविक प्रदूषणको संभावना
                                         </td>
                                         <td>
-                                            <select class="form-control" asp-for="@Model[i].SourceSanitationCondition2">
+                                            <select class="form-control" asp-for="@source.SourceSanitationCondition2" name="SourceSanitationCondition2">
                                                 <option value="छ">छ</option>
                                                 <option value="छैन">छैन</option>
                                                 <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -62,7 +55,7 @@
                                             मुहान वरिपरि ढलको अभावमा जमिनको प्रदुषित पानी को प्रवेश
                                         </td>
                                         <td>
-                                            <select class="form-control" asp-for="@Model[i].SourceSanitationCondition3">
+                                            <select class="form-control" asp-for="@source.SourceSanitationCondition3" name="SourceSanitationCondition3">
                                                 <option value="छ">छ</option>
                                                 <option value="छैन">छैन</option>
                                                 <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
@@ -74,19 +67,70 @@
                                             अनावश्यक मानिस तथा जनावरको मुहान क्षेत्रमा सजीलै पहुच
                                         </td>
                                         <td>
-                                            <select class="form-control" asp-for="@Model[i].SourceSanitationCondition4">
+                                            <select class="form-control" asp-for="@source.SourceSanitationCondition4" name="SourceSanitationCondition4">
                                                 <option value="छ">छ</option>
                                                 <option value="छैन">छैन</option>
                                                 <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
                                             </select>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td>
+                                            मुहान क्षेत्रमा सरसफाइको कमिले गर्दा प्रदूषण को सम्भावना
+                                        </td>
+                                        <td>
+                                            <select class="form-control" asp-for="@source.SourceSanitationCondition5" name="SourceSanitationCondition5">
+                                                <option value="छ">छ</option>
+                                                <option value="छैन">छैन</option>
+                                                <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            मुहान क्षेत्रमा रुख बिरुवा नभएकोले बाढि पहिरोले मुहानमा प्रदूषण को सम्भावना भएको
+                                        </td>
+                                        <td>
+                                            <select class="form-control" asp-for="@source.SourceSanitationCondition6" name="SourceSanitationCondition6">
+                                                <option value="छ">छ</option>
+                                                <option value="छैन">छैन</option>
+                                                <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            खुल्ला दिसा पिसाब को कारण मुहान क्षेत्रमा जैविक प्रदूषण को संभावना
+                                        </td>
+                                        <td>
+                                            <select class="form-control" asp-for="@source.SourceSanitationCondition7" name="SourceSanitationCondition7">
+                                                <option value="छ">छ</option>
+                                                <option value="छैन">छैन</option>
+                                                <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            पानीको मुहानमा खोला बाट पानी तर्काउदा अत्याधिक ठोस फोहर तथा धमीलोपनाको नियन्त्रणको अभाव
+                                        </td>
+                                        <td>
+                                            <select class="form-control" asp-for="@source.SourceSanitationCondition8" name="SourceSanitationCondition8">
+                                                <option value="छ">छ</option>
+                                                <option value="छैन">छैन</option>
+                                                <option value="आंसिक रुपमा छ">आंसिक रुपमा छ</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <!-- Repeat similar structure for other fields -->
                                 </table>
 
-                                <!-- Save and Delete Buttons -->
                                 <div class="text-center mt-4">
                                     <button type="submit" class="btn btn-primary">Save</button>
-                                    <button type="button" class="btn btn-danger" onclick="deleteSanitaryData('@Model[i].Uuid')">Delete</button>
+                                    <button type="button" class="btn btn-danger"
+                                            onclick="deleteSanitaryData('@mainFormId', '@source.Uuid')">
+                                        Delete
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -98,56 +142,71 @@
 </div>
 
 <script>
-        function updateSourceData(event) {
-        event.preventDefault(); // Prevent the default form submission
+    function updateSourceData(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
 
-        var formData = new FormData(document.getElementById("sanitaryForm"));
-
-        $.ajax({
-            type: "POST",
-            url: '/Wqs/FormSanSouEditPost',
-            data: formData,
-            processData: false,
-            contentType: false,
+        fetch('/Wqs/FormSanSouEditPost', {
+            method: 'POST',
+            body: formData,
             headers: {
-                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // Anti-Forgery Token
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert(response.message); // Show success message
-                    // Optionally, you can refresh part of the page or reset the form here
-                } else {
-                    alert(response.message); // Show error message
-                }
-            },
-            error: function () {
-                alert("An error occurred while updating data.");
+                'RequestVerificationToken': form.querySelector('[name="__RequestVerificationToken"]').value
             }
-        });
-    }
-       function deleteSanitaryData() {
-        if (confirm("Are you sure you want to delete this record? This action cannot be undone.")) {
-            var formid = '@uuid'; // Use the UUID from the main form
-
-            $.ajax({
-                type: "POST",
-                url: '/Wqs/DeleteDataSou', // Replace with your actual delete endpoint
-                data: { "id": btoa(formid) }, // Encode the UUID to base64
-                headers: {
-                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() // Anti-Forgery Token
-                },
-                success: function (response) {
-                    if (response.success) {
-                        alert(response.message); // Show success message
-                        window.location.href = '/Dashboard/Index'; // Redirect to the dashboard or another page after deletion
-                    } else {
-                        alert(response.message); // Show error message
-                    }
-                },
-                error: function () {
-                    alert("An error occurred while deleting the record.");
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Network error');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Successfully updated!');
+                    // Optional: Update UI without refresh
+                    form.querySelector('.btn-primary').textContent = '✔ Saved';
+                    setTimeout(() => {
+                        form.querySelector('.btn-primary').textContent = 'Save';
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || 'Update failed');
                 }
+            })
+            .catch(error => {
+                alert(error.message);
+                console.error('Error:', error);
             });
-        }
+    }
+
+    function deleteSanitaryData(mainFormId, sourceUuid) {
+        if (!confirm('Permanently delete this source form?')) return;
+
+        const payload = {
+            mainFormId: btoa(unescape(encodeURIComponent(mainFormId))),
+            sourceUuid: btoa(unescape(encodeURIComponent(sourceUuid)))
+        };
+
+        fetch('/Wqs/DeleteSourceForm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify(payload)
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Network error');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Deleted successfully!');
+                    window.location.reload(); // Refresh to reflect changes
+                } else {
+                    throw new Error(data.message || 'Deletion failed');
+                }
+            })
+            .catch(error => {
+                alert(error.message);
+                console.error('Error:', error);
+            });
     }
 </script>
